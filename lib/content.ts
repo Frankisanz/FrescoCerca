@@ -1,0 +1,1024 @@
+import {
+  destinations as destinationRecords,
+  DESTINATION_TAG_LABELS,
+  type Destination as DestinationRecord,
+} from "@/lib/destinations";
+import {
+  absoluteUrl,
+  serializeJsonLd,
+  SITE_URL,
+  siteConfig,
+} from "@/lib/site";
+
+export { absoluteUrl, serializeJsonLd, SITE_URL };
+export const SITE_NAME = siteConfig.name;
+
+export function formatCelsius(value: number) {
+  return `${new Intl.NumberFormat("es-ES", {
+    maximumFractionDigits: 1,
+  }).format(value)} °C`;
+}
+
+export type EditorialDestination = {
+  slug: string;
+  name: string;
+  province: string;
+  region: string;
+  lat: number;
+  lng: number;
+  altitude: number;
+  summerHigh: number;
+  summerLow: number;
+  tags: string[];
+  description: string;
+  bestFor: string;
+  sourceNote: string;
+  sourceUrl: string;
+};
+
+export const editorialDestinations: EditorialDestination[] =
+  destinationRecords.map((destination: DestinationRecord) => ({
+    slug: destination.slug,
+    name: destination.nombre,
+    province: destination.provincia,
+    region: destination.comunidad,
+    lat: destination.lat,
+    lng: destination.lng,
+    altitude: destination.altitude,
+    summerHigh: destination.summerHigh,
+    summerLow: destination.summerLow,
+    tags: destination.etiquetas.map((tag) => DESTINATION_TAG_LABELS[tag]),
+    description: destination.descripcion,
+    bestFor: destination.mejorPara.join(" · "),
+    sourceNote: `${destination.fuente}. ${destination.metodologia}`,
+    sourceUrl: destination.fuenteUrl,
+  }));
+
+export type BreadcrumbItem = {
+  name: string;
+  path: string;
+};
+
+export function breadcrumbJsonLd(items: BreadcrumbItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
+  };
+}
+
+export type FromCity = {
+  slug: string;
+  name: string;
+  province: string;
+  lat: number;
+  lng: number;
+  referenceHigh: number;
+  title: string;
+  description: string;
+  introduction: string[];
+  strategy: string;
+  routeAdvice: string;
+  usefulFor: string[];
+  areaIdeas: { name: string; reason: string }[];
+  faqs: { question: string; answer: string }[];
+};
+
+export const fromCities: FromCity[] = [
+  {
+    slug: "madrid",
+    name: "Madrid",
+    province: "Comunidad de Madrid",
+    lat: 40.4168,
+    lng: -3.7038,
+    referenceHigh: 33,
+    title: "Escapadas frescas desde Madrid",
+    description:
+      "Compara destinos de montaña y zonas verdes para organizar una escapada con menos calor desde Madrid, con datos climáticos orientativos y criterios prácticos.",
+    introduction: [
+      "Salir de Madrid para buscar una noche más llevadera no consiste únicamente en conducir hacia el norte. La altitud, la orientación del alojamiento, la vegetación y la temperatura mínima habitual suelen importar más que el nombre de la provincia.",
+      "Esta selección prioriza lugares elevados o con un entorno natural capaz de ofrecer planes a primera y última hora del día. Las temperaturas mostradas son referencias de verano del destino: antes de reservar hay que comprobar el pronóstico y los avisos oficiales para las fechas concretas.",
+    ],
+    strategy:
+      "Desde Madrid conviene comparar primero la sierra cercana con destinos algo más lejanos del Sistema Central e Ibérico. Para una sola noche puede compensar reducir kilómetros; para dos o tres, una diferencia térmica mayor y un alojamiento bien acondicionado suelen pesar más.",
+    routeAdvice:
+      "Las salidas de viernes y los regresos de domingo pueden cambiar mucho la duración real del viaje. Comprueba el itinerario en la DGT, evita fijar una actividad exigente en la franja central del día y conserva una alternativa por si el pronóstico cambia.",
+    usefulFor: [
+      "Una noche improvisada con poco equipaje",
+      "Senderismo temprano y descanso por la tarde",
+      "Familias que buscan naturaleza sin recorrer media península",
+      "Teletrabajo de dos o tres días en un entorno más templado",
+    ],
+    areaIdeas: [
+      {
+        name: "Sistema Central",
+        reason:
+          "Permite comparar pueblos de sierra a distancias razonables, prestando atención a altitud, sombra y mínima nocturna.",
+      },
+      {
+        name: "Serranía de Cuenca",
+        reason:
+          "Puede encajar en una escapada de más de una noche por su combinación de altitud, pinares y planes de naturaleza.",
+      },
+      {
+        name: "Sistema Ibérico",
+        reason:
+          "Amplía el radio de búsqueda cuando el objetivo principal es descansar por la noche y no solo estar cerca.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿Dónde hace menos calor cerca de Madrid?",
+        answer:
+          "No hay un único ganador para todo el verano. Los destinos elevados de los sistemas Central e Ibérico suelen ser buenos candidatos, pero la mejor opción depende del episodio concreto, especialmente de la mínima nocturna, el viento y la nubosidad.",
+      },
+      {
+        question: "¿Cuánta distancia merece la pena recorrer?",
+        answer:
+          "Para una noche suele ser práctico limitar el radio; para un fin de semana puede compensar ampliar la búsqueda si la diferencia nocturna prevista es clara. FrescoCerca usa distancia geográfica como orientación, no como tiempo exacto de conducción.",
+      },
+    ],
+  },
+  {
+    slug: "sevilla",
+    name: "Sevilla",
+    province: "Sevilla",
+    lat: 37.3891,
+    lng: -5.9845,
+    referenceHigh: 36,
+    title: "Escapadas frescas desde Sevilla",
+    description:
+      "Ideas para escapar del calor desde Sevilla comparando sierras, altitud, noches de verano y planes tranquilos sin confundir clima habitual con previsión.",
+    introduction: [
+      "Cuando Sevilla encadena días muy calurosos, buscar únicamente una máxima algo menor puede quedarse corto. Para descansar, la mínima nocturna, la ventilación y las características reales del alojamiento son decisivas.",
+      "En esta guía de salida se comparan destinos con altitud y entornos serranos, desde opciones relativamente cercanas hasta alternativas para un fin de semana completo. Ninguna referencia sustituye el pronóstico de AEMET para la fecha del viaje.",
+    ],
+    strategy:
+      "Empieza por las sierras occidentales si prima la cercanía y amplía hacia áreas más elevadas de Cádiz, Málaga o Granada cuando puedas pasar dos noches. En episodios extensos, la costa no siempre garantiza una noche confortable por la humedad.",
+    routeAdvice:
+      "Sal con agua suficiente, evita dejar personas o animales dentro del coche y revisa avisos por calor e incendios. Si el alojamiento no especifica climatización o ventilación, pregunta antes de reservar: estar en un pueblo serrano no garantiza que todas las habitaciones sean frescas.",
+    usefulFor: [
+      "Dormir fuera durante una noche especialmente cálida",
+      "Combinar piscina natural y paseo al atardecer",
+      "Buscar un alojamiento rural con sombra",
+      "Viajar con perro evitando el asfalto en las horas centrales",
+    ],
+    areaIdeas: [
+      {
+        name: "Sierra de Aracena",
+        reason:
+          "Es una primera zona lógica por cercanía relativa, arbolado y oferta rural; conviene comparar pueblo, cota y alojamiento.",
+      },
+      {
+        name: "Sierra de Grazalema",
+        reason:
+          "Su relieve ofrece alternativas interesantes, aunque la previsión local y el acceso concreto deben decidir el plan.",
+      },
+      {
+        name: "Sierras altas de Granada",
+        reason:
+          "Para una estancia de varias noches, la altitud puede aportar una diferencia más clara que una escapada muy próxima.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿Es siempre más fresca la costa que Sevilla?",
+        answer:
+          "No necesariamente en términos de confort nocturno. La brisa puede ayudar, pero una humedad alta reduce la sensación de alivio. Conviene comparar temperatura mínima, humedad, viento y condiciones del alojamiento.",
+      },
+      {
+        question: "¿Qué dato debo mirar primero?",
+        answer:
+          "Si la prioridad es dormir, mira la mínima prevista y no solo la máxima. Después comprueba altitud, ventilación, sombra y si el alojamiento dispone de climatización.",
+      },
+    ],
+  },
+  {
+    slug: "cordoba",
+    name: "Córdoba",
+    province: "Córdoba",
+    lat: 37.8882,
+    lng: -4.7794,
+    referenceHigh: 36,
+    title: "Escapadas frescas desde Córdoba",
+    description:
+      "Encuentra candidatos para una escapada con noches más suaves desde Córdoba, comparando altitud, entorno, distancia aproximada y servicios.",
+    introduction: [
+      "Desde Córdoba hay una diferencia importante entre cambiar de paisaje y cambiar de condiciones térmicas. Un destino rural cercano puede ser agradable, pero la altitud y la mínima nocturna son las que indican si permitirá descansar mejor.",
+      "La selección favorece destinos interiores elevados y zonas serranas donde sea posible organizar el día alrededor de paseos tempranos, sombra y actividades tranquilas. Los valores son climáticos y orientativos, nunca una predicción para una fecha concreta.",
+    ],
+    strategy:
+      "Para una escapada corta, compara Sierra Morena con destinos de mayor cota hacia Jaén y Granada. Si la previsión regional muestra calor generalizado, puede ser más sensato escoger un buen alojamiento cercano que sumar horas de carretera por una diferencia pequeña.",
+    routeAdvice:
+      "Planifica la llegada fuera de las horas de máxima insolación y confirma aparcamiento sombreado si viajas con niños o animales. Las carreteras de sierra pueden alargar el último tramo aunque la distancia en línea recta parezca reducida.",
+    usefulFor: [
+      "Parejas que buscan una noche rural tranquila",
+      "Familias que valoran piscina y zonas sombreadas",
+      "Rutas cortas al amanecer",
+      "Escapadas de dos noches hacia cotas más altas",
+    ],
+    areaIdeas: [
+      {
+        name: "Sierra Morena cordobesa",
+        reason:
+          "Funciona como primer radio de búsqueda para reducir conducción, verificando siempre la mínima prevista.",
+      },
+      {
+        name: "Sierras de Jaén",
+        reason:
+          "Ofrecen pueblos y espacios naturales a distintas cotas, útiles para comparar alternativas de fin de semana.",
+      },
+      {
+        name: "Entornos elevados de Granada",
+        reason:
+          "Pueden justificar un trayecto mayor cuando la prioridad es obtener noches claramente más templadas.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿Basta con ir a la sierra para encontrar menos calor?",
+        answer:
+          "No. Dentro de una misma sierra cambian mucho la cota, la orientación y la ventilación. La previsión local y el tipo de alojamiento siguen siendo imprescindibles.",
+      },
+      {
+        question: "¿Cómo comparo dos destinos?",
+        answer:
+          "Usa la mínima nocturna como criterio principal, después la máxima, la altitud, la distancia real por carretera y los servicios que necesitarás durante las horas centrales.",
+      },
+    ],
+  },
+  {
+    slug: "jaen",
+    name: "Jaén",
+    province: "Jaén",
+    lat: 37.7796,
+    lng: -3.7849,
+    referenceHigh: 34,
+    title: "Escapadas frescas desde Jaén",
+    description:
+      "Compara pueblos de sierra y destinos elevados para preparar una escapada menos calurosa desde Jaén con criterios verificables.",
+    introduction: [
+      "Jaén tiene la ventaja de estar rodeada por sistemas montañosos, pero no todos los pueblos de la provincia ofrecen la misma noche de verano. Cota, exposición y forma urbana producen diferencias que merece la pena comprobar.",
+      "Estas propuestas sirven para elaborar una lista corta de candidatos. Antes de salir, compara el pronóstico horario, los avisos oficiales, el acceso por carretera y los servicios disponibles.",
+    ],
+    strategy:
+      "Prioriza primero la cota y la mínima nocturna, y utiliza la distancia para desempatar. Cazorla, Segura, Las Villas y las sierras hacia Granada permiten explorar perfiles distintos sin convertir necesariamente la escapada en un viaje largo.",
+    routeAdvice:
+      "En zonas de montaña la distancia lineal oculta curvas y desnivel. Consulta el tiempo real de ruta, reposta con antelación y no improvises actividades en áreas afectadas por avisos meteorológicos o restricciones por incendio.",
+    usefulFor: [
+      "Escapadas de naturaleza sin desplazamientos extremos",
+      "Observación de estrellas con planificación responsable",
+      "Alojamientos rurales para dos noches",
+      "Planes de amanecer y atardecer",
+    ],
+    areaIdeas: [
+      {
+        name: "Sierras de Cazorla, Segura y Las Villas",
+        reason:
+          "Reúnen localidades a cotas diferentes, por lo que conviene comparar el punto exacto y no solo el parque natural.",
+      },
+      {
+        name: "Sierra Mágina",
+        reason:
+          "La proximidad permite valorar una salida breve, siempre condicionada por el pronóstico local.",
+      },
+      {
+        name: "Altiplanos granadinos",
+        reason:
+          "Amplían el abanico para un fin de semana cuando se busca una noche potencialmente más fresca.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿Cuál es el pueblo más fresco de Jaén?",
+        answer:
+          "No existe un ganador permanente: cambia según la situación atmosférica. La altitud ayuda, pero deben compararse la mínima prevista, el viento, la exposición y el alojamiento concreto.",
+      },
+      {
+        question: "¿Sirven las medias de verano para decidir?",
+        answer:
+          "Sirven para descubrir candidatos, no para cerrar el viaje. La decisión final debe hacerse con previsiones cercanas a la fecha y fuentes oficiales.",
+      },
+    ],
+  },
+  {
+    slug: "ubeda",
+    name: "Úbeda",
+    province: "Jaén",
+    lat: 38.011,
+    lng: -3.371,
+    referenceHigh: 34,
+    title: "Escapadas frescas desde Úbeda",
+    description:
+      "Descubre destinos serranos y elevados para salir del calor desde Úbeda, con una comparación honesta de clima, distancia y comodidad.",
+    introduction: [
+      "Desde Úbeda, la cercanía de varias sierras permite diseñar escapadas cortas, pero elegir bien exige bajar al detalle. Dos alojamientos separados por pocos kilómetros pueden tener distinta altitud, orientación y capacidad para ventilar durante la noche.",
+      "FrescoCerca utiliza datos estivales de referencia para ordenar posibilidades, no para afirmar qué tiempo hará. La previsión oficial de los días próximos debe ser siempre la última comprobación.",
+    ],
+    strategy:
+      "El radio inicial puede centrarse en Cazorla, Segura y puntos altos del entorno. Para dos o tres noches, amplía hacia Albacete o Granada y compara la diferencia térmica prevista con el tiempo total de carretera.",
+    routeAdvice:
+      "Verifica el último tramo antes de salir: algunos alojamientos rurales requieren accesos lentos. Lleva agua, evita recorridos sin sombra a mediodía y confirma las condiciones para mascotas si viajas con ellas.",
+    usefulFor: [
+      "Fin de semana rural desde La Loma",
+      "Dormir a mayor cota sin cruzar España",
+      "Viajes con flexibilidad para cambiar de destino",
+      "Planes tranquilos cerca de espacios naturales",
+    ],
+    areaIdeas: [
+      {
+        name: "Entorno de Cazorla",
+        reason:
+          "Es una búsqueda natural desde Úbeda, pero la cota exacta y el acceso pueden importar más que la distancia.",
+      },
+      {
+        name: "Sierra de Segura",
+        reason:
+          "Aporta candidatos para estancias de varias noches y planes centrados en naturaleza.",
+      },
+      {
+        name: "Sierras de Albacete",
+        reason:
+          "Ofrecen una dirección alternativa cuando la previsión aconseja ampliar el radio hacia el este.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿Qué destino fresco queda más cerca de Úbeda?",
+        answer:
+          "La respuesta cambia con el tiempo y el acceso por carretera. Las sierras jiennenses son el primer ámbito a comparar, pero FrescoCerca muestra distancia geográfica, no promete tiempos de conducción.",
+      },
+      {
+        question: "¿Es mejor reservar en el pueblo o en un alojamiento aislado?",
+        answer:
+          "Depende de la ventilación, la sombra y los servicios que necesites. Un alojamiento aislado puede tener buen entorno, pero conviene comprobar acceso, cobertura, agua y climatización.",
+      },
+    ],
+  },
+  {
+    slug: "murcia",
+    name: "Murcia",
+    province: "Región de Murcia",
+    lat: 37.9922,
+    lng: -1.1307,
+    referenceHigh: 34,
+    title: "Escapadas frescas desde Murcia",
+    description:
+      "Compara montaña, interior y costa para encontrar una escapada potencialmente más fresca desde Murcia sin guiarte solo por la máxima.",
+    introduction: [
+      "Desde Murcia, elegir entre costa y montaña requiere mirar el confort completo. La brisa marina puede aliviar durante el día, pero la humedad puede mantener noches difíciles; la altitud suele favorecer mínimas menores, aunque no todos los episodios se comportan igual.",
+      "Esta página propone candidatos basados en referencias de verano, altitud y distancia geográfica. Consulta siempre la predicción horaria y los avisos oficiales antes de desplazarte.",
+    ],
+    strategy:
+      "Compara primero las sierras del noroeste murciano y de Albacete con opciones interiores de mayor cota. Deja la costa como una alternativa que debe evaluarse por humedad, viento y mínima, no solo por la temperatura máxima anunciada.",
+    routeAdvice:
+      "En verano, una salida temprana reduce exposición y retenciones. Si vas a un espacio natural, confirma restricciones de acceso, disponibilidad de agua y nivel de riesgo de incendio; no dependas únicamente de un mapa turístico.",
+    usefulFor: [
+      "Escapadas de montaña desde el sureste",
+      "Comparar costa y altitud con datos",
+      "Viajes con actividades antes de las 11:00",
+      "Estancias rurales de dos o tres noches",
+    ],
+    areaIdeas: [
+      {
+        name: "Noroeste de Murcia",
+        reason:
+          "Combina proximidad relativa y mayor altitud; cada localidad debe contrastarse con la previsión concreta.",
+      },
+      {
+        name: "Sierras de Albacete",
+        reason:
+          "Pueden ofrecer noches más llevaderas en determinados episodios y una oferta natural distinta.",
+      },
+      {
+        name: "Interior de Alicante",
+        reason:
+          "Permite ampliar la comparación sin asumir que la franja costera será automáticamente la opción más fresca.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿La playa es la mejor escapatoria al calor de Murcia?",
+        answer:
+          "No siempre. La brisa puede mejorar la tarde, pero la humedad y una mínima alta pueden empeorar el descanso. Compara el pronóstico horario completo.",
+      },
+      {
+        question: "¿Qué aporta la altitud?",
+        answer:
+          "Suele favorecer temperaturas menores, especialmente por la noche, pero no garantiza confort. También influyen viento, orientación, superficie urbana y características del alojamiento.",
+      },
+    ],
+  },
+  {
+    slug: "zaragoza",
+    name: "Zaragoza",
+    province: "Zaragoza",
+    lat: 41.6488,
+    lng: -0.8891,
+    referenceHigh: 33,
+    title: "Escapadas frescas desde Zaragoza",
+    description:
+      "Busca escapadas de montaña desde Zaragoza comparando Pirineos y Sistema Ibérico con distancia, altitud y noches estivales de referencia.",
+    introduction: [
+      "Zaragoza ocupa una posición útil para comparar dos grandes direcciones: Pirineos y Sistema Ibérico. La mejor no es siempre la más alta ni la más conocida; también cuentan la ruta, la exposición del valle y la previsión nocturna.",
+      "Los destinos se ordenan como candidatos de planificación. Las medias estivales ayudan a explorar, pero no describen el tiempo de un fin de semana concreto.",
+    ],
+    strategy:
+      "Para una noche, busca el equilibrio entre cota y tiempo de viaje. En una estancia más larga puedes ampliar hacia valles pirenaicos o sierras turolenses, comparando la mínima prevista y evitando añadir carretera por una diferencia marginal.",
+    routeAdvice:
+      "El cierzo, las tormentas de montaña y los cambios rápidos de tiempo requieren revisar el pronóstico incluso en días cálidos. Consulta accesos y aparcamiento, y lleva una capa ligera si el plan incluye cotas altas al amanecer.",
+    usefulFor: [
+      "Escapadas de montaña de una o dos noches",
+      "Comparar Pirineo y Sistema Ibérico",
+      "Rutas tempranas con regreso antes de la tarde",
+      "Viajes que combinan naturaleza y pueblos con servicios",
+    ],
+    areaIdeas: [
+      {
+        name: "Pirineo aragonés",
+        reason:
+          "Ofrece un gradiente amplio de altitudes, pero conviene revisar valle, orientación y tiempo real de acceso.",
+      },
+      {
+        name: "Sierra de Albarracín",
+        reason:
+          "Es una alternativa hacia el Sistema Ibérico para fines de semana centrados en paisaje y descanso nocturno.",
+      },
+      {
+        name: "Moncayo y entorno",
+        reason:
+          "Permite plantear escapadas más próximas, siempre contrastando la previsión de la localidad elegida.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿Pirineos o Teruel para huir del calor desde Zaragoza?",
+        answer:
+          "Depende del episodio, la duración del viaje y el presupuesto. Compara la mínima prevista, la altitud del alojamiento y el tiempo real de acceso; no solo la reputación fresca del área.",
+      },
+      {
+        question: "¿Por qué puede refrescar mucho por la noche?",
+        answer:
+          "La altitud, el aire seco y la pérdida de calor nocturna pueden producir cambios amplios. Aun en verano, lleva una capa adecuada si vas a estar fuera temprano o al anochecer.",
+      },
+    ],
+  },
+  {
+    slug: "toledo",
+    name: "Toledo",
+    province: "Toledo",
+    lat: 39.8628,
+    lng: -4.0273,
+    referenceHigh: 34,
+    title: "Escapadas frescas desde Toledo",
+    description:
+      "Selecciona una escapada con noches potencialmente más suaves desde Toledo comparando montes, sierras y destinos de mayor altitud.",
+    introduction: [
+      "Desde Toledo, desplazarse hacia un entorno rural no garantiza por sí solo una diferencia térmica. Los valles interiores pueden conservar mucho calor, mientras que algunas zonas elevadas ofrecen noches más favorables.",
+      "La selección combina distancia geográfica, altitud y referencias estivales para reducir opciones. Confirma después la previsión y la ruta exacta; FrescoCerca no muestra observaciones meteorológicas en directo.",
+    ],
+    strategy:
+      "Comienza por Montes de Toledo y Sierra de San Vicente si buscas proximidad. Para dos noches, compara también Gredos, Sistema Central y Serranía de Cuenca, valorando si la diferencia prevista compensa el trayecto.",
+    routeAdvice:
+      "No conviertas la distancia en línea recta en tiempo de viaje: los últimos kilómetros hacia la sierra pueden ser lentos. Comprueba DGT, combustible, acceso y disponibilidad de sombra o climatización.",
+    usefulFor: [
+      "Una escapada corta desde el centro peninsular",
+      "Alojamiento rural con planes tranquilos",
+      "Viajes en familia con piscina o río autorizado",
+      "Comparar sierras en varias direcciones",
+    ],
+    areaIdeas: [
+      {
+        name: "Montes de Toledo",
+        reason:
+          "Son la referencia más próxima, pero la elevación y la mínima cambian entre municipios y alojamientos.",
+      },
+      {
+        name: "Gredos",
+        reason:
+          "Amplía la búsqueda hacia cotas mayores para una estancia de fin de semana.",
+      },
+      {
+        name: "Serranía de Cuenca",
+        reason:
+          "Puede ser una alternativa cuando se dispone de más tiempo y la previsión favorece el este.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿Dónde puedo dormir con menos calor cerca de Toledo?",
+        answer:
+          "Los destinos de sierra son buenos candidatos, pero no hay una respuesta fija. Compara la mínima de cada localidad y pregunta por las condiciones de la habitación.",
+      },
+      {
+        question: "¿Qué diferencia térmica justifica el viaje?",
+        answer:
+          "Es una decisión personal. Valora especialmente la mínima nocturna, el tiempo de conducción, el coste y la calidad del alojamiento en lugar de perseguir únicamente la máxima más baja.",
+      },
+    ],
+  },
+  {
+    slug: "valladolid",
+    name: "Valladolid",
+    province: "Valladolid",
+    lat: 41.6523,
+    lng: -4.7245,
+    referenceHigh: 31,
+    title: "Escapadas frescas desde Valladolid",
+    description:
+      "Explora destinos montañosos para una escapada más fresca desde Valladolid, con criterios sobre altitud, mínima nocturna y distancia.",
+    introduction: [
+      "Las noches de la meseta pueden variar mucho, por lo que una escapada desde Valladolid debe decidirse con el episodio concreto en mente. La cercanía a montaña abre varias direcciones, pero la mejor combinación depende de la duración y del acceso.",
+      "Los datos estivales de referencia permiten descubrir lugares; no sustituyen una previsión meteorológica ni garantizan una temperatura durante la estancia.",
+    ],
+    strategy:
+      "Para reducir carretera, compara primero áreas elevadas de Palencia, León y Segovia. Si dispones de varios días, la Cordillera Cantábrica permite ampliar opciones, teniendo en cuenta que la meteorología de montaña puede cambiar deprisa.",
+    routeAdvice:
+      "Presta atención a tormentas, viento y descensos nocturnos. Confirma la ruta y los servicios antes de partir, especialmente en localidades pequeñas donde los horarios y la oferta pueden ser limitados.",
+    usefulFor: [
+      "Fin de semana en la Cordillera Cantábrica",
+      "Escapadas de pueblo y montaña",
+      "Senderismo suave a primera hora",
+      "Viajes que priorizan la mínima nocturna",
+    ],
+    areaIdeas: [
+      {
+        name: "Montaña Palentina",
+        reason:
+          "Es una dirección natural para combinar mayor cota y una estancia de naturaleza.",
+      },
+      {
+        name: "Sierras de León",
+        reason:
+          "Ofrecen distintas alternativas para ampliar la búsqueda durante episodios cálidos.",
+      },
+      {
+        name: "Sistema Central segoviano",
+        reason:
+          "Permite comparar una ruta hacia el sur con las opciones cantábricas del norte.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿Cuál es la zona de montaña más práctica desde Valladolid?",
+        answer:
+          "Depende de la carretera, el municipio y la duración. Montaña Palentina y áreas de León o Segovia son buenos puntos de partida para comparar, no una garantía meteorológica.",
+      },
+      {
+        question: "¿Necesito ropa de abrigo en verano?",
+        answer:
+          "En cotas altas la temperatura puede bajar al anochecer y cambiar con tormentas o viento. Revisa la previsión y lleva una capa ligera adecuada al plan.",
+      },
+    ],
+  },
+];
+
+export type GuideSection = {
+  heading: string;
+  paragraphs: string[];
+  bullets?: string[];
+};
+
+export type Guide = {
+  slug: string;
+  title: string;
+  description: string;
+  eyebrow: string;
+  readingMinutes: number;
+  published: string;
+  updated: string;
+  introduction: string[];
+  sections: GuideSection[];
+  takeaways: string[];
+  faqs: { question: string; answer: string }[];
+};
+
+export const guides: Guide[] = [
+  {
+    slug: "como-elegir-destino-fresco",
+    title: "Cómo elegir un destino fresco sin dejarte engañar por una cifra",
+    description:
+      "Método práctico para comparar temperatura nocturna, altitud, humedad, alojamiento, ruta y previsión antes de reservar una escapada de verano.",
+    eyebrow: "Guía de planificación",
+    readingMinutes: 9,
+    published: "2026-07-27",
+    updated: "2026-07-27",
+    introduction: [
+      "Buscar «un sitio donde no haga calor» parece sencillo hasta que aparecen diez listas con pueblos distintos. El problema no suele estar en los nombres, sino en el criterio: una máxima media de julio no dice qué ocurrirá el sábado, ni cómo se sentirá una habitación a medianoche.",
+      "Un destino fresco es el resultado de varias decisiones pequeñas. Esta guía propone un proceso verificable para pasar de una lista llamativa a una escapada que tenga sentido para tus fechas, tu origen y tu forma de viajar.",
+    ],
+    sections: [
+      {
+        heading: "Empieza por la noche, no por el récord de temperatura",
+        paragraphs: [
+          "Si tu objetivo principal es descansar, la mínima prevista suele ser más útil que la máxima. Una tarde moderada seguida de una noche cálida y húmeda puede resultar peor que un día soleado en un lugar donde refresca claramente después del atardecer.",
+          "Compara el pronóstico horario de dos o tres localidades para la misma franja. Mira cuándo comienza a bajar la temperatura y qué valor mantiene entre la medianoche y las siete. Esa curva cuenta más que una cifra aislada publicada en una red social.",
+        ],
+        bullets: [
+          "Temperatura mínima y hora a la que se alcanza",
+          "Humedad relativa y viento durante la noche",
+          "Persistencia del calor durante varios días",
+          "Avisos oficiales y posibilidad de tormentas",
+        ],
+      },
+      {
+        heading: "Usa la altitud para descubrir, no para sentenciar",
+        paragraphs: [
+          "La altitud es un buen filtro inicial porque, en condiciones comparables, el aire suele enfriarse al ascender. Sin embargo, no existe una resta fija aplicable a todos los viajes: intervienen la masa de aire, el relieve, el viento, la nubosidad y la acumulación de calor en el entorno construido.",
+          "Dos pueblos a una cota parecida pueden comportarse de manera diferente si uno ocupa un valle cerrado y el otro una ladera ventilada. Por eso FrescoCerca combina altitud con referencias climáticas, pero presenta cada lugar como candidato, no como promesa.",
+        ],
+      },
+      {
+        heading: "Comprueba el alojamiento como si fuera parte del clima",
+        paragraphs: [
+          "Una casa de piedra puede conservar una temperatura agradable o acumular calor tras varios días, según su orientación, ventilación y uso. Las fotografías rara vez responden a las preguntas que importan: si la habitación recibe sol de tarde, si se puede crear corriente o si el equipo de climatización alcanza el dormitorio.",
+          "Escribe al alojamiento antes de pagar una tarifa no reembolsable. Una respuesta concreta vale más que una etiqueta genérica como «casa en la sierra». También conviene leer reseñas de los meses de julio y agosto, buscando comentarios sobre sueño, ruido y temperatura.",
+        ],
+        bullets: [
+          "Orientación y presencia de sombra por la tarde",
+          "Ventanas enfrentadas, ventilador o aire acondicionado",
+          "Planta de la habitación y aislamiento del tejado",
+          "Piscina, zonas interiores y política para mascotas",
+        ],
+      },
+      {
+        heading: "Calcula el alivio neto del viaje",
+        paragraphs: [
+          "Recorrer más kilómetros no siempre produce una escapada mejor. Suma combustible, peajes, atascos, hora de llegada y energía invertida. Para una sola noche, una diferencia térmica moderada cerca de casa puede ser más valiosa que una mínima espectacular tras cuatro horas de carretera.",
+          "La distancia geográfica que mostramos sirve para ordenar candidatos, no equivale al itinerario. Abre la ruta real, revisa incidencias y comprueba el último tramo. En montaña, pocos kilómetros pueden requerir bastante tiempo.",
+        ],
+      },
+      {
+        heading: "Haz una comprobación final en tres momentos",
+        paragraphs: [
+          "Una semana antes puedes decidir la zona y reservar con cancelación razonable. Entre 72 y 48 horas antes, compara modelos y avisos; la víspera revisa el pronóstico horario, la carretera y las restricciones locales. Esta secuencia evita tanto improvisar tarde como confiar demasiado pronto en una previsión lejana.",
+          "Guarda un plan B en otra dirección. Durante un episodio cálido, una tormenta, humo de incendios o un cambio de viento puede convertir el segundo candidato en una opción más responsable.",
+        ],
+      },
+    ],
+    takeaways: [
+      "Prioriza la mínima nocturna si quieres dormir mejor.",
+      "La altitud ayuda a filtrar, pero no garantiza el resultado.",
+      "Verifica orientación y ventilación del alojamiento.",
+      "Compara beneficio térmico con tiempo y coste de carretera.",
+      "Toma la decisión final con previsión y avisos oficiales.",
+    ],
+    faqs: [
+      {
+        question: "¿Con cuánta antelación es fiable elegir el destino?",
+        answer:
+          "Puedes explorar y reservar con condiciones flexibles antes, pero la comprobación meteorológica decisiva debe hacerse en los días próximos al viaje. La incertidumbre aumenta cuanto más lejano está el plazo.",
+      },
+      {
+        question: "¿La altitud garantiza noches frescas?",
+        answer:
+          "No. Es un indicador útil, pero intervienen la situación atmosférica, el relieve, la humedad, el viento y el propio alojamiento.",
+      },
+      {
+        question: "¿FrescoCerca ofrece previsión en tiempo real?",
+        answer:
+          "No. Las fichas se basan en referencias climáticas y geográficas para descubrir candidatos. Antes de viajar debes consultar la predicción y los avisos de fuentes oficiales.",
+      },
+    ],
+  },
+  {
+    slug: "donde-hace-menos-calor-en-espana",
+    title: "Dónde hace menos calor en España: cómo buscar por regiones y relieve",
+    description:
+      "Una explicación útil de las zonas españolas que suelen ofrecer veranos más suaves y de por qué ningún mapa climático sustituye el pronóstico de tus fechas.",
+    eyebrow: "Clima y territorio",
+    readingMinutes: 10,
+    published: "2026-07-27",
+    updated: "2026-07-27",
+    introduction: [
+      "La pregunta «¿dónde hace menos calor en España?» no tiene una sola respuesta. Puede referirse a la tarde más suave, a la noche más fría, a menor sensación térmica o a un lugar donde sea fácil pasar las horas centrales bajo techo o entre árboles.",
+      "España reúne costa atlántica, valles interiores, mesetas y cordilleras en distancias relativamente cortas. Entender esos patrones permite buscar mejor y evitar listas que presentan una media histórica como si fuera una garantía para el próximo fin de semana.",
+    ],
+    sections: [
+      {
+        heading: "Norte atlántico: máximas contenidas, pero atención a la humedad",
+        paragraphs: [
+          "Galicia, Asturias, Cantabria y País Vasco suelen aparecer en las búsquedas estivales porque la influencia atlántica modera muchos días. La nubosidad y la brisa pueden reducir la insolación, y la oferta de costa, valles y montaña permite cambiar de plan sin recorrer grandes distancias.",
+          "Eso no significa ausencia de episodios cálidos. Las entradas de aire del sur pueden elevar las temperaturas, y una humedad alta modifica el confort. Compara el interior con el litoral y no presupongas que cualquier localidad del norte tendrá la misma noche.",
+        ],
+      },
+      {
+        heading: "Montaña: la cota crea oportunidades en casi todas las regiones",
+        paragraphs: [
+          "Pirineos, Cordillera Cantábrica, Sistema Central, Sistema Ibérico y las sierras Béticas contienen localidades elevadas capaces de ofrecer un contraste respecto a ciudades próximas. La ventaja de pensar en relieve es que abre opciones en Aragón, Castilla y León, Castilla-La Mancha, Andalucía y otras comunidades, no solo en la franja norte.",
+          "Los valles pueden acumular calor durante el día y las tormentas cambian las condiciones con rapidez. Comprueba la altitud exacta del núcleo y del alojamiento: compartir comarca no implica compartir temperatura.",
+        ],
+        bullets: [
+          "Pirineos y valles altos",
+          "Montaña Cantábrica y macizos del noroeste",
+          "Sistemas Central e Ibérico",
+          "Sierras altas del sureste y Andalucía oriental",
+        ],
+      },
+      {
+        heading: "Mesetas elevadas: noches que pueden compensar días soleados",
+        paragraphs: [
+          "Algunas localidades de las dos mesetas y del Sistema Ibérico combinan aire relativamente seco y altitud. Pueden registrar tardes calurosas y, aun así, perder temperatura con mayor rapidez al anochecer que un entorno costero húmedo.",
+          "Este perfil es interesante cuando el objetivo es dormir. No obstante, durante olas de calor prolongadas también se elevan las mínimas, por lo que la ventaja histórica debe confirmarse fecha a fecha.",
+        ],
+      },
+      {
+        heading: "Costa: brisa no equivale siempre a descanso nocturno",
+        paragraphs: [
+          "La proximidad del mar suaviza muchas máximas, pero también puede mantener humedad y mínimas elevadas. Una terraza con brisa puede sentirse agradable mientras una habitación mal ventilada conserva calor durante horas.",
+          "Cuando compares costa e interior, revisa temperatura, humedad, viento y tipo de alojamiento. El mejor lugar para pasar la tarde no tiene por qué ser el mejor para dormir.",
+        ],
+      },
+      {
+        heading: "Cómo convertir un mapa de España en tres candidatos",
+        paragraphs: [
+          "Define primero tu radio real de viaje y el número de noches. Después filtra por altitud o influencia atlántica, descarta destinos bajo avisos o con acceso problemático y compara el pronóstico horario. Finalmente, revisa alojamiento y actividades compatibles con las horas centrales.",
+          "No necesitas localizar el punto más frío del país. Necesitas una opción accesible, segura y suficientemente confortable para tu grupo. Esa diferencia convierte una curiosidad climática en una decisión útil.",
+        ],
+        bullets: [
+          "Para una noche, reduce radio y prioriza facilidad de llegada.",
+          "Para varias noches, amplía opciones y compara servicios.",
+          "Con niños o mascotas, añade sombra, agua y acceso sanitario.",
+          "Mantén una alternativa con cancelación razonable.",
+        ],
+      },
+    ],
+    takeaways: [
+      "El norte atlántico y la montaña son buenos puntos de partida, no garantías.",
+      "Para dormir, compara mínimas, humedad y ventilación.",
+      "La altitud del alojamiento importa más que la etiqueta de la comarca.",
+      "Un destino cercano y bien preparado puede superar al lugar más frío.",
+      "La previsión oficial siempre decide el viaje concreto.",
+    ],
+    faqs: [
+      {
+        question: "¿Cuál es la región más fresca de España en verano?",
+        answer:
+          "El norte atlántico y las áreas de montaña suelen concentrar condiciones más suaves, pero no existe una región ganadora todos los días. Depende de la situación atmosférica y de qué entiendas por frescor.",
+      },
+      {
+        question: "¿Dónde bajan más las temperaturas por la noche?",
+        answer:
+          "Las zonas elevadas, secas y poco urbanizadas pueden perder calor con rapidez, pero cada episodio es distinto. Consulta la mínima prevista para el municipio y el alojamiento.",
+      },
+      {
+        question: "¿Las medias climáticas sirven para reservar?",
+        answer:
+          "Sirven para descubrir destinos y entender patrones. Para reservar una escapada sensible al calor, combínalas con condiciones flexibles y una previsión cercana a la fecha.",
+      },
+    ],
+  },
+  {
+    slug: "escapadas-frescas-con-ninos",
+    title: "Escapadas frescas con niños: seguridad, descanso y planes que sí funcionan",
+    description:
+      "Planifica una escapada familiar de verano valorando temperatura nocturna, sombra, agua, trayecto, alojamiento y alternativas para las horas de más calor.",
+    eyebrow: "Viajes en familia",
+    readingMinutes: 9,
+    published: "2026-07-27",
+    updated: "2026-07-27",
+    introduction: [
+      "Viajar con niños durante un episodio cálido no consiste en encontrar una piscina y dar el plan por resuelto. El trayecto, la siesta, la temperatura de la habitación y la posibilidad de cambiar de actividad importan tanto como el destino.",
+      "Una buena escapada familiar reduce decisiones sobre la marcha. El lugar más frío puede no ser el más cómodo si obliga a conducir demasiado, carece de sombra o no ofrece una alternativa interior cuando cambia el tiempo.",
+    ],
+    sections: [
+      {
+        heading: "Elige por ritmo familiar, no por una foto",
+        paragraphs: [
+          "Anota las horas a las que vuestra familia suele comer, descansar y acostarse. Después busca un destino donde esas franjas puedan transcurrir en un espacio confortable. Una ruta preciosa sin sombra a las doce no será útil si es el único plan disponible.",
+          "Para bebés y niños pequeños, pregunta por persianas, ventilación, cuna y ubicación de la habitación. No asumas que una casa rural de montaña mantiene todas las estancias a la misma temperatura.",
+        ],
+      },
+      {
+        heading: "Reduce el riesgo durante el trayecto",
+        paragraphs: [
+          "Programa la salida fuera de las horas más calurosas cuando sea posible y evita depender de una única parada. Lleva más agua de la prevista, protectores solares adecuados y ropa accesible sin tener que vaciar el maletero.",
+          "Nunca dejes a un menor dentro del vehículo, ni siquiera con una ventana abierta o durante una gestión breve. Comprueba el estado del tráfico, la autonomía y dónde podrías detenerte con seguridad.",
+        ],
+        bullets: [
+          "Agua accesible para cada persona",
+          "Paradas localizadas antes de salir",
+          "Protección solar, gorra y ropa ligera",
+          "Teléfonos cargados y ubicación del alojamiento guardada",
+        ],
+      },
+      {
+        heading: "Busca tres capas de plan",
+        paragraphs: [
+          "El plan A puede ser una actividad temprana al aire libre; el B, una visita interior o zona sombreada durante las horas centrales; el C, una tarde tranquila en el alojamiento. Esta estructura evita forzar una excursión porque ya estaba pagada.",
+          "Piscinas naturales, ríos y embalses requieren información local: baño autorizado, corriente, profundidad, vigilancia y accesibilidad. Que un lugar aparezca en fotografías no significa que el baño sea legal o seguro ese día.",
+        ],
+      },
+      {
+        heading: "Evalúa la noche como parte de la salud familiar",
+        paragraphs: [
+          "Dormir mal afecta al día siguiente y puede agravar el cansancio por calor. Compara mínimas previstas y pregunta si la climatización llega al dormitorio infantil, si hay ruido al abrir ventanas y si se puede oscurecer la habitación.",
+          "Lleva una capa ligera si el alojamiento está a mayor cota. El objetivo no es perseguir frío extremo, sino mantener un entorno estable y adaptable.",
+        ],
+      },
+      {
+        heading: "Cuándo cambiar o cancelar el plan",
+        paragraphs: [
+          "Replantea la salida si hay avisos meteorológicos adversos, humo o incendios próximos, tormentas intensas, acceso restringido o si algún miembro del grupo se encuentra enfermo. Una reserva no justifica asumir un riesgo evitable.",
+          "Busca tarifas con cancelación razonable cuando el viaje dependa especialmente del tiempo. Guarda una alternativa urbana con climatización o una salida más corta para no sentir que cancelar equivale a perder todo el fin de semana.",
+        ],
+      },
+    ],
+    takeaways: [
+      "El alojamiento y la noche importan tanto como el destino.",
+      "Planifica las horas centrales antes de reservar.",
+      "Verifica que el baño esté permitido y sea adecuado.",
+      "Acorta el viaje si reduce estrés y exposición.",
+      "Cambia el plan ante avisos o síntomas relacionados con el calor.",
+    ],
+    faqs: [
+      {
+        question: "¿Qué temperatura es segura para viajar con niños?",
+        answer:
+          "No hay una cifra única aplicable a todas las edades y situaciones. Sigue las recomendaciones sanitarias, limita la exposición, mantén hidratación y consulta a un profesional ante síntomas o condiciones médicas.",
+      },
+      {
+        question: "¿Es mejor montaña o playa con niños?",
+        answer:
+          "Depende de la previsión, la humedad, el trayecto y los servicios. La montaña puede ofrecer noches más frescas; la playa puede tener brisa y más infraestructura. Compara el conjunto.",
+      },
+      {
+        question: "¿Qué debe tener un alojamiento familiar en verano?",
+        answer:
+          "Sombra o buen aislamiento, ventilación o climatización efectiva, agua, un espacio para descansar en las horas centrales y una ubicación accesible para las necesidades de la familia.",
+      },
+    ],
+  },
+  {
+    slug: "escapadas-frescas-con-perro",
+    title: "Escapadas frescas con perro: cómo elegir destino y evitar el calor",
+    description:
+      "Guía para preparar un viaje de verano con perro: suelo, sombra, agua, horarios, alojamiento, coche y señales para detener la actividad.",
+    eyebrow: "Viajar con animales",
+    readingMinutes: 9,
+    published: "2026-07-27",
+    updated: "2026-07-27",
+    introduction: [
+      "Un destino que resulta agradable para una persona puede seguir siendo demasiado caluroso para un perro. El suelo, la falta de sombra, el esfuerzo y el transporte cambian la exposición. Además, raza, edad, peso y estado de salud modifican el riesgo.",
+      "Esta guía ayuda a filtrar lugares y alojamientos, pero no sustituye el consejo veterinario. Ante dudas sobre la tolerancia de tu animal o cualquier síntoma, consulta a un profesional.",
+    ],
+    sections: [
+      {
+        heading: "Busca una noche fresca y mañanas aprovechables",
+        paragraphs: [
+          "La mínima nocturna es útil porque determina si el animal podrá descansar y si habrá una ventana segura para pasear al amanecer. No confíes solo en una máxima inferior a la de tu ciudad: revisa el pronóstico horario y la humedad.",
+          "Los destinos con bosque o calles sombreadas ofrecen más alternativas, pero comprueba las normas locales. Algunos espacios protegidos exigen correa, restringen accesos o no admiten animales en determinadas áreas.",
+        ],
+      },
+      {
+        heading: "El alojamiento debe aceptar al perro de verdad",
+        paragraphs: [
+          "La etiqueta «admite mascotas» puede ocultar límites de peso, suplementos, número máximo o prohibición de dejar al animal solo. Pide las condiciones por escrito y confirma qué zonas puede utilizar.",
+          "Pregunta también por climatización, suelo, terraza segura y distancia a un paseo sombreado. Una habitación fresca a la que el perro no puede acceder no resuelve el viaje.",
+        ],
+        bullets: [
+          "Suplementos, fianza y límites de tamaño",
+          "Acceso del animal a dormitorio y zonas comunes",
+          "Climatización y posibilidad de ventilar con seguridad",
+          "Entorno inmediato para salidas cortas",
+        ],
+      },
+      {
+        heading: "Protege las patas y reduce el ejercicio",
+        paragraphs: [
+          "El asfalto y otras superficies pueden calentarse mucho más que el aire. Elige tierra o sombra, sal temprano y al anochecer, y reduce intensidad y duración. Una ruta habitual puede ser excesiva en condiciones cálidas.",
+          "Lleva agua y recipiente, pero no fuerces al animal a beber grandes cantidades de golpe. Aprende a reconocer jadeo desproporcionado, debilidad, desorientación o dificultad para caminar y detén el ejercicio si aparecen.",
+        ],
+      },
+      {
+        heading: "Haz seguro el viaje en coche",
+        paragraphs: [
+          "Planifica paradas, utiliza un sistema de retención adecuado y mantén ventilación. No dejes nunca al perro dentro del vehículo estacionado, aunque sea por pocos minutos, haya sombra o el día parezca moderado.",
+          "Lleva su documentación, medicación, contacto veterinario y una fotografía reciente. Localiza antes de salir una clínica cercana al destino, especialmente si el animal es mayor o tiene una condición previa.",
+        ],
+      },
+      {
+        heading: "Agua no siempre significa baño permitido",
+        paragraphs: [
+          "Antes de acercarte a un río, embalse o playa, revisa normativa, calidad del agua, corriente, accesos y presencia de algas o fauna peligrosa. No todos los perros saben nadar ni todos los puntos de baño son seguros.",
+          "Una zona arbolada y un paseo corto pueden ser mejores que una actividad acuática improvisada. La escapada debe adaptarse al animal, no al contenido que esperabas fotografiar.",
+        ],
+      },
+    ],
+    takeaways: [
+      "Compara la mínima y reserva los paseos para franjas seguras.",
+      "Confirma por escrito las condiciones del alojamiento.",
+      "Evita asfalto caliente y reduce la intensidad.",
+      "Nunca dejes al perro solo dentro del coche.",
+      "Consulta normas y seguridad antes de cualquier baño.",
+    ],
+    faqs: [
+      {
+        question: "¿Qué perros tienen más riesgo con el calor?",
+        answer:
+          "El riesgo puede ser mayor en animales braquicéfalos, mayores, cachorros, con sobrepeso o con ciertas enfermedades, pero cualquier perro puede sufrirlo. Consulta a tu veterinario según su caso.",
+      },
+      {
+        question: "¿Cómo sé si el suelo está demasiado caliente?",
+        answer:
+          "El suelo puede superar ampliamente la temperatura del aire. Evita superficies expuestas, prioriza sombra y tierra y, ante duda, cambia el paseo; una prueba informal no sustituye una evaluación prudente.",
+      },
+      {
+        question: "¿Puede quedarse el perro en el coche con el aire puesto?",
+        answer:
+          "No es una opción segura: el sistema puede fallar y la situación cambiar rápidamente. Organiza el viaje para que el animal nunca quede solo en el vehículo.",
+      },
+    ],
+  },
+];
+
+export function getGuide(slug: string) {
+  return guides.find((guide) => guide.slug === slug);
+}
+
+export function getFromCity(slug: string) {
+  return fromCities.find((city) => city.slug === slug);
+}
+
+export function getDestination(slug: string) {
+  return editorialDestinations.find(
+    (destination) => destination.slug === slug,
+  );
+}
+
+function toRadians(value: number) {
+  return (value * Math.PI) / 180;
+}
+
+export function distanceKm(
+  first: { lat: number; lng: number },
+  second: { lat: number; lng: number },
+) {
+  const earthRadiusKm = 6371;
+  const dLat = toRadians(second.lat - first.lat);
+  const dLng = toRadians(second.lng - first.lng);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRadians(first.lat)) *
+      Math.cos(toRadians(second.lat)) *
+      Math.sin(dLng / 2) ** 2;
+
+  return Math.round(
+    earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)),
+  );
+}
+
+export type DestinationCandidate = {
+  destination: EditorialDestination;
+  distance: number;
+  indicativeDifference: number;
+};
+
+export function getDestinationCandidates(
+  city: FromCity,
+  limit = 6,
+): DestinationCandidate[] {
+  return editorialDestinations
+    .map((destination) => ({
+      destination,
+      distance: distanceKm(city, destination),
+      indicativeDifference: Math.max(
+        0,
+        Math.round((city.referenceHigh - destination.summerHigh) * 10) / 10,
+      ),
+    }))
+    .filter(({ distance }) => distance <= 550)
+    .sort((left, right) => {
+      const leftScore =
+        left.distance / 85 +
+        left.destination.summerHigh * 0.65 -
+        left.destination.altitude / 700;
+      const rightScore =
+        right.distance / 85 +
+        right.destination.summerHigh * 0.65 -
+        right.destination.altitude / 700;
+      return leftScore - rightScore;
+    })
+    .slice(0, limit);
+}
+
+export function getNearbyDestinations(
+  destination: EditorialDestination,
+  limit = 3,
+): DestinationCandidate[] {
+  return editorialDestinations
+    .filter((candidate) => candidate.slug !== destination.slug)
+    .map((candidate) => ({
+      destination: candidate,
+      distance: distanceKm(destination, candidate),
+      indicativeDifference:
+        Math.round((destination.summerHigh - candidate.summerHigh) * 10) / 10,
+    }))
+    .sort((left, right) => left.distance - right.distance)
+    .slice(0, limit);
+}
