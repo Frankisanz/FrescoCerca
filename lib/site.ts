@@ -112,7 +112,7 @@ export function createWebPageJsonLd({
       name: siteConfig.name,
       url: absoluteUrl("/"),
     },
-    dateModified: "2026-07-27",
+    dateModified: "2026-07-29",
   };
 }
 

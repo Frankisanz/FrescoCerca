@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Dónde ver el eclipse solar de 2026: horizonte, tiempo y viaje",
+  title: "Dónde ver el eclipse solar de 2026 en España",
   description:
     "Prepara tu escapada para el eclipse total del 12 de agosto de 2026 en España: horizonte oeste, meteorología, seguridad ocular, tráfico y plan B.",
   alternates: { canonical: "/eclipse-2026" },

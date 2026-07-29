@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#153a43" />
+    <meta name="robots" content="noindex" />
+    <title>Sin conexión | FrescoCerca</title>
+    <style>
+      :root { color-scheme: light; font-family: system-ui, sans-serif; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; color: #153a43; background: #f8f4e8; }
+      main { width: min(100%, 620px); padding: clamp(28px, 7vw, 56px); border: 1px solid #153a4326; border-radius: 28px; background: #fffdf7; box-shadow: 0 22px 60px #153a4314; }
+      .mark { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 18px; color: #f6d56b; background: #153a43; font-size: 28px; font-weight: 800; }
+      h1 { margin: 28px 0 12px; font-size: clamp(2rem, 8vw, 3.5rem); line-height: 1; letter-spacing: -.04em; }
+      p { margin: 0; color: #365d64; font-size: 1.08rem; line-height: 1.7; }
+      a { display: inline-flex; margin-top: 28px; padding: 13px 18px; border-radius: 999px; color: white; background: #c5522f; font-weight: 750; text-decoration: none; }
+      a:focus-visible { outline: 3px solid #153a43; outline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="mark" aria-hidden="true">F°</div>
+      <h1>Ahora estás sin conexión</h1>
+      <p>
+        Las páginas que ya hayas consultado siguen disponibles. Cuando vuelva
+        la conexión podrás buscar nuevos destinos y actualizar sus datos.
+      </p>
+      <a href="/">Intentar volver al inicio</a>
+    </main>
+  </body>
+</html>

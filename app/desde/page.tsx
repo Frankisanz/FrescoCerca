@@ -10,7 +10,7 @@ import {
 
 const title = "Escapadas frescas desde tu ciudad";
 const description =
-  "Consulta guías de salida desde Madrid, Sevilla, Córdoba, Jaén, Úbeda, Murcia, Zaragoza, Toledo y Valladolid para comparar destinos menos calurosos.";
+  "Compara escapadas frescas desde 14 ciudades españolas con destinos, referencias estivales, distancia orientativa y consejos para elegir mejor.";
 
 export const metadata: Metadata = {
   title,

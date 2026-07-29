@@ -129,6 +129,38 @@ export default function SobreFrescoCercaPage() {
 
           <section
             className="about-page__section"
+            aria-labelledby="proceso-editorial"
+          >
+            <h2
+              id="proceso-editorial"
+              className="content-page__section-title text-2xl font-semibold tracking-tight text-current"
+            >
+              Cómo trabajamos cada ficha
+            </h2>
+            <p className="mt-3">
+              Cada destino combina referencias climáticas comparables con
+              información oficial del municipio, la comunidad autónoma, el
+              espacio natural o el servicio de transporte correspondiente. Las
+              fuentes concretas aparecen al final de cada ficha para que puedas
+              comprobarlas y ampliar la información.
+            </p>
+            <p className="mt-3">
+              El contenido se redacta para resolver decisiones reales: cuándo
+              conviene caminar, qué preguntar al alojamiento, cómo organizar el
+              acceso y qué condiciones hay que revisar antes de salir. No
+              publicamos posiciones patrocinadas ni alteramos el orden a cambio
+              de pagos.
+            </p>
+            <p className="mt-3">
+              Indicamos la fecha de revisión y distinguimos siempre entre una
+              referencia histórica, una estimación y una predicción. Si
+              detectas un dato desactualizado, puedes escribirnos y revisaremos
+              la fuente antes de corregirlo.
+            </p>
+          </section>
+
+          <section
+            className="about-page__section"
             aria-labelledby="version-inicial"
           >
             <h2

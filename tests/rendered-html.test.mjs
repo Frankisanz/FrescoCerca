@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 process.env.NEXT_PUBLIC_SITE_URL = "https://frescocerca.vercel.app";
@@ -49,6 +50,38 @@ test("renders the Barcelona escape guide with its own canonical URL", async () =
     html,
     /<link rel="canonical" href="https:\/\/frescocerca\.vercel\.app\/desde\/barcelona"/,
   );
+});
+
+test("exposes a complete installable PWA manifest and offline worker", async () => {
+  const response = await render("/manifest.webmanifest");
+  assert.equal(response.status, 200);
+
+  const manifest = await response.json();
+  assert.equal(manifest.display, "standalone");
+  assert.equal(manifest.scope, "/");
+  assert.equal(manifest.start_url, "/");
+  assert.ok(
+    manifest.icons.some(
+      (icon) => icon.src === "/icons/icon-192.png" && icon.sizes === "192x192",
+    ),
+  );
+  assert.ok(
+    manifest.icons.some(
+      (icon) => icon.src === "/icons/icon-512.png" && icon.sizes === "512x512",
+    ),
+  );
+  assert.ok(manifest.icons.some((icon) => icon.purpose === "maskable"));
+
+  const worker = await readFile(new URL("../public/sw.js", import.meta.url), "utf8");
+  assert.match(worker, /addEventListener\("install"/);
+  assert.match(worker, /addEventListener\("fetch"/);
+  assert.match(worker, /offline\.html/);
+
+  const icon = await readFile(
+    new URL("../public/icons/icon-512.png", import.meta.url),
+  );
+  assert.equal(icon.readUInt32BE(16), 512);
+  assert.equal(icon.readUInt32BE(20), 512);
 });
 
 test("renders an editorial route with a canonical URL", async () => {

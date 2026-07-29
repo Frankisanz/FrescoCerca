@@ -29,6 +29,8 @@ export type EditorialDestination = {
   altitude: number;
   summerHigh: number;
   summerLow: number;
+  summerHighRange: readonly [number, number];
+  summerLowRange: readonly [number, number];
   tags: string[];
   description: string;
   bestFor: string;
@@ -47,6 +49,8 @@ export const editorialDestinations: EditorialDestination[] =
     altitude: destination.altitude,
     summerHigh: destination.summerHigh,
     summerLow: destination.summerLow,
+    summerHighRange: destination.climaVerano.maximasC,
+    summerLowRange: destination.climaVerano.minimasC,
     tags: destination.etiquetas.map((tag) => DESTINATION_TAG_LABELS[tag]),
     description: destination.descripcion,
     bestFor: destination.mejorPara.join(" · "),
@@ -857,6 +861,7 @@ export type GuideSection = {
 export type Guide = {
   slug: string;
   title: string;
+  seoTitle: string;
   description: string;
   eyebrow: string;
   readingMinutes: number;
@@ -872,6 +877,7 @@ export const guides: Guide[] = [
   {
     slug: "como-elegir-destino-fresco",
     title: "Cómo elegir un destino fresco sin dejarte engañar por una cifra",
+    seoTitle: "Cómo elegir un destino fresco en verano",
     description:
       "Método práctico para comparar temperatura nocturna, altitud, humedad, alojamiento, ruta y previsión antes de reservar una escapada de verano.",
     eyebrow: "Guía de planificación",
@@ -959,6 +965,7 @@ export const guides: Guide[] = [
   {
     slug: "donde-hace-menos-calor-en-espana",
     title: "Dónde hace menos calor en España: cómo buscar por regiones y relieve",
+    seoTitle: "Dónde hace menos calor en España en verano",
     description:
       "Una explicación útil de las zonas españolas que suelen ofrecer veranos más suaves y de por qué ningún mapa climático sustituye el pronóstico de tus fechas.",
     eyebrow: "Clima y territorio",
@@ -1046,6 +1053,7 @@ export const guides: Guide[] = [
   {
     slug: "escapadas-frescas-con-ninos",
     title: "Escapadas frescas con niños: seguridad, descanso y planes que sí funcionan",
+    seoTitle: "Escapadas frescas con niños en verano",
     description:
       "Planifica una escapada familiar de verano valorando temperatura nocturna, sombra, agua, trayecto, alojamiento y alternativas para las horas de más calor.",
     eyebrow: "Viajes en familia",
@@ -1127,6 +1135,7 @@ export const guides: Guide[] = [
   {
     slug: "escapadas-frescas-con-perro",
     title: "Escapadas frescas con perro: cómo elegir destino y evitar el calor",
+    seoTitle: "Escapadas frescas con perro en verano",
     description:
       "Guía para preparar un viaje de verano con perro: suelo, sombra, agua, horarios, alojamiento, coche y señales para detener la actividad.",
     eyebrow: "Viajar con animales",

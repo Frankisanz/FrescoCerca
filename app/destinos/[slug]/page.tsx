@@ -5,12 +5,12 @@ import {
   absoluteUrl,
   breadcrumbJsonLd,
   editorialDestinations as destinations,
-  formatCelsius,
   getDestination,
   getNearbyDestinations,
   guides,
   serializeJsonLd,
 } from "@/lib/content";
+import { getDestinationEditorial } from "@/lib/destination-editorial";
 
 type DestinationPageProps = {
   params: Promise<{ slug: string }>;
@@ -22,29 +22,41 @@ export function generateStaticParams() {
   return destinations.map((destination) => ({ slug: destination.slug }));
 }
 
+function formatRange(range: readonly [number, number]) {
+  return `${range[0]}–${range[1]} °C`;
+}
+
 export async function generateMetadata({
   params,
 }: DestinationPageProps): Promise<Metadata> {
   const { slug } = await params;
   const destination = getDestination(slug);
+  const editorial = getDestinationEditorial(slug);
 
-  if (!destination) {
+  if (!destination || !editorial) {
     return { title: "Destino no encontrado" };
   }
 
-  const title = `${destination.name} en verano: clima, altitud y guía fresca`;
-  const description = `${destination.description} Consulta temperaturas estivales orientativas, altitud, ideas y qué comprobar antes de viajar.`;
   const url = absoluteUrl(`/destinos/${destination.slug}`);
 
   return {
-    title,
-    description,
+    title: editorial.seoTitle,
+    description: editorial.seoDescription,
     alternates: { canonical: url },
     openGraph: {
-      title,
-      description,
+      title: editorial.seoTitle,
+      description: editorial.seoDescription,
       url,
       type: "article",
+      publishedTime: "2026-07-27",
+      modifiedTime: "2026-07-29",
+      images: [absoluteUrl("/og.png")],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: editorial.seoTitle,
+      description: editorial.seoDescription,
+      images: [absoluteUrl("/og.png")],
     },
   };
 }
@@ -54,13 +66,19 @@ export default async function DestinationPage({
 }: DestinationPageProps) {
   const { slug } = await params;
   const destination = getDestination(slug);
+  const editorial = getDestinationEditorial(slug);
 
   if (!destination) {
     notFound();
   }
 
+  if (!editorial) {
+    throw new Error(`Falta contenido editorial para ${destination.slug}`);
+  }
+
   const nearby = getNearbyDestinations(destination);
   const destinationUrl = `/destinos/${destination.slug}`;
+  const destinationAbsoluteUrl = absoluteUrl(destinationUrl);
   const breadcrumb = breadcrumbJsonLd([
     { name: "Inicio", path: "/" },
     { name: "Destinos", path: "/destinos" },
@@ -69,9 +87,10 @@ export default async function DestinationPage({
   const placeJsonLd = {
     "@context": "https://schema.org",
     "@type": "TouristDestination",
+    "@id": `${destinationAbsoluteUrl}#destination`,
     name: destination.name,
-    description: destination.description,
-    url: absoluteUrl(destinationUrl),
+    description: editorial.localOverview,
+    url: destinationAbsoluteUrl,
     containedInPlace: {
       "@type": "AdministrativeArea",
       name: `${destination.province}, ${destination.region}`,
@@ -85,17 +104,42 @@ export default async function DestinationPage({
     additionalProperty: [
       {
         "@type": "PropertyValue",
-        name: "Máxima estival orientativa",
-        value: destination.summerHigh,
-        unitCode: "CEL",
+        name: "Máximas estivales orientativas",
+        value: formatRange(destination.summerHighRange),
       },
       {
         "@type": "PropertyValue",
-        name: "Mínima estival orientativa",
-        value: destination.summerLow,
-        unitCode: "CEL",
+        name: "Mínimas estivales orientativas",
+        value: formatRange(destination.summerLowRange),
       },
     ],
+  };
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: editorial.seoTitle,
+    description: editorial.seoDescription,
+    mainEntityOfPage: destinationAbsoluteUrl,
+    image: absoluteUrl("/og.png"),
+    inLanguage: "es-ES",
+    datePublished: "2026-07-27",
+    dateModified: "2026-07-29",
+    author: {
+      "@type": "Organization",
+      name: "FrescoCerca",
+      url: absoluteUrl("/sobre-frescocerca"),
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "FrescoCerca",
+      url: absoluteUrl("/"),
+      logo: {
+        "@type": "ImageObject",
+        url: absoluteUrl("/icons/icon-512.png"),
+      },
+    },
+    about: { "@id": `${destinationAbsoluteUrl}#destination` },
+    citation: editorial.sources.map((source) => source.url),
   };
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -106,41 +150,39 @@ export default async function DestinationPage({
         name: `¿Hace fresco en ${destination.name} durante el verano?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `Las referencias del dataset sitúan su máxima estival en torno a ${formatCelsius(destination.summerHigh)} y su mínima en ${formatCelsius(destination.summerLow)}. Son valores orientativos: el tiempo de una fecha concreta debe comprobarse en la predicción oficial.`,
+          text: `La referencia usada por FrescoCerca sitúa las máximas habituales entre ${formatRange(destination.summerHighRange)} y las mínimas entre ${formatRange(destination.summerLowRange)}. No es una predicción: comprueba AEMET para las fechas concretas.`,
         },
       },
       {
         "@type": "Question",
-        name: `¿A qué altitud está ${destination.name}?`,
+        name: `¿Qué debo mirar al reservar en ${destination.name}?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `${destination.name} se sitúa aproximadamente a ${destination.altitude.toLocaleString("es-ES")} metros según la referencia utilizada por FrescoCerca.`,
+          text: editorial.stayAdvice,
         },
       },
       {
         "@type": "Question",
-        name: `¿Qué debo revisar antes de viajar a ${destination.name}?`,
+        name: `¿Cómo organizar el día si hace calor en ${destination.name}?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Comprueba la previsión horaria, los avisos oficiales, la ruta, las condiciones del alojamiento y cualquier restricción local o de acceso a espacios naturales.",
+          text: `Prioriza ${editorial.dayPlan[0].title.toLowerCase()} por la mañana, ${editorial.dayPlan[1].title.toLowerCase()} durante las horas centrales y ${editorial.dayPlan[2].title.toLowerCase()} al final del día. Adapta siempre el plan a los avisos y condiciones reales.`,
         },
       },
     ],
   };
-
-  const altitudeContext =
-    destination.altitude >= 1200
-      ? "Su cota elevada la convierte en un candidato lógico cuando quieres comparar noches de montaña."
-      : destination.altitude >= 800
-        ? "Su altitud intermedia puede aportar contraste frente a ciudades más bajas, según el episodio meteorológico."
-        : "La altitud no debe ser el único criterio aquí: vegetación, orientación, viento y alojamiento ganan importancia.";
 
   return (
     <main id="contenido" className="content-shell destination-page">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: serializeJsonLd([breadcrumb, placeJsonLd, faqJsonLd]),
+          __html: serializeJsonLd([
+            breadcrumb,
+            placeJsonLd,
+            articleJsonLd,
+            faqJsonLd,
+          ]),
         }}
       />
 
@@ -157,28 +199,33 @@ export default async function DestinationPage({
           <p className="content-eyebrow">
             {destination.province} · {destination.region}
           </p>
-          <h1>{destination.name}: una escapada para comparar con calma</h1>
+          <h1>{editorial.seoTitle}</h1>
           <p className="content-lead">{destination.description}</p>
           <ul className="destination-tags" aria-label="Ideal para">
             {destination.tags.map((tag) => (
               <li key={tag}>{tag}</li>
             ))}
           </ul>
+          <p className="editorial-byline">
+            <Link href="/sobre-frescocerca">Equipo editorial FrescoCerca</Link>
+            <span aria-hidden="true">·</span>
+            <time dateTime="2026-07-29">Fuentes revisadas el 29 de julio de 2026</time>
+          </p>
         </div>
 
         <aside
           className="destination-summary"
           aria-label={`Datos orientativos de ${destination.name}`}
         >
-          <p>Referencia de verano</p>
+          <p>Referencia de julio y agosto</p>
           <dl className="destination-summary__metrics">
             <div>
-              <dt>Máxima</dt>
-              <dd>{formatCelsius(destination.summerHigh)}</dd>
+              <dt>Máximas</dt>
+              <dd>{formatRange(destination.summerHighRange)}</dd>
             </div>
             <div>
-              <dt>Mínima</dt>
-              <dd>{formatCelsius(destination.summerLow)}</dd>
+              <dt>Mínimas</dt>
+              <dd>{formatRange(destination.summerLowRange)}</dd>
             </div>
             <div>
               <dt>Altitud</dt>
@@ -186,78 +233,96 @@ export default async function DestinationPage({
             </div>
           </dl>
           <small>
-            Fuente y método:{" "}
-            <a href={destination.sourceUrl} rel="noreferrer" target="_blank">
-              {destination.sourceNote}
-            </a>
+            Referencias históricas redondeadas. Consulta la predicción antes de
+            reservar.
           </small>
         </aside>
       </header>
 
       <div className="content-notice" role="note">
-        <strong>No es una previsión meteorológica.</strong> Los datos ayudan a
-        descubrir destinos. Comprueba AEMET y los avisos oficiales para las
-        fechas concretas antes de reservar o desplazarte.
+        <strong>No es una previsión meteorológica.</strong> Esta ficha sirve para
+        comparar. Revisa AEMET, avisos, accesos y condiciones del alojamiento
+        para las fechas concretas.
       </div>
 
       <div className="destination-layout">
         <article className="article-body destination-article">
           <section className="article-section">
-            <p className="content-kicker">Por qué considerarlo</p>
-            <h2>Qué puede aportar {destination.name}</h2>
+            <p className="content-kicker">Contexto local</p>
+            <h2>Qué hace diferente a {destination.name}</h2>
+            <p>{editorial.localOverview}</p>
+            <p>{editorial.coolingFactors}</p>
             <p>
-              {altitudeContext} Su referencia estival de{" "}
-              {formatCelsius(destination.summerHigh)} durante el día y{" "}
-              {formatCelsius(destination.summerLow)} por la noche permite
-              situarlo frente a otros destinos del atlas, pero no predice un fin
-              de semana concreto.
-            </p>
-            <p>
-              {destination.bestFor} La utilidad real dependerá de la ubicación
-              exacta del alojamiento, su orientación y ventilación, además de
-              las condiciones previstas.
+              La referencia climática utilizada se mueve entre{" "}
+              {formatRange(destination.summerHighRange)} de máxima y{" "}
+              {formatRange(destination.summerLowRange)} de mínima. La noche, la
+              orientación del alojamiento y el episodio meteorológico concreto
+              importan más que una media aislada.
             </p>
           </section>
 
           <section className="article-section">
-            <p className="content-kicker">Plan inteligente</p>
-            <h2>Cómo organizar una estancia</h2>
-            <p>
-              Reserva las actividades al aire libre para primera hora y el
-              atardecer. Durante la franja central, deja margen para descansar,
-              visitar un espacio interior o cambiar el plan si la temperatura
-              sube más de lo esperado.
-            </p>
+            <p className="content-kicker">Un día con sentido</p>
+            <h2>Plan adaptado a las horas de calor</h2>
+            <ol className="destination-day-plan">
+              {editorial.dayPlan.map((item) => (
+                <li key={item.time}>
+                  <span>{item.time}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.detail}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section className="article-section">
+            <p className="content-kicker">Preparar la estancia</p>
+            <h2>Dónde dormir y cómo llegar</h2>
+            <div className="destination-practical-grid">
+              <div>
+                <h3>Al elegir alojamiento</h3>
+                <p>{editorial.stayAdvice}</p>
+              </div>
+              <div>
+                <h3>Acceso y desplazamientos</h3>
+                <p>{editorial.accessAdvice}</p>
+              </div>
+            </div>
+            <h3 className="destination-checks-title">Tres comprobaciones locales</h3>
             <ul className="article-checklist">
-              <li>Revisa la predicción horaria entre 48 y 72 horas antes.</li>
-              <li>
-                Pregunta al alojamiento por sombra, ventilación y climatización.
-              </li>
-              <li>
-                Comprueba acceso, aparcamiento y restricciones en espacios
-                naturales.
-              </li>
-              <li>
-                Lleva una alternativa por tormentas, viento, humo o calor
-                persistente.
-              </li>
+              {editorial.checks.map((check) => (
+                <li key={check}>{check}</li>
+              ))}
             </ul>
           </section>
 
-          <section className="article-section">
-            <p className="content-kicker">Interpretar los datos</p>
-            <h2>Qué significan estas temperaturas</h2>
+          <section className="article-section destination-sources">
+            <p className="content-kicker">Trazabilidad</p>
+            <h2>Fuentes utilizadas y límites</h2>
             <p>
-              Son referencias climáticas útiles para comparar lugares, no
-              observaciones en directo ni un pronóstico. Una media suaviza días
-              muy distintos y no refleja por sí sola humedad, viento o
-              acumulación de calor en el edificio donde dormirás.
+              La referencia térmica procede de valores climatológicos normales
+              de AEMET y se redondea para comparar destinos. Los planes y
+              accesos se contrastan con estas fuentes oficiales:
             </p>
-            <p>
-              Si buscas descansar, prioriza la mínima prevista de tus fechas.
-              Después compara la máxima, el trayecto y las condiciones del
-              alojamiento. Así evitas recorrer más kilómetros por una ventaja
-              térmica que quizá no exista ese día.
+            <ul>
+              <li>
+                <a href={destination.sourceUrl} rel="noreferrer" target="_blank">
+                  AEMET: valores climatológicos normales
+                </a>
+                <span>{destination.sourceNote}</span>
+              </li>
+              {editorial.sources.map((source) => (
+                <li key={source.url}>
+                  <a href={source.url} rel="noreferrer" target="_blank">
+                    {source.label}
+                  </a>
+                  <span>{source.supports}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="destination-sources__note">
+              Los horarios, aforos, permisos y accesos pueden cambiar. Confirma
+              siempre la información vigente en la fuente enlazada.
             </p>
           </section>
 
@@ -265,30 +330,24 @@ export default async function DestinationPage({
             <p className="content-kicker">Preguntas frecuentes</p>
             <h2>Antes de viajar a {destination.name}</h2>
             <details>
-              <summary>
-                ¿Hace fresco en {destination.name} durante el verano?
-              </summary>
+              <summary>¿Hace fresco en verano?</summary>
               <p>
-                Sus datos de referencia ayudan a considerarlo como candidato,
-                pero no garantizan el tiempo. Consulta siempre una previsión
-                cercana a la fecha.
+                Puede ofrecer una referencia más suave que una ciudad baja y
+                continental, especialmente por la noche, pero no hay garantía.
+                Compara la mínima prevista de tus fechas y los avisos oficiales.
               </p>
             </details>
             <details>
-              <summary>¿Qué importancia tiene su altitud?</summary>
+              <summary>¿Qué importancia tiene la altitud?</summary>
               <p>
-                Los {destination.altitude.toLocaleString("es-ES")} metros son un
-                indicador útil, no una garantía. Relieve, humedad, viento y
-                orientación también influyen.
+                Sus {destination.altitude.toLocaleString("es-ES")} metros ayudan
+                a interpretar el contexto, pero relieve, humedad, viento, sombra
+                y edificio también condicionan el descanso.
               </p>
             </details>
             <details>
-              <summary>¿Qué debo comprobar el día anterior?</summary>
-              <p>
-                Predicción horaria, avisos oficiales, estado de la carretera,
-                posibles restricciones y condiciones finales de entrada al
-                alojamiento.
-              </p>
+              <summary>¿Qué debo preguntar al alojamiento?</summary>
+              <p>{editorial.stayAdvice}</p>
             </details>
           </section>
         </article>
@@ -309,10 +368,17 @@ export default async function DestinationPage({
               alojamiento.
             </small>
           </div>
-          <Link
-            className="content-cta"
-            href={`/guias/${guides[0].slug}`}
-          >
+          <div className="destination-aside__panel">
+            <p className="content-kicker">Cómo se ha hecho</p>
+            <p>
+              Datos comparables, contexto local y enlaces a fuentes públicas,
+              sin posiciones patrocinadas.
+            </p>
+            <Link className="content-text-link" href="/metodologia">
+              Ver metodología <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+          <Link className="content-cta" href={`/guias/${guides[0].slug}`}>
             Aprende a comparar destinos
             <span aria-hidden="true">→</span>
           </Link>

@@ -10,7 +10,7 @@ import {
   serializeJsonLd,
 } from "@/lib/content";
 
-const title = "Destinos frescos de España para una escapada de verano";
+const title = "Destinos frescos de España para este verano";
 const description =
   "Explora pueblos y destinos de montaña con datos estivales de referencia, altitud y criterios prácticos para preparar una escapada con menos calor.";
 

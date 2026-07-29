@@ -8,6 +8,7 @@ import {
 } from "@/lib/site";
 import { SiteFooter } from "./components/site-footer";
 import { SiteHeader } from "./components/site-header";
+import { PwaControls } from "./components/pwa-controls";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -34,6 +35,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: SITE_URL,
+  manifest: "/manifest.webmanifest",
   applicationName: siteConfig.name,
   title: {
     default: `${siteConfig.name} — Escapadas para dormir más fresco`,
@@ -83,6 +85,24 @@ export const metadata: Metadata = {
     description,
     images: ["/og.png"],
   },
+  icons: {
+    icon: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      {
+        url: "/icons/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+  },
+  appleWebApp: {
+    capable: true,
+    title: siteConfig.shortName,
+    statusBarStyle: "black-translucent",
+  },
 };
 
 const organizationJsonLd = {
@@ -131,6 +151,7 @@ export default function RootLayout({
         <SiteHeader />
         {children}
         <SiteFooter />
+        <PwaControls />
       </body>
     </html>
   );

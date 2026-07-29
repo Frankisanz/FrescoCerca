@@ -31,7 +31,7 @@ export async function generateMetadata({
 
   const url = absoluteUrl(`/guias/${guide.slug}`);
   return {
-    title: guide.title,
+    title: guide.seoTitle,
     description: guide.description,
     alternates: { canonical: url },
     openGraph: {

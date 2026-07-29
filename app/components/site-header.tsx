@@ -3,7 +3,7 @@ import Link from "next/link";
 const navigation = [
   { href: "/#buscador", label: "Buscador" },
   { href: "/destinos", label: "Destinos" },
-  { href: "/desde/madrid", label: "Desde tu ciudad" },
+  { href: "/desde", label: "Desde tu ciudad" },
   { href: "/guias", label: "Guías" },
   { href: "/metodologia", label: "Cómo calculamos" },
 ];

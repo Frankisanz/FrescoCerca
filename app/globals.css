@@ -22,6 +22,65 @@
   --site-width: 1200px;
 }
 
+.pwa-controls {
+  position: fixed;
+  right: max(18px, env(safe-area-inset-right));
+  bottom: max(18px, env(safe-area-inset-bottom));
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: min(520px, calc(100vw - 36px));
+  padding: 12px;
+  border: 1px solid rgba(246, 213, 107, 0.35);
+  border-radius: 18px;
+  color: #fffdf7;
+  background: #153a43;
+  box-shadow: 0 18px 48px rgba(21, 58, 67, 0.28);
+}
+
+.pwa-controls p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.pwa-controls button {
+  flex: none;
+  min-height: 42px;
+  padding: 10px 15px;
+  border: 0;
+  border-radius: 999px;
+  color: #153a43;
+  background: #f6d56b;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.pwa-controls button:hover {
+  background: #ffe492;
+}
+
+.pwa-controls button:focus-visible {
+  outline: 3px solid #fffdf7;
+  outline-offset: 3px;
+}
+
+@media (max-width: 560px) {
+  .pwa-controls {
+    right: 14px;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    left: 14px;
+    flex-wrap: wrap;
+  }
+
+  .pwa-controls button {
+    flex: 1 1 auto;
+  }
+}
+
 @theme inline {
   --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
@@ -2426,6 +2485,130 @@ h3 {
   text-underline-offset: 3px;
 }
 
+.editorial-byline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 18px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+}
+
+.editorial-byline a {
+  font-weight: 720;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.destination-day-plan {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.destination-day-plan li {
+  min-height: 230px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+}
+
+.destination-day-plan li:nth-child(2) {
+  background: var(--sun-soft);
+}
+
+.destination-day-plan li:nth-child(3) {
+  background: var(--sky);
+}
+
+.destination-day-plan span {
+  color: var(--coral-deep);
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 720;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.destination-day-plan h3 {
+  margin: 30px 0 10px;
+  font-size: 1.08rem;
+  line-height: 1.25;
+}
+
+.destination-day-plan p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  line-height: 1.62;
+}
+
+.destination-practical-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.destination-practical-grid > div {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--cream);
+}
+
+.destination-practical-grid h3,
+.destination-checks-title {
+  margin: 0 0 12px;
+  font-size: 1.08rem;
+}
+
+.destination-practical-grid p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.destination-checks-title {
+  margin-top: 32px;
+}
+
+.destination-sources > ul {
+  display: grid;
+  gap: 10px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.destination-sources > ul li {
+  display: grid;
+  gap: 5px;
+  padding: 17px 19px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+}
+
+.destination-sources a {
+  color: var(--coral-deep);
+  font-weight: 760;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.destination-sources li span,
+.destination-sources__note {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.destination-sources__note {
+  margin-top: 18px;
+}
+
 .destination-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 285px;
@@ -3030,8 +3213,14 @@ h3 {
   .content-steps,
   .article-card-grid,
   .article-related-grid,
-  .destination-grid--compact {
+  .destination-grid--compact,
+  .destination-day-plan,
+  .destination-practical-grid {
     grid-template-columns: 1fr;
+  }
+
+  .destination-day-plan li {
+    min-height: 0;
   }
 
   .content-steps > li + li,

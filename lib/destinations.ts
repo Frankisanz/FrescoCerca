@@ -67,7 +67,7 @@ export const CLIMATE_METHODOLOGY = {
     "https://www.aemet.es/es/serviciosclimaticos/datosclimatologicos/valoresclimatologicos",
   metodologia:
     "Rangos editoriales redondeados para julio y agosto, contrastados con la altitud y la geografía local. Representan condiciones habituales, no récords ni una predicción para fechas concretas. Conviene consultar AEMET antes de viajar.",
-  revisado: "2026-07-27",
+  revisado: "2026-07-29",
 } as const;
 
 export const ORIGIN_CLIMATE_METHODOLOGY =

@@ -253,7 +253,7 @@ export default function MetodologiaPage() {
               .
             </p>
             <p className="mt-3 text-sm text-current/60">
-              Última actualización: 27 de julio de 2026.
+              Última actualización: 29 de julio de 2026.
             </p>
           </section>
         </section>
