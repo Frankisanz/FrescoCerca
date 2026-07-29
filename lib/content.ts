@@ -576,6 +576,276 @@ export const fromCities: FromCity[] = [
       },
     ],
   },
+  {
+    slug: "barcelona",
+    name: "Barcelona",
+    province: "Barcelona",
+    lat: 41.3874,
+    lng: 2.1686,
+    referenceHigh: 29,
+    title: "Escapadas frescas desde Barcelona",
+    description:
+      "Encuentra ideas de montaña e interior para dormir con más frescor desde Barcelona, comparando altitud, humedad, distancia y condiciones reales del alojamiento.",
+    introduction: [
+      "Desde Barcelona, la temperatura no cuenta toda la historia: la humedad y la isla de calor urbana pueden hacer que una mínima aparentemente moderada se sienta pesada. Por eso una escapada debe compararse por la noche prevista, la ventilación y el tipo de entorno, no solo por una máxima inferior.",
+      "Los candidatos de FrescoCerca ayudan a explorar cotas y paisajes distintos. Antes de reservar, contrasta el pronóstico horario, el estado de las carreteras y las condiciones de la habitación para las fechas exactas del viaje.",
+    ],
+    strategy:
+      "Para una sola noche, empieza por el interior cercano y evita convertir una diferencia térmica pequeña en un trayecto largo. Para un fin de semana, amplía la comparación hacia el Prepirineo y los valles de montaña, dando prioridad a la mínima nocturna prevista y a la ventilación del alojamiento.",
+    routeAdvice:
+      "Las rutas hacia zonas de montaña y costa interior pueden concentrar tráfico en viernes y domingo. Confirma el tiempo real de desplazamiento, reserva aparcamiento si es necesario y mantén un plan alternativo ante tormentas, restricciones de acceso o episodios de calor persistente.",
+    usefulFor: [
+      "Escapadas de una o dos noches desde el área metropolitana",
+      "Viajes que priorizan dormir mejor frente a una máxima aislada",
+      "Planes de bosque, pueblo y paseos al atardecer",
+      "Alojamientos rurales con sombra y ventilación comprobable",
+    ],
+    areaIdeas: [
+      {
+        name: "Montseny y sierras prelitorales",
+        reason:
+          "Permiten comparar una salida relativamente próxima, verificando siempre la cota exacta y la temperatura nocturna prevista.",
+      },
+      {
+        name: "Prepirineo catalán",
+        reason:
+          "Amplía la búsqueda para estancias de más de una noche con perfiles de altitud y valle muy diferentes.",
+      },
+      {
+        name: "Interior de Tarragona y Lleida",
+        reason:
+          "Ofrece alternativas que conviene valorar por viento, sequedad, sombra y acceso, no solo por distancia.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿Dónde dormir con menos calor cerca de Barcelona?",
+        answer:
+          "Las zonas elevadas e interiores son buenos puntos de partida, pero no existe una respuesta fija. Compara la mínima prevista, la humedad, la ventilación y el alojamiento concreto antes de decidir.",
+      },
+      {
+        question: "¿La montaña garantiza una noche fresca?",
+        answer:
+          "No. Un valle poco ventilado, una habitación orientada al oeste o varios días de calor acumulado pueden reducir el alivio. La montaña sirve para descubrir candidatos, no para prometer el tiempo.",
+      },
+    ],
+  },
+  {
+    slug: "valencia",
+    name: "Valencia",
+    province: "Valencia",
+    lat: 39.4699,
+    lng: -0.3763,
+    referenceHigh: 31,
+    title: "Escapadas frescas desde Valencia",
+    description:
+      "Compara sierras e interior desde Valencia para preparar una escapada con noches potencialmente más llevaderas, sin confundir brisa, humedad y altitud.",
+    introduction: [
+      "Desde Valencia, una tarde de costa puede resultar agradable por la brisa, pero eso no asegura una noche cómoda si la humedad se mantiene alta. Al buscar descanso, comparar la mínima y la sensación de humedad suele ser más útil que perseguir una máxima menor.",
+      "Esta guía propone direcciones de interior y montaña como punto de partida. Las referencias climáticas ordenan posibilidades, mientras que la previsión oficial, la ruta real y el alojamiento deciden si la escapada encaja en tus fechas.",
+    ],
+    strategy:
+      "Empieza por sierras valencianas y castellonenses si quieres contener el trayecto. Para dos o tres noches, compara también altiplanos de Teruel y la Serranía de Cuenca; la clave es valorar si la ventaja nocturna prevista compensa las horas de carretera.",
+    routeAdvice:
+      "En verano conviene salir pronto y revisar los últimos kilómetros hacia casas rurales o áreas de baño autorizadas. Comprueba avisos, restricciones por incendio, disponibilidad de sombra y condiciones de acceso antes de depender de un plan al aire libre.",
+    usefulFor: [
+      "Escapadas de interior desde la costa mediterránea",
+      "Comparar humedad nocturna y mayor altitud",
+      "Fines de semana de pueblo, bosque y baño autorizado",
+      "Viajes en familia con alternativas para las horas centrales",
+    ],
+    areaIdeas: [
+      {
+        name: "Sierras del interior valenciano",
+        reason:
+          "Permiten crear una lista corta sin asumir que cualquier localidad de interior tendrá el mismo comportamiento nocturno.",
+      },
+      {
+        name: "Interior de Castellón",
+        reason:
+          "Aporta cotas y orientaciones distintas para comparar con la previsión de un episodio concreto.",
+      },
+      {
+        name: "Teruel y Serranía de Cuenca",
+        reason:
+          "Son alternativas para una estancia más larga cuando se busca ampliar el radio y priorizar el descanso.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿La costa de Valencia es siempre la opción más fresca?",
+        answer:
+          "No necesariamente para dormir. La brisa puede ayudar durante la tarde, pero una humedad alta y una mínima elevada pueden restar confort. Compara la previsión horaria completa.",
+      },
+      {
+        question: "¿Qué debo preguntar al alojamiento?",
+        answer:
+          "Pregunta por sombra de tarde, ventilación cruzada, ventilador o climatización, acceso y condiciones de piscina o zonas interiores. Esos detalles cambian mucho la experiencia en una noche cálida.",
+      },
+    ],
+  },
+  {
+    slug: "malaga",
+    name: "Málaga",
+    province: "Málaga",
+    lat: 36.7213,
+    lng: -4.4214,
+    referenceHigh: 30,
+    title: "Escapadas frescas desde Málaga",
+    description:
+      "Explora escapadas de sierra desde Málaga para comparar noches, altitud, humedad y accesos antes de reservar una salida de verano.",
+    introduction: [
+      "Málaga permite elegir entre costa e interior, pero la decisión no se reduce a alejarse del mar. La costa puede ofrecer brisa, mientras que la humedad mantiene algunas noches cálidas; la montaña puede bajar la temperatura, aunque exige comprobar carretera, cota y exposición.",
+      "FrescoCerca presenta candidatos para orientar una búsqueda responsable. Los datos son referencias de verano y no sustituyen la predicción oficial ni las condiciones concretas de un alojamiento.",
+    ],
+    strategy:
+      "Para una salida breve, compara sierras próximas sin dar por hecho que el pueblo más cercano será el que mejor se duerma. Para un fin de semana completo, amplía hacia cotas altas de Granada o Cádiz y elige según mínima prevista, servicios y tiempo de ruta.",
+    routeAdvice:
+      "La carretera de montaña puede ser lenta aunque el destino parezca cercano en el mapa. Revisa avisos de calor, viento e incendio, evita iniciar rutas a mediodía y confirma si el alojamiento cuenta con sombra, ventilación y aparcamiento adecuado.",
+    usefulFor: [
+      "Escapadas de montaña desde la Costa del Sol",
+      "Planes tranquilos de dos noches con alojamiento rural",
+      "Comparar brisa costera y frescor de altitud",
+      "Viajes con mascota fuera de las horas de máxima insolación",
+    ],
+    areaIdeas: [
+      {
+        name: "Sierras del interior malagueño",
+        reason:
+          "Son un primer radio razonable para comparar altitud, sombra y la previsión nocturna de cada localidad.",
+      },
+      {
+        name: "Serranía de Ronda y Grazalema",
+        reason:
+          "Aportan relieves y orientaciones distintas para una estancia de fin de semana, siempre con comprobación previa del acceso.",
+      },
+      {
+        name: "Alpujarras y sierras granadinas",
+        reason:
+          "Permiten ampliar la búsqueda hacia cotas más altas cuando la duración del viaje justifica más carretera.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿Montaña o costa para escapar del calor desde Málaga?",
+        answer:
+          "Depende de la previsión, la humedad y el objetivo del viaje. Compara la mínima nocturna, el viento y las condiciones de la habitación; no hay una dirección ganadora todo el verano.",
+      },
+      {
+        question: "¿Es suficiente con elegir un alojamiento rural?",
+        answer:
+          "No. Revisa orientación, ventilación, sombra y acceso. Un alojamiento rural puede seguir acumulando calor si recibe sol de tarde o no permite crear corriente durante la noche.",
+      },
+    ],
+  },
+  {
+    slug: "bilbao",
+    name: "Bilbao",
+    province: "Bizkaia",
+    lat: 43.263,
+    lng: -2.935,
+    referenceHigh: 26,
+    title: "Escapadas frescas desde Bilbao",
+    description:
+      "Prepara una escapada desde Bilbao comparando valles, costa y montaña con atención a humedad, lluvia, altitud y el tipo de plan que buscas.",
+    introduction: [
+      "En Bilbao, buscar una escapada más fresca no siempre significa buscar una temperatura mucho menor. En muchos episodios el factor decisivo es la humedad, la ventilación, la lluvia o la posibilidad de encontrar actividades cómodas si el tiempo cambia.",
+      "Esta guía sirve para ordenar alternativas de montaña y costa con honestidad. Las referencias estivales ayudan a descubrir destinos, pero la decisión debe apoyarse en la previsión horaria, los avisos y las condiciones de carretera del día de salida.",
+    ],
+    strategy:
+      "Si buscas una noche tranquila, compara primero la mínima, la humedad y la ventilación del alojamiento. Para una escapada más activa, añade previsión de lluvia, visibilidad y estado de senderos; una cota mayor no compensa si el plan depende de un acceso o una actividad que no será segura.",
+    routeAdvice:
+      "El tiempo puede cambiar rápido entre costa, valle y montaña. Lleva capa impermeable incluso en verano, confirma aparcamiento y normas de los espacios naturales, y prepara una alternativa interior si la lluvia o la niebla cambian el plan.",
+    usefulFor: [
+      "Escapadas de naturaleza de una o dos noches",
+      "Planes que equilibran frescor y previsión de lluvia",
+      "Paseos tempranos y gastronomía de pueblo",
+      "Viajes con alternativas bajo techo",
+    ],
+    areaIdeas: [
+      {
+        name: "Montes y parques del entorno vasco",
+        reason:
+          "Permiten comparar proximidad, exposición y servicios sin depender de un trayecto largo.",
+      },
+      {
+        name: "Valles de Cantabria y norte de Burgos",
+        reason:
+          "Amplían la búsqueda con perfiles de humedad, relieve y alojamiento diferentes.",
+      },
+      {
+        name: "Navarra atlántica y prepirenaica",
+        reason:
+          "Ofrece una dirección alternativa para estancias más largas, revisando siempre el tiempo de ruta y la meteorología local.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿Hace falta escapar del calor desde Bilbao?",
+        answer:
+          "Depende del episodio. Esta guía no presupone una ola de calor: ayuda a comparar descanso, humedad, lluvia y tipo de plan cuando quieres salir de la ciudad.",
+      },
+      {
+        question: "¿Qué pesa más: altitud o humedad?",
+        answer:
+          "Ambas importan. La altitud puede ayudar a enfriar, pero una noche húmeda o un alojamiento mal ventilado puede reducir el confort. Consulta la previsión horaria y las condiciones reales de la habitación.",
+      },
+    ],
+  },
+  {
+    slug: "granada",
+    name: "Granada",
+    province: "Granada",
+    lat: 37.1773,
+    lng: -3.5986,
+    referenceHigh: 35,
+    title: "Escapadas frescas desde Granada",
+    description:
+      "Compara escapadas de altitud desde Granada para buscar noches más llevaderas con datos orientativos, acceso real y una planificación responsable.",
+    introduction: [
+      "Granada tiene cerca cotas muy diferentes, pero esa ventaja exige elegir con precisión. Un cambio de altitud puede ofrecer una noche más llevadera, aunque el relieve, la orientación y el tipo de edificio siguen influyendo mucho en cómo se descansa.",
+      "Las propuestas de FrescoCerca sirven para descubrir candidatos, no para sustituir una previsión. Confirma la temperatura nocturna, los avisos, la carretera y las condiciones del alojamiento antes de convertir una referencia climática en una reserva.",
+    ],
+    strategy:
+      "Para una noche, compara primero áreas elevadas con acceso sencillo y evita sumar carretera por una diferencia marginal. Para dos o tres noches, amplía hacia las Alpujarras, el altiplano y sierras vecinas, valorando tanto la mínima prevista como la exposición solar del alojamiento.",
+    routeAdvice:
+      "En rutas de montaña, el último tramo puede requerir más tiempo del que sugiere el mapa. Lleva agua, protección solar y una capa ligera para el atardecer; consulta restricciones, tormentas y riesgo de incendio antes de iniciar actividades fuera de zonas urbanas.",
+    usefulFor: [
+      "Dormir a mayor cota sin alejarse demasiado",
+      "Escapadas rurales de una o dos noches",
+      "Planes de amanecer, sombra y paseo al atardecer",
+      "Viajes que comparan varias sierras antes de reservar",
+    ],
+    areaIdeas: [
+      {
+        name: "Alpujarras y laderas de Sierra Nevada",
+        reason:
+          "Aportan variedad de altitudes y orientaciones; conviene comparar el municipio y el alojamiento exactos.",
+      },
+      {
+        name: "Altiplano granadino",
+        reason:
+          "Permite valorar otra dirección para una estancia tranquila, con atención al viento y al descenso nocturno.",
+      },
+      {
+        name: "Sierras de Jaén y Albacete",
+        reason:
+          "Amplían el radio para un fin de semana cuando la previsión favorece una alternativa fuera de la provincia.",
+      },
+    ],
+    faqs: [
+      {
+        question: "¿A qué zona debo ir desde Granada para dormir más fresco?",
+        answer:
+          "No hay una respuesta permanente. Las zonas de mayor cota son buenos candidatos, pero la elección final depende de la mínima prevista, la exposición, el acceso y la ventilación del alojamiento.",
+      },
+      {
+        question: "¿La altitud elimina el riesgo de calor?",
+        answer:
+          "No. Puede haber sol intenso, poca sombra y cambios rápidos de tiempo. Planifica agua, horarios y descanso, y consulta siempre los avisos oficiales para tus fechas.",
+      },
+    ],
+  },
 ];
 
 export type GuideSection = {

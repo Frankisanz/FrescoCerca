@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+process.env.NEXT_PUBLIC_SITE_URL = "https://frescocerca.vercel.app";
+
 async function render(pathname = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${pathname}`);
@@ -35,6 +37,18 @@ test("renders the Spanish, indexable FrescoCerca homepage", async () => {
   assert.match(html, /application\/ld\+json/i);
   assert.match(html, /og:image/i);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/i);
+});
+
+test("renders the Barcelona escape guide with its own canonical URL", async () => {
+  const response = await render("/desde/barcelona");
+  const html = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(html, /Escapadas frescas desde Barcelona/);
+  assert.match(
+    html,
+    /<link rel="canonical" href="https:\/\/frescocerca\.vercel\.app\/desde\/barcelona"/,
+  );
 });
 
 test("renders an editorial route with a canonical URL", async () => {

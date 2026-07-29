@@ -14,7 +14,7 @@ const staticRoutes = [
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date("2026-07-27T00:00:00+02:00");
+  const lastModified = new Date("2026-07-29T00:00:00+02:00");
   const destinationRoutes: MetadataRoute.Sitemap = [
     {
       url: absoluteUrl("/destinos"),

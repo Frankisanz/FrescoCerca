@@ -89,7 +89,7 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
       url: absoluteUrl("/"),
     },
     datePublished: "2026-07-27",
-    dateModified: "2026-07-27",
+    dateModified: "2026-07-29",
   };
 
   return (
