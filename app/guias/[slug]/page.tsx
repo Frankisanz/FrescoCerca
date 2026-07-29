@@ -15,6 +15,15 @@ type GuidePageProps = {
 
 export const dynamicParams = false;
 
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${value}T12:00:00Z`));
+}
+
 export function generateStaticParams() {
   return guides.map((guide) => ({ slug: guide.slug }));
 }
@@ -41,6 +50,13 @@ export async function generateMetadata({
       type: "article",
       publishedTime: guide.published,
       modifiedTime: guide.updated,
+      images: [absoluteUrl("/og.png")],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: guide.title,
+      description: guide.description,
+      images: [absoluteUrl("/og.png")],
     },
   };
 }
@@ -62,21 +78,24 @@ export default async function GuidePage({ params }: GuidePageProps) {
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
+    "@id": `${absoluteUrl(path)}#article`,
     headline: guide.title,
     description: guide.description,
+    url: absoluteUrl(path),
     mainEntityOfPage: absoluteUrl(path),
+    image: absoluteUrl("/og.png"),
+    inLanguage: "es-ES",
     datePublished: guide.published,
     dateModified: guide.updated,
     author: {
       "@type": "Organization",
       name: "FrescoCerca",
-      url: absoluteUrl("/"),
+      url: absoluteUrl("/sobre-frescocerca"),
     },
     publisher: {
-      "@type": "Organization",
-      name: "FrescoCerca",
-      url: absoluteUrl("/"),
+      "@id": `${absoluteUrl("/")}#organization`,
     },
+    citation: guide.sources?.map((source) => source.url),
   };
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -120,9 +139,18 @@ export default async function GuidePage({ params }: GuidePageProps) {
             <span>{guide.readingMinutes} minutos de lectura</span>
             <span>
               Actualizada el{" "}
-              <time dateTime={guide.updated}>27 de julio de 2026</time>
+              <time dateTime={guide.updated}>{formatDate(guide.updated)}</time>
             </span>
           </div>
+          <p className="editorial-byline">
+            <Link href="/sobre-frescocerca">Equipo editorial FrescoCerca</Link>
+            <span aria-hidden="true">·</span>
+            <span>
+              {guide.sources?.length
+                ? "Fuentes oficiales enlazadas al final"
+                : "Revisión editorial y metodología transparente"}
+            </span>
+          </p>
         </header>
 
         <div className="article-layout">
@@ -169,6 +197,31 @@ export default async function GuidePage({ params }: GuidePageProps) {
                 </details>
               ))}
             </section>
+
+            {guide.sources?.length ? (
+              <section className="article-section destination-sources">
+                <p className="content-kicker">Fuentes y límites</p>
+                <h2>Información oficial consultada</h2>
+                <p>
+                  Estas fuentes respaldan el método de la guía. Los horarios,
+                  servicios, avisos y condiciones meteorológicas pueden cambiar:
+                  comprueba siempre la información vigente para tus fechas.
+                </p>
+                <ul>
+                  {guide.sources.map((source) => (
+                    <li key={source.url}>
+                      <a href={source.url} rel="noreferrer" target="_blank">
+                        {source.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+                <p className="destination-sources__note">
+                  FrescoCerca no ofrece una previsión ni garantiza que un destino
+                  vaya a resultar fresco durante un viaje concreto.
+                </p>
+              </section>
+            ) : null}
           </div>
 
           <aside className="article-aside">

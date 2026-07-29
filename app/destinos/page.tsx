@@ -3,9 +3,9 @@ import Link from "next/link";
 import {
   absoluteUrl,
   breadcrumbJsonLd,
-  editorialDestinations as destinations,
   formatCelsius,
   fromCities,
+  getRankedDestinations,
   guides,
   serializeJsonLd,
 } from "@/lib/content";
@@ -27,12 +27,7 @@ export const metadata: Metadata = {
 };
 
 export default function DestinationsIndexPage() {
-  const sortedDestinations = [...destinations].sort(
-    (left, right) =>
-      left.summerHigh - right.summerHigh ||
-      right.altitude - left.altitude ||
-      left.name.localeCompare(right.name, "es"),
-  );
+  const rankedDestinations = getRankedDestinations();
 
   const breadcrumb = breadcrumbJsonLd([
     { name: "Inicio", path: "/" },
@@ -43,8 +38,8 @@ export default function DestinationsIndexPage() {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "Destinos frescos de España",
-    numberOfItems: sortedDestinations.length,
-    itemListElement: sortedDestinations.map((destination, index) => ({
+    numberOfItems: rankedDestinations.length,
+    itemListElement: rankedDestinations.map((destination, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: destination.name,
@@ -85,18 +80,18 @@ export default function DestinationsIndexPage() {
       <section className="content-section" aria-labelledby="listado-destinos">
         <div className="content-section-heading">
           <div>
-            <p className="content-kicker">{sortedDestinations.length} lugares</p>
+            <p className="content-kicker">{rankedDestinations.length} lugares</p>
             <h2 id="listado-destinos">Compara antes de elegir</h2>
           </div>
           <p>
-            La lista comienza por las máximas estivales de referencia más
-            contenidas. La distancia y la previsión de tus fechas pueden cambiar
-            por completo cuál es la mejor opción.
+            La lista prioriza el alivio nocturno y después el diurno. La
+            distancia y la previsión de tus fechas pueden cambiar por completo
+            cuál es la mejor opción.
           </p>
         </div>
 
         <div className="destination-grid">
-          {sortedDestinations.map((destination) => (
+          {rankedDestinations.map((destination) => (
             <article className="destination-card" key={destination.slug}>
               <div className="destination-card__heading">
                 <div>

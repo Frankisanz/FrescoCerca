@@ -1,8 +1,15 @@
 import {
   destinations as destinationRecords,
   DESTINATION_TAG_LABELS,
+  originCities as originRecords,
   type Destination as DestinationRecord,
 } from "@/lib/destinations";
+import {
+  calculateDirectDistanceKm,
+  CITY_GUIDE_MAX_TRAVEL_HOURS,
+  rankDestinations,
+} from "@/lib/destination-ranking";
+import { growthGuides } from "@/lib/guide-growth";
 import {
   absoluteUrl,
   serializeJsonLd,
@@ -57,6 +64,10 @@ export const editorialDestinations: EditorialDestination[] =
     sourceNote: `${destination.fuente}. ${destination.metodologia}`,
     sourceUrl: destination.fuenteUrl,
   }));
+
+const editorialDestinationBySlug = new Map(
+  editorialDestinations.map((destination) => [destination.slug, destination]),
+);
 
 export type BreadcrumbItem = {
   name: string;
@@ -871,9 +882,10 @@ export type Guide = {
   sections: GuideSection[];
   takeaways: string[];
   faqs: { question: string; answer: string }[];
+  sources?: { title: string; url: string }[];
 };
 
-export const guides: Guide[] = [
+const foundationGuides: Guide[] = [
   {
     slug: "como-elegir-destino-fresco",
     title: "Cómo elegir un destino fresco sin dejarte engañar por una cifra",
@@ -1216,6 +1228,8 @@ export const guides: Guide[] = [
   },
 ];
 
+export const guides: Guide[] = [...growthGuides, ...foundationGuides];
+
 export function getGuide(slug: string) {
   return guides.find((guide) => guide.slug === slug);
 }
@@ -1230,31 +1244,18 @@ export function getDestination(slug: string) {
   );
 }
 
-function toRadians(value: number) {
-  return (value * Math.PI) / 180;
-}
-
 export function distanceKm(
   first: { lat: number; lng: number },
   second: { lat: number; lng: number },
 ) {
-  const earthRadiusKm = 6371;
-  const dLat = toRadians(second.lat - first.lat);
-  const dLng = toRadians(second.lng - first.lng);
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRadians(first.lat)) *
-      Math.cos(toRadians(second.lat)) *
-      Math.sin(dLng / 2) ** 2;
-
-  return Math.round(
-    earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)),
-  );
+  return Math.round(calculateDirectDistanceKm(first, second));
 }
 
 export type DestinationCandidate = {
   destination: EditorialDestination;
   distance: number;
+  estimatedRoadDistanceKm: number;
+  estimatedTravelHours: number;
   indicativeDifference: number;
 };
 
@@ -1262,34 +1263,64 @@ export function getDestinationCandidates(
   city: FromCity,
   limit = 6,
 ): DestinationCandidate[] {
-  return editorialDestinations
-    .map((destination) => ({
-      destination,
-      distance: distanceKm(city, destination),
-      indicativeDifference: Math.max(
-        0,
-        Math.round((city.referenceHigh - destination.summerHigh) * 10) / 10,
-      ),
-    }))
-    .filter(({ distance }) => distance <= 550)
-    .sort((left, right) => {
-      const leftScore =
-        left.distance / 85 +
-        left.destination.summerHigh * 0.65 -
-        left.destination.altitude / 700;
-      const rightScore =
-        right.distance / 85 +
-        right.destination.summerHigh * 0.65 -
-        right.destination.altitude / 700;
-      return leftScore - rightScore;
-    })
-    .slice(0, limit);
+  const origin = originRecords.find((candidate) => candidate.slug === city.slug);
+
+  if (!origin) {
+    return [];
+  }
+
+  return rankDestinations(destinationRecords, {
+    origin,
+    maxTravelHours: CITY_GUIDE_MAX_TRAVEL_HOURS,
+    limit,
+    diversify: true,
+  }).flatMap((candidate) => {
+    const destination = editorialDestinationBySlug.get(
+      candidate.destination.slug,
+    );
+
+    if (!destination) {
+      return [];
+    }
+
+    return [
+      {
+        destination,
+        distance: Math.round(candidate.directDistanceKm),
+        estimatedRoadDistanceKm: Math.round(
+          candidate.estimatedRoadDistanceKm,
+        ),
+        estimatedTravelHours: candidate.estimatedTravelHours,
+        indicativeDifference: Math.max(
+          0,
+          Math.round(candidate.nighttimeReliefC * 10) / 10,
+        ),
+      },
+    ];
+  });
 }
+
+export function getRankedDestinations() {
+  return rankDestinations(destinationRecords, {
+    limit: destinationRecords.length,
+  }).flatMap((candidate) => {
+    const destination = editorialDestinationBySlug.get(
+      candidate.destination.slug,
+    );
+    return destination ? [destination] : [];
+  });
+}
+
+export type NearbyDestinationCandidate = {
+  destination: EditorialDestination;
+  distance: number;
+  indicativeDifference: number;
+};
 
 export function getNearbyDestinations(
   destination: EditorialDestination,
   limit = 3,
-): DestinationCandidate[] {
+): NearbyDestinationCandidate[] {
   return editorialDestinations
     .filter((candidate) => candidate.slug !== destination.slug)
     .map((candidate) => ({

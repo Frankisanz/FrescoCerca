@@ -67,11 +67,20 @@ export function createPageMetadata({
       siteName: siteConfig.name,
       title,
       description,
+      images: [
+        {
+          url: absoluteUrl("/og.png"),
+          width: 1200,
+          height: 630,
+          alt: `${siteConfig.name}: escapadas para dormir más fresco`,
+        },
+      ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title,
       description,
+      images: [absoluteUrl("/og.png")],
     },
     robots: noIndex
       ? {

@@ -118,20 +118,20 @@ export default function FromCitiesIndexPage() {
           <li>
             <span>01</span>
             <div>
-              <h3>Acotamos la distancia</h3>
+              <h3>Acotamos el tiempo estimado</h3>
               <p>
-                Usamos distancia en línea recta para ordenar posibilidades, no
-                como sustituto de un navegador.
+                Descartamos opciones que superan unas cinco horas orientativas
+                por carretera. No sustituye la ruta de un navegador.
               </p>
             </div>
           </li>
           <li>
             <span>02</span>
             <div>
-              <h3>Comparamos referencias</h3>
+              <h3>Priorizamos el descanso nocturno</h3>
               <p>
-                Altitud y temperaturas estivales ayudan a descubrir candidatos
-                con perfiles diferentes.
+                Comparamos primero el alivio nocturno, después el diurno, la
+                cercanía y la variedad regional.
               </p>
             </div>
           </li>

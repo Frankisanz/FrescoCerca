@@ -7,10 +7,12 @@ import {
   DESTINATIONS,
   DESTINATION_TAG_LABELS,
   ORIGIN_CITIES,
-  type Coordinates,
-  type Destination,
   type DestinationTag,
 } from "@/lib/destinations";
+import {
+  formatTravelTime,
+  rankDestinations,
+} from "@/lib/destination-ranking";
 
 const TRAVEL_HOUR_OPTIONS = [3, 4, 5, 6] as const;
 const RESULT_LIMIT_OPTIONS = [3, 4, 5, 6] as const;
@@ -18,139 +20,6 @@ const PREFERENCE_OPTIONS = Object.entries(DESTINATION_TAG_LABELS) as [
   DestinationTag,
   string,
 ][];
-
-type RankedDestination = {
-  destination: Destination;
-  directDistanceKm: number;
-  estimatedRoadDistanceKm: number;
-  estimatedTravelHours: number;
-  typicalMaximumC: number;
-  typicalNightMinimumC: number;
-  daytimeReliefC: number;
-  nighttimeReliefC: number;
-  preferenceMatches: number;
-  score: number;
-};
-
-function toRadians(value: number) {
-  return (value * Math.PI) / 180;
-}
-
-function haversineDistanceKm(from: Coordinates, to: Coordinates) {
-  const earthRadiusKm = 6_371;
-  const latitudeDelta = toRadians(to.lat - from.lat);
-  const longitudeDelta = toRadians(to.lng - from.lng);
-  const fromLatitude = toRadians(from.lat);
-  const toLatitude = toRadians(to.lat);
-
-  const haversine =
-    Math.sin(latitudeDelta / 2) ** 2 +
-    Math.cos(fromLatitude) *
-      Math.cos(toLatitude) *
-      Math.sin(longitudeDelta / 2) ** 2;
-
-  return (
-    2 *
-    earthRadiusKm *
-    Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine))
-  );
-}
-
-function estimateRoadTrip(directDistanceKm: number) {
-  // A transparent planning estimate, not a routing result: 24% extra distance,
-  // 12 km for urban access and an average effective speed of 78 km/h.
-  const estimatedRoadDistanceKm = directDistanceKm * 1.24 + 12;
-  const estimatedTravelHours = estimatedRoadDistanceKm / 78 + 0.15;
-
-  return { estimatedRoadDistanceKm, estimatedTravelHours };
-}
-
-function rangeMidpoint(range: readonly [number, number]) {
-  return (range[0] + range[1]) / 2;
-}
-
-function formatTravelTime(hours: number) {
-  const totalMinutes = Math.round((hours * 60) / 5) * 5;
-  const wholeHours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  if (wholeHours === 0) {
-    return `${minutes} min`;
-  }
-
-  if (minutes === 0) {
-    return `${wholeHours} h`;
-  }
-
-  return `${wholeHours} h ${minutes} min`;
-}
-
-function rankDestinations(
-  originSlug: string,
-  maxTravelHours: number,
-  preferences: readonly DestinationTag[],
-) {
-  const origin = ORIGIN_CITIES.find((city) => city.slug === originSlug);
-
-  if (!origin) {
-    return [];
-  }
-
-  return DESTINATIONS.map<RankedDestination>((destination) => {
-    const directDistanceKm = haversineDistanceKm(
-      origin.coordenadas,
-      destination.coordenadas,
-    );
-    const { estimatedRoadDistanceKm, estimatedTravelHours } =
-      estimateRoadTrip(directDistanceKm);
-    const typicalMaximumC = rangeMidpoint(
-      destination.climaVerano.maximasC,
-    );
-    const typicalNightMinimumC = rangeMidpoint(
-      destination.climaVerano.minimasC,
-    );
-    const daytimeReliefC =
-      origin.maximaEstivalOrientativaC - typicalMaximumC;
-    const nighttimeReliefC =
-      origin.minimaNocturnaEstivalOrientativaC - typicalNightMinimumC;
-    const preferenceMatches = preferences.filter((preference) =>
-      destination.etiquetas.includes(preference),
-    ).length;
-    const preferenceCoverage =
-      preferences.length === 0 ? 1 : preferenceMatches / preferences.length;
-
-    // Sleeping comfort has more weight than daytime relief. Both inputs are
-    // rounded climate references rather than a forecast for a specific date.
-    const score =
-      preferenceCoverage * 24 +
-      preferenceMatches * 5 +
-      nighttimeReliefC * 4.8 +
-      daytimeReliefC * 1.8 -
-      estimatedTravelHours * 2.4 +
-      Math.min(destination.altitudM / 400, 4);
-
-    return {
-      destination,
-      directDistanceKm,
-      estimatedRoadDistanceKm,
-      estimatedTravelHours,
-      typicalMaximumC,
-      typicalNightMinimumC,
-      daytimeReliefC,
-      nighttimeReliefC,
-      preferenceMatches,
-      score,
-    };
-  })
-    .filter((result) => result.estimatedTravelHours <= maxTravelHours)
-    .sort((left, right) => {
-      if (right.score !== left.score) {
-        return right.score - left.score;
-      }
-
-      return left.estimatedTravelHours - right.estimatedTravelHours;
-    });
-}
 
 export function EscapeFinder() {
   const [originSlug, setOriginSlug] = useState("madrid");
@@ -162,11 +31,21 @@ export function EscapeFinder() {
   const selectedOrigin = ORIGIN_CITIES.find(
     (origin) => origin.slug === originSlug,
   );
-  const rankedDestinations = useMemo(
-    () => rankDestinations(originSlug, maxTravelHours, preferences),
-    [originSlug, maxTravelHours, preferences],
-  );
-  const visibleDestinations = rankedDestinations.slice(0, resultLimit);
+  const visibleDestinations = useMemo(() => {
+    const origin = ORIGIN_CITIES.find((city) => city.slug === originSlug);
+
+    if (!origin) {
+      return [];
+    }
+
+    return rankDestinations(DESTINATIONS, {
+      origin,
+      maxTravelHours,
+      preferences,
+      limit: resultLimit,
+      diversify: true,
+    });
+  }, [originSlug, maxTravelHours, preferences, resultLimit]);
 
   function togglePreference(preference: DestinationTag) {
     setPreferences((current) =>

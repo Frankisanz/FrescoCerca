@@ -32,7 +32,7 @@ const collections = [
     kicker: "Para una noche",
     title: "Bosque, baño y vuelta a casa",
     text: "Opciones sencillas para improvisar cuando la ciudad no baja de 25 °C.",
-    href: "/guias/como-elegir-destino-fresco",
+    href: "/guias/pueblos-con-noches-frescas-en-verano",
     className: "collection-forest",
   },
   {
@@ -265,27 +265,27 @@ export default function Home() {
             </Link>
           </div>
           <div className="article-list">
-            <Link href="/guias/donde-hace-menos-calor-en-espana">
+            <Link href="/guias/pueblos-con-noches-frescas-en-verano">
               <span className="article-index">01</span>
               <span>
-                <small>Clima y geografía · 8 min</small>
-                <strong>Dónde hace menos calor en España en verano</strong>
+                <small>Descanso nocturno · 11 min</small>
+                <strong>Pueblos con noches frescas: cómo elegir bien</strong>
               </span>
               <span aria-hidden="true">↗</span>
             </Link>
-            <Link href="/guias/como-elegir-destino-fresco">
+            <Link href="/guias/escapadas-frescas-sin-coche">
               <span className="article-index">02</span>
               <span>
-                <small>Método práctico · 6 min</small>
-                <strong>Cómo elegir un destino fresco sin equivocarte</strong>
+                <small>Transporte público · 12 min</small>
+                <strong>Cómo preparar una escapada fresca sin coche</strong>
               </span>
               <span aria-hidden="true">↗</span>
             </Link>
-            <Link href="/guias/escapadas-frescas-con-ninos">
+            <Link href="/guias/escapadas-frescas-de-fin-de-semana">
               <span className="article-index">03</span>
               <span>
-                <small>Viajar en familia · 7 min</small>
-                <strong>Escapadas frescas con niños: qué comprobar</strong>
+                <small>48 horas · 12 min</small>
+                <strong>Escapadas frescas de fin de semana</strong>
               </span>
               <span aria-hidden="true">↗</span>
             </Link>

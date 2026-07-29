@@ -113,7 +113,12 @@ const organizationJsonLd = {
       "@id": `${absoluteUrl("/")}#organization`,
       name: siteConfig.name,
       url: absoluteUrl("/"),
-      logo: absoluteUrl("/og.png"),
+      logo: {
+        "@type": "ImageObject",
+        url: absoluteUrl("/icons/icon-512.png"),
+        width: 512,
+        height: 512,
+      },
       email: siteConfig.legal.email,
     },
     {

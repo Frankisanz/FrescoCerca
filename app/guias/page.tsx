@@ -7,9 +7,9 @@ import {
   serializeJsonLd,
 } from "@/lib/content";
 
-const title = "Guías para viajar con menos calor";
+const title = "Guías de escapadas frescas y noches con menos calor";
 const description =
-  "Guías originales de FrescoCerca para elegir destino, entender el clima de España y preparar escapadas responsables con niños o con perro.";
+  "Guías para encontrar noches frescas, preparar escapadas sin coche o de fin de semana y elegir destinos responsables con niños o con perro.";
 
 export const metadata: Metadata = {
   title,
@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     description,
     url: absoluteUrl("/guias"),
     type: "website",
+    images: [absoluteUrl("/og.png")],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: [absoluteUrl("/og.png")],
   },
 };
 

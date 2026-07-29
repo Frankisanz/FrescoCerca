@@ -10,6 +10,10 @@ import {
   getFromCity,
   serializeJsonLd,
 } from "@/lib/content";
+import {
+  CITY_GUIDE_MAX_TRAVEL_HOURS,
+  formatTravelTime,
+} from "@/lib/destination-ranking";
 
 type FromCityPageProps = {
   params: Promise<{ slug: string }>;
@@ -128,20 +132,27 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
             <h2 id="candidatos">Destinos para comparar desde {city.name}</h2>
           </div>
           <p>
-            Distancias aproximadas en línea recta. No equivalen a kilómetros ni
-            tiempos por carretera.
+            Solo mostramos opciones dentro de unas{" "}
+            {CITY_GUIDE_MAX_TRAVEL_HOURS} horas estimadas. Confirma siempre la
+            ruta y el tráfico reales.
           </p>
         </div>
 
         {candidates.length > 0 ? (
           <div className="destination-grid">
             {candidates.map(
-              ({ destination, distance, indicativeDifference }) => (
+              ({
+                destination,
+                distance,
+                estimatedTravelHours,
+                indicativeDifference,
+              }) => (
                 <article className="destination-card" key={destination.slug}>
                   <div className="destination-card__heading">
                     <div>
                       <p className="destination-card__region">
-                        {destination.province} · aprox. {distance} km
+                        {destination.province} · aprox. {distance} km en línea
+                        recta
                       </p>
                       <h3>
                         <Link href={`/destinos/${destination.slug}`}>
@@ -156,11 +167,11 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
                   <p>{destination.description}</p>
                   <dl className="destination-metrics">
                     <div>
-                      <dt>Máxima estival</dt>
-                      <dd>{formatCelsius(destination.summerHigh)}</dd>
+                      <dt>Trayecto estimado</dt>
+                      <dd>{formatTravelTime(estimatedTravelHours)}</dd>
                     </div>
                     <div>
-                      <dt>Diferencia indicativa</dt>
+                      <dt>Alivio nocturno</dt>
                       <dd>
                         {indicativeDifference > 0
                           ? `−${formatCelsius(indicativeDifference)}`

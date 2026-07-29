@@ -7,7 +7,6 @@ import {
   editorialDestinations as destinations,
   getDestination,
   getNearbyDestinations,
-  guides,
   serializeJsonLd,
 } from "@/lib/content";
 import { getDestinationEditorial } from "@/lib/destination-editorial";
@@ -378,8 +377,11 @@ export default async function DestinationPage({
               Ver metodología <span aria-hidden="true">→</span>
             </Link>
           </div>
-          <Link className="content-cta" href={`/guias/${guides[0].slug}`}>
-            Aprende a comparar destinos
+          <Link
+            className="content-cta"
+            href="/guias/pueblos-con-noches-frescas-en-verano"
+          >
+            Cómo encontrar una noche más fresca
             <span aria-hidden="true">→</span>
           </Link>
         </aside>
