@@ -11,17 +11,20 @@ const title = "Aviso legal";
 const description =
   "Información sobre la titularidad, las condiciones de uso y la responsabilidad de FrescoCerca.";
 const path = "/aviso-legal";
+const lastModified = "2026-07-27";
 
 export const metadata: Metadata = createPageMetadata({
   title,
   description,
   path,
+  noIndex: true,
 });
 
 const jsonLd = createWebPageJsonLd({
   title,
   description,
   path,
+  modifiedTime: lastModified,
 });
 
 export default function AvisoLegalPage() {
@@ -199,7 +202,8 @@ export default function AvisoLegalPage() {
           </section>
 
           <footer className="legal-page__footer border-t border-current/10 pt-6 text-sm text-current/60">
-            Última actualización: 27 de julio de 2026.
+            Última actualización:{" "}
+            <time dateTime={lastModified}>27 de julio de 2026</time>.
           </footer>
         </section>
       </article>

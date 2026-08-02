@@ -109,6 +109,52 @@ test("renders an editorial route with a canonical URL", async () => {
   assert.match(html, /Instituto Geográfico Nacional/i);
 });
 
+test("renders the editorial identity, Article schema and visual on key routes", async () => {
+  for (const pathname of [
+    "/eclipse-2026",
+    "/destinos",
+    "/desde",
+    "/desde/barcelona",
+  ]) {
+    const response = await render(pathname);
+    const html = await response.text();
+
+    assert.equal(response.status, 200, pathname);
+    assert.match(html, /Francisco Javier Sanchez Fuentes/, pathname);
+    assert.match(html, /"@type":"Article"/, pathname);
+    assert.match(
+      html,
+      /frescocerca-refugio-editorial-og\.jpg/,
+      pathname,
+    );
+    assert.match(html, /frescocerca-refugio-editorial\.webp/, pathname);
+    assert.match(html, /Ilustraci.n editorial\./, pathname);
+  }
+});
+
+test("publishes an honest visible responsible-editor profile", async () => {
+  const response = await render("/sobre-frescocerca");
+  const html = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(html, /id="responsable-editorial"/);
+  assert.match(html, /Francisco Javier Sanchez Fuentes/);
+  assert.match(html, /no atribuye titulaciones/i);
+  assert.match(html, /"@type":"Person"/);
+});
+
+test("destination articles use the central person author and editorial image", async () => {
+  const response = await render("/destinos/capileira");
+  const html = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(html, /Francisco Javier Sanchez Fuentes/);
+  assert.match(html, /frescocerca-refugio-editorial-og\.jpg/);
+  assert.match(html, /"author":\{"@type":"Person"/);
+  assert.match(html, /"publisher":\{"@type":"Organization"/);
+  assert.doesNotMatch(html, /Equipo editorial FrescoCerca/);
+});
+
 test("publishes the new high-intent guides with sources and rich metadata", async () => {
   const slugs = [
     "pueblos-con-noches-frescas-en-verano",
@@ -130,7 +176,10 @@ test("publishes the new high-intent guides with sources and rich metadata", asyn
     assert.match(html, /Información oficial consultada/);
     assert.match(html, /FAQPage/);
     assert.match(html, /property="og:image"/);
-    assert.match(html, /Equipo editorial FrescoCerca/);
+    assert.match(html, /frescocerca-refugio-editorial-og\.jpg/);
+    assert.match(html, /Francisco Javier Sanchez Fuentes/);
+    assert.match(html, /"author":\{"@type":"Person"/);
+    assert.doesNotMatch(html, /Equipo editorial FrescoCerca/);
     assert.match(html, /29 de julio de 2026/);
   }
 });
@@ -143,6 +192,32 @@ test("includes every new guide in the sitemap", async () => {
   assert.match(xml, /guias\/pueblos-con-noches-frescas-en-verano/);
   assert.match(xml, /guias\/escapadas-frescas-sin-coche/);
   assert.match(xml, /guias\/escapadas-frescas-de-fin-de-semana/);
+});
+
+test("keeps legal information available but out of the search index", async () => {
+  for (const pathname of ["/aviso-legal", "/privacidad", "/cookies"]) {
+    const response = await render(pathname);
+    const html = await response.text();
+
+    assert.equal(response.status, 200, pathname);
+    assert.match(
+      html,
+      /<meta name="robots" content="noindex, follow"\s*\/?>/i,
+      pathname,
+    );
+    assert.match(html, /"dateModified":"2026-07-27"/, pathname);
+    assert.match(html, /<time dateTime="2026-07-27">/i, pathname);
+  }
+});
+
+test("excludes noindex legal routes from the sitemap", async () => {
+  const response = await render("/sitemap.xml");
+  const xml = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.doesNotMatch(xml, /<loc>[^<]*\/aviso-legal<\/loc>/);
+  assert.doesNotMatch(xml, /<loc>[^<]*\/privacidad<\/loc>/);
+  assert.doesNotMatch(xml, /<loc>[^<]*\/cookies<\/loc>/);
 });
 
 test("shared ranking prioritizes nighttime relief over a cooler daytime maximum", () => {

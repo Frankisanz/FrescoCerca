@@ -11,17 +11,20 @@ const title = "Política de cookies";
 const description =
   "Información sobre el uso actual de cookies y tecnologías similares en FrescoCerca.";
 const path = "/cookies";
+const lastModified = "2026-07-27";
 
 export const metadata: Metadata = createPageMetadata({
   title,
   description,
   path,
+  noIndex: true,
 });
 
 const jsonLd = createWebPageJsonLd({
   title,
   description,
   path,
+  modifiedTime: lastModified,
 });
 
 export default function CookiesPage() {
@@ -190,7 +193,9 @@ export default function CookiesPage() {
           </section>
 
           <footer className="cookies-page__footer border-t border-current/10 pt-6 text-sm text-current/60">
-            Última actualización: 27 de julio de 2026. Para dudas, escribe a{" "}
+            Última actualización:{" "}
+            <time dateTime={lastModified}>27 de julio de 2026</time>. Para dudas,
+            escribe a{" "}
             <a
               href={`mailto:${siteConfig.legal.email}`}
               className="font-semibold underline underline-offset-4"

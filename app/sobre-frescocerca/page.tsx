@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
+  absoluteUrl,
   createPageMetadata,
   createWebPageJsonLd,
   serializeJsonLd,
@@ -29,13 +30,26 @@ const jsonLd = {
     }),
     {
       "@type": "Organization",
+      "@id": `${absoluteUrl("/")}#organization`,
       name: siteConfig.name,
       url: siteConfig.url.toString(),
       founder: {
         "@type": "Person",
-        name: siteConfig.legal.owner,
+        "@id": `${absoluteUrl(siteConfig.editorial.profilePath)}#responsable-editorial`,
       },
       email: siteConfig.legal.email,
+    },
+    {
+      "@type": "Person",
+      "@id": `${absoluteUrl(siteConfig.editorial.profilePath)}#responsable-editorial`,
+      name: siteConfig.editorial.responsible,
+      url: absoluteUrl(siteConfig.editorial.profilePath),
+      jobTitle: `Responsable editorial de ${siteConfig.name}`,
+      worksFor: {
+        "@id": `${absoluteUrl("/")}#organization`,
+      },
+      description:
+        "Responsable de revisar, documentar y corregir el contenido editorial de FrescoCerca.",
     },
   ],
 };
@@ -125,6 +139,40 @@ export default function SobreFrescoCercaPage() {
                 </span>
               </li>
             </ul>
+          </section>
+
+          <section
+            id="responsable-editorial"
+            className="about-page__section rounded-3xl border border-current/10 p-6 sm:p-8"
+            aria-labelledby="perfil-responsable"
+          >
+            <p className="content-page__eyebrow text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700 dark:text-emerald-300">
+              Responsable editorial
+            </p>
+            <h2
+              id="perfil-responsable"
+              className="content-page__section-title mt-2 text-2xl font-semibold tracking-tight text-current"
+            >
+              {siteConfig.editorial.responsible}
+            </h2>
+            <p className="mt-3">
+              Revisa la claridad, la trazabilidad de las fuentes y las
+              correcciones de FrescoCerca. El perfil identifica a la persona
+              responsable del contenido; no atribuye titulaciones,
+              certificaciones ni experiencia profesional que no estén
+              documentadas.
+            </p>
+            <p className="mt-3">
+              Para proponer una corrección, escribe a{" "}
+              <a
+                href={`mailto:${siteConfig.legal.email}`}
+                className="font-semibold text-emerald-700 underline decoration-emerald-700/30 underline-offset-4 hover:decoration-current dark:text-emerald-300"
+              >
+                {siteConfig.legal.email}
+              </a>{" "}
+              e indica la URL, el dato que debe revisarse y, si es posible, la
+              fuente original.
+            </p>
           </section>
 
           <section

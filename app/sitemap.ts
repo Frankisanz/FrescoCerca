@@ -1,30 +1,73 @@
 import type { MetadataRoute } from "next";
 import { fromCities, guides } from "@/lib/content";
-import { destinations } from "@/lib/destinations";
-import { absoluteUrl } from "@/lib/site";
+import { CLIMATE_METHODOLOGY, destinations } from "@/lib/destinations";
+import { absoluteUrl, EDITORIAL_REVIEW_DATE } from "@/lib/site";
+
+const MANUAL_CONTENT_DATES = {
+  coreEditorial: EDITORIAL_REVIEW_DATE,
+  eclipse: EDITORIAL_REVIEW_DATE,
+  about: EDITORIAL_REVIEW_DATE,
+} as const;
+
+function latestIsoDate(values: readonly string[]) {
+  return values.reduce((latest, value) => (value > latest ? value : latest));
+}
+
+function toLastModified(value: string) {
+  return new Date(`${value}T00:00:00+02:00`);
+}
+
+const latestGuideUpdate = latestIsoDate(
+  guides.map((guide) => guide.updated),
+);
+const latestSiteUpdate = latestIsoDate([
+  MANUAL_CONTENT_DATES.coreEditorial,
+  CLIMATE_METHODOLOGY.revisado,
+  latestGuideUpdate,
+]);
 
 const staticRoutes = [
-  "/",
-  "/eclipse-2026",
-  "/metodologia",
-  "/sobre-frescocerca",
-  "/aviso-legal",
-  "/privacidad",
-  "/cookies",
+  {
+    path: "/",
+    lastModified: latestSiteUpdate,
+    changeFrequency: "weekly",
+    priority: 1,
+  },
+  {
+    path: "/eclipse-2026",
+    lastModified: MANUAL_CONTENT_DATES.eclipse,
+    changeFrequency: "monthly",
+    priority: 0.9,
+  },
+  {
+    path: "/metodologia",
+    lastModified: EDITORIAL_REVIEW_DATE,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  },
+  {
+    path: "/sobre-frescocerca",
+    lastModified: MANUAL_CONTENT_DATES.about,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  },
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date("2026-07-29T00:00:00+02:00");
+  const destinationLastModified = toLastModified(EDITORIAL_REVIEW_DATE);
+  const editorialLastModified = toLastModified(
+    MANUAL_CONTENT_DATES.coreEditorial,
+  );
   const destinationRoutes: MetadataRoute.Sitemap = [
     {
       url: absoluteUrl("/destinos"),
-      lastModified,
+      lastModified: destinationLastModified,
       changeFrequency: "weekly",
       priority: 0.8,
     },
     ...destinations.map((destination) => ({
       url: absoluteUrl(`/destinos/${destination.slug}`),
-      lastModified,
+      lastModified: destinationLastModified,
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
@@ -32,19 +75,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const editorialRoutes: MetadataRoute.Sitemap = [
     {
       url: absoluteUrl("/desde"),
-      lastModified,
+      lastModified: editorialLastModified,
       changeFrequency: "weekly",
       priority: 0.8,
     },
     ...fromCities.map((city) => ({
       url: absoluteUrl(`/desde/${city.slug}`),
-      lastModified,
+      lastModified: editorialLastModified,
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
     {
       url: absoluteUrl("/guias"),
-      lastModified,
+      lastModified: toLastModified(latestGuideUpdate),
       changeFrequency: "weekly",
       priority: 0.8,
     },
@@ -57,19 +100,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   return [
-    ...staticRoutes.map((path) => ({
-      url: absoluteUrl(path),
-      lastModified,
-      changeFrequency:
-        path === "/" ? ("weekly" as const) : ("monthly" as const),
-      priority:
-        path === "/"
-          ? 1
-          : path === "/eclipse-2026"
-            ? 0.9
-            : path === "/metodologia"
-              ? 0.7
-              : 0.5,
+    ...staticRoutes.map((route) => ({
+      url: absoluteUrl(route.path),
+      lastModified: toLastModified(route.lastModified),
+      changeFrequency: route.changeFrequency,
+      priority: route.priority,
     })),
     ...destinationRoutes,
     ...editorialRoutes,

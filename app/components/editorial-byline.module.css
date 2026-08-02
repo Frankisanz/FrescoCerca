@@ -1,0 +1,63 @@
+.byline {
+  display: grid;
+  gap: 0.4rem;
+  margin: 1.5rem 0 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-radius: 1rem;
+  background: color-mix(in srgb, #ffffff 82%, #d8eee8);
+  color: #173f42;
+}
+
+.identity,
+.details,
+.traceability {
+  margin: 0;
+}
+
+.identity {
+  font-size: 0.95rem;
+}
+
+.identity span {
+  display: block;
+  margin-bottom: 0.18rem;
+  color: #527073;
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.identity a,
+.traceability a {
+  color: inherit;
+  font-weight: 750;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.details,
+.traceability {
+  color: #526b6d;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+@media (min-width: 720px) {
+  .byline {
+    grid-template-columns: minmax(15rem, 0.8fr) minmax(18rem, 1.2fr);
+    column-gap: 1.25rem;
+    align-items: start;
+  }
+
+  .details {
+    text-align: right;
+  }
+
+  .traceability {
+    grid-column: 1 / -1;
+    padding-top: 0.5rem;
+    border-top: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+  }
+}

@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { EditorialByline } from "@/app/components/editorial-byline";
 import {
-  absoluteUrl,
   breadcrumbJsonLd,
   getGuide,
   guides,
   serializeJsonLd,
 } from "@/lib/content";
+import {
+  createArticleJsonLd,
+  createArticleMetadata,
+} from "@/lib/site";
 
 type GuidePageProps = {
   params: Promise<{ slug: string }>;
@@ -38,27 +42,13 @@ export async function generateMetadata({
     return { title: "Guía no encontrada" };
   }
 
-  const url = absoluteUrl(`/guias/${guide.slug}`);
-  return {
+  return createArticleMetadata({
     title: guide.seoTitle,
     description: guide.description,
-    alternates: { canonical: url },
-    openGraph: {
-      title: guide.title,
-      description: guide.description,
-      url,
-      type: "article",
-      publishedTime: guide.published,
-      modifiedTime: guide.updated,
-      images: [absoluteUrl("/og.png")],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: guide.title,
-      description: guide.description,
-      images: [absoluteUrl("/og.png")],
-    },
-  };
+    path: `/guias/${guide.slug}`,
+    publishedTime: guide.published,
+    modifiedTime: guide.updated,
+  });
 }
 
 export default async function GuidePage({ params }: GuidePageProps) {
@@ -69,34 +59,21 @@ export default async function GuidePage({ params }: GuidePageProps) {
     notFound();
   }
 
-  const path = `/guias/${guide.slug}`;
+  const path = `/guias/${guide.slug}` as `/guias/${string}`;
   const breadcrumb = breadcrumbJsonLd([
     { name: "Inicio", path: "/" },
     { name: "Guías", path: "/guias" },
     { name: guide.title, path },
   ]);
-  const articleJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "@id": `${absoluteUrl(path)}#article`,
-    headline: guide.title,
+  const articleJsonLd = createArticleJsonLd({
+    title: guide.title,
     description: guide.description,
-    url: absoluteUrl(path),
-    mainEntityOfPage: absoluteUrl(path),
-    image: absoluteUrl("/og.png"),
-    inLanguage: "es-ES",
-    datePublished: guide.published,
-    dateModified: guide.updated,
-    author: {
-      "@type": "Organization",
-      name: "FrescoCerca",
-      url: absoluteUrl("/sobre-frescocerca"),
-    },
-    publisher: {
-      "@id": `${absoluteUrl("/")}#organization`,
-    },
-    citation: guide.sources?.map((source) => source.url),
-  };
+    path,
+    publishedTime: guide.published,
+    modifiedTime: guide.updated,
+    articleSection: guide.eyebrow,
+    citations: guide.sources?.map((source) => source.url) ?? [],
+  });
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -142,15 +119,14 @@ export default async function GuidePage({ params }: GuidePageProps) {
               <time dateTime={guide.updated}>{formatDate(guide.updated)}</time>
             </span>
           </div>
-          <p className="editorial-byline">
-            <Link href="/sobre-frescocerca">Equipo editorial FrescoCerca</Link>
-            <span aria-hidden="true">·</span>
-            <span>
-              {guide.sources?.length
-                ? "Fuentes oficiales enlazadas al final"
-                : "Revisión editorial y metodología transparente"}
-            </span>
-          </p>
+          <EditorialByline
+            reviewedOn={formatDate(guide.updated)}
+            sourceSummary={
+              guide.sources?.length
+                ? "Las fuentes consultadas se identifican y enlazan al final de la guía."
+                : "La revisión sigue la metodología editorial pública de FrescoCerca."
+            }
+          />
         </header>
 
         <div className="article-layout">

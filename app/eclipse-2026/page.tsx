@@ -1,18 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { EditorialByline } from "@/app/components/editorial-byline";
+import { EditorialHeroImage } from "@/app/components/editorial-hero-image";
+import {
+  createArticleJsonLd,
+  createArticleMetadata,
+  serializeJsonLd,
+} from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Dónde ver el eclipse solar de 2026 en España",
-  description:
-    "Prepara tu escapada para el eclipse total del 12 de agosto de 2026 en España: horizonte oeste, meteorología, seguridad ocular, tráfico y plan B.",
-  alternates: { canonical: "/eclipse-2026" },
-  openGraph: {
-    title: "Dónde ver el eclipse de 2026 y cómo preparar la escapada",
-    description:
-      "Una guía práctica para elegir lugar, revisar el cielo y viajar con seguridad el 12 de agosto.",
-    url: "/eclipse-2026",
-  },
-};
+const title = "Dónde ver el eclipse solar de 2026 en España";
+const description =
+  "Prepara tu escapada para el eclipse total del 12 de agosto de 2026 en España: horizonte oeste, meteorología, seguridad ocular, tráfico y plan B.";
+const path = "/eclipse-2026" as const;
+
+const officialSources = [
+  "https://eclipses.ign.es/",
+  "https://eclipses.ign.es/como-observar-eclipses.html",
+  "https://www.aemet.es/es/eltiempo/prediccion",
+  "https://www.dgt.es/conoce-el-estado-del-trafico/",
+] as const;
+
+export const metadata: Metadata = createArticleMetadata({
+  title,
+  description,
+  path,
+});
 
 const checklist = [
   {
@@ -57,35 +69,30 @@ const eclipseFaq = [
 ];
 
 export default function Eclipse2026Page() {
-  const jsonLd = {
+  const articleJsonLd = createArticleJsonLd({
+    title,
+    description,
+    path,
+    articleSection: "Eclipse solar de 2026",
+    citations: officialSources,
+  });
+  const faqJsonLd = {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Article",
-        headline:
-          "Dónde ver el eclipse solar de 2026: horizonte, tiempo y viaje",
-        datePublished: "2026-07-27",
-        dateModified: "2026-07-27",
-        inLanguage: "es-ES",
-        author: { "@type": "Organization", name: "FrescoCerca" },
-        publisher: { "@type": "Organization", name: "FrescoCerca" },
-      },
-      {
-        "@type": "FAQPage",
-        mainEntity: eclipseFaq.map((item) => ({
-          "@type": "Question",
-          name: item.q,
-          acceptedAnswer: { "@type": "Answer", text: item.a },
-        })),
-      },
-    ],
+    "@type": "FAQPage",
+    mainEntity: eclipseFaq.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
   };
 
   return (
     <main id="contenido" className="article-page eclipse-page">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd([articleJsonLd, faqJsonLd]),
+        }}
       />
 
       <header className="article-hero eclipse-article-hero">
@@ -107,8 +114,16 @@ export default function Eclipse2026Page() {
             <span>Lectura: 8 min</span>
             <span>Fuentes oficiales enlazadas</span>
           </div>
+          <EditorialByline sourceSummary="Astronomía y seguridad contrastadas con el IGN; predicción con AEMET y tráfico con la DGT." />
         </div>
       </header>
+
+      <div className="site-shell">
+        <EditorialHeroImage
+          preload
+          caption="El lugar definitivo debe decidirse con el visor del IGN, la previsión cercana a la fecha y un acceso autorizado."
+        />
+      </div>
 
       <div className="site-shell article-layout">
         <article className="article-body">

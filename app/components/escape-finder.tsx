@@ -361,10 +361,11 @@ export function EscapeFinder() {
       </div>
 
       <p className="finder-disclaimer" id="finder-disclaimer">
-        Los datos climáticos son rangos históricos orientativos para julio y
-        agosto, no una previsión meteorológica en tiempo real. La distancia por
-        carretera también es estimada. Comprueba la ruta, los avisos y el
-        pronóstico de AEMET antes de salir.
+        Los rangos son estimaciones editoriales orientativas para julio y
+        agosto basadas en información climática abierta de AEMET. No son una
+        tabla de una estación concreta, una medición en directo ni una
+        previsión. La distancia por carretera también es estimada. Comprueba la
+        ruta, los avisos y el pronóstico de AEMET antes de salir.
       </p>
     </section>
   );

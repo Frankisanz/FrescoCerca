@@ -1,6 +1,6 @@
 /* global self, caches */
 
-const CACHE_VERSION = "frescocerca-v3";
+const CACHE_VERSION = "frescocerca-v4";
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 const PRECACHE_URLS = [
@@ -11,6 +11,7 @@ const PRECACHE_URLS = [
   "/icons/icon-512.png",
   "/icons/icon-maskable-512.png",
   "/icons/apple-touch-icon.png",
+  "/images/frescocerca-refugio-editorial.webp",
   "/og.png",
 ];
 

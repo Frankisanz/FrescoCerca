@@ -62,11 +62,11 @@ export const DESTINATION_TAG_LABELS: Record<DestinationTag, string> = {
 
 export const CLIMATE_METHODOLOGY = {
   fuente:
-    "AEMET, valores climatológicos normales 1991-2020 y estaciones representativas cercanas",
+    "AEMET, mapas y valores climatológicos normales 1991-2020",
   fuenteUrl:
     "https://www.aemet.es/es/serviciosclimaticos/datosclimatologicos/valoresclimatologicos",
   metodologia:
-    "Rangos editoriales redondeados para julio y agosto, contrastados con la altitud y la geografía local. Representan condiciones habituales, no récords ni una predicción para fechas concretas. Conviene consultar AEMET antes de viajar.",
+    "Estimaciones editoriales orientativas para julio y agosto, redondeadas a partir de la consulta de mapas y datos climáticos abiertos de AEMET, junto con la altitud y la geografía local. No equivalen a la tabla de una estación concreta ni a una medición directa del municipio; tampoco son récords ni una predicción para fechas concretas. Conviene consultar AEMET antes de viajar.",
   revisado: "2026-07-29",
 } as const;
 

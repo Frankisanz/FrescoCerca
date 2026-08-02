@@ -10,6 +10,14 @@ import {
   serializeJsonLd,
 } from "@/lib/content";
 import { getDestinationEditorial } from "@/lib/destination-editorial";
+import { CLIMATE_METHODOLOGY } from "@/lib/destinations";
+import {
+  createArticleJsonLd,
+  createArticleMetadata,
+  EDITORIAL_PUBLISHED_DATE,
+  EDITORIAL_REVIEW_DATE,
+  siteConfig,
+} from "@/lib/site";
 
 type DestinationPageProps = {
   params: Promise<{ slug: string }>;
@@ -36,28 +44,13 @@ export async function generateMetadata({
     return { title: "Destino no encontrado" };
   }
 
-  const url = absoluteUrl(`/destinos/${destination.slug}`);
-
-  return {
+  return createArticleMetadata({
     title: editorial.seoTitle,
     description: editorial.seoDescription,
-    alternates: { canonical: url },
-    openGraph: {
-      title: editorial.seoTitle,
-      description: editorial.seoDescription,
-      url,
-      type: "article",
-      publishedTime: "2026-07-27",
-      modifiedTime: "2026-07-29",
-      images: [absoluteUrl("/og.png")],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: editorial.seoTitle,
-      description: editorial.seoDescription,
-      images: [absoluteUrl("/og.png")],
-    },
-  };
+    path: `/destinos/${destination.slug}`,
+    publishedTime: EDITORIAL_PUBLISHED_DATE,
+    modifiedTime: EDITORIAL_REVIEW_DATE,
+  });
 }
 
 export default async function DestinationPage({
@@ -76,7 +69,14 @@ export default async function DestinationPage({
   }
 
   const nearby = getNearbyDestinations(destination);
-  const destinationUrl = `/destinos/${destination.slug}`;
+  const climateReviewLabel = new Intl.DateTimeFormat("es-ES", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${CLIMATE_METHODOLOGY.revisado}T00:00:00Z`));
+  const destinationUrl =
+    `/destinos/${destination.slug}` as `/destinos/${string}`;
   const destinationAbsoluteUrl = absoluteUrl(destinationUrl);
   const breadcrumb = breadcrumbJsonLd([
     { name: "Inicio", path: "/" },
@@ -114,31 +114,16 @@ export default async function DestinationPage({
     ],
   };
   const articleJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: editorial.seoTitle,
-    description: editorial.seoDescription,
-    mainEntityOfPage: destinationAbsoluteUrl,
-    image: absoluteUrl("/og.png"),
-    inLanguage: "es-ES",
-    datePublished: "2026-07-27",
-    dateModified: "2026-07-29",
-    author: {
-      "@type": "Organization",
-      name: "FrescoCerca",
-      url: absoluteUrl("/sobre-frescocerca"),
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "FrescoCerca",
-      url: absoluteUrl("/"),
-      logo: {
-        "@type": "ImageObject",
-        url: absoluteUrl("/icons/icon-512.png"),
-      },
-    },
+    ...createArticleJsonLd({
+      title: editorial.seoTitle,
+      description: editorial.seoDescription,
+      path: destinationUrl,
+      citations: editorial.sources.map((source) => source.url),
+      articleSection: "Destinos para noches más frescas",
+      publishedTime: EDITORIAL_PUBLISHED_DATE,
+      modifiedTime: EDITORIAL_REVIEW_DATE,
+    }),
     about: { "@id": `${destinationAbsoluteUrl}#destination` },
-    citation: editorial.sources.map((source) => source.url),
   };
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -149,7 +134,7 @@ export default async function DestinationPage({
         name: `¿Hace fresco en ${destination.name} durante el verano?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `La referencia usada por FrescoCerca sitúa las máximas habituales entre ${formatRange(destination.summerHighRange)} y las mínimas entre ${formatRange(destination.summerLowRange)}. No es una predicción: comprueba AEMET para las fechas concretas.`,
+          text: `La estimación editorial orientativa de FrescoCerca sitúa el rango de máximas entre ${formatRange(destination.summerHighRange)} y el de mínimas entre ${formatRange(destination.summerLowRange)}. Se basa en información climática abierta de AEMET, pero no reproduce una estación concreta ni es una predicción: comprueba AEMET para las fechas del viaje.`,
         },
       },
       {
@@ -206,9 +191,13 @@ export default async function DestinationPage({
             ))}
           </ul>
           <p className="editorial-byline">
-            <Link href="/sobre-frescocerca">Equipo editorial FrescoCerca</Link>
+            <Link href={siteConfig.editorial.profilePath}>
+              {siteConfig.editorial.responsible}
+            </Link>
             <span aria-hidden="true">·</span>
-            <time dateTime="2026-07-29">Fuentes revisadas el 29 de julio de 2026</time>
+            <time dateTime={CLIMATE_METHODOLOGY.revisado}>
+              Fuentes revisadas el {climateReviewLabel}
+            </time>
           </p>
         </div>
 
@@ -252,7 +241,7 @@ export default async function DestinationPage({
             <p>{editorial.localOverview}</p>
             <p>{editorial.coolingFactors}</p>
             <p>
-              La referencia climática utilizada se mueve entre{" "}
+              La estimación editorial utilizada se mueve entre{" "}
               {formatRange(destination.summerHighRange)} de máxima y{" "}
               {formatRange(destination.summerLowRange)} de mínima. La noche, la
               orientación del alojamiento y el episodio meteorológico concreto
@@ -297,16 +286,18 @@ export default async function DestinationPage({
 
           <section className="article-section destination-sources">
             <p className="content-kicker">Trazabilidad</p>
-            <h2>Fuentes utilizadas y límites</h2>
+            <h2>Fuente marco, estimación y límites</h2>
             <p>
-              La referencia térmica procede de valores climatológicos normales
-              de AEMET y se redondea para comparar destinos. Los planes y
-              accesos se contrastan con estas fuentes oficiales:
+              Los rangos térmicos son estimaciones editoriales orientativas,
+              redondeadas a partir de mapas y datos climáticos abiertos de
+              AEMET, la altitud y el contexto geográfico. No reproducen la tabla
+              de una estación concreta ni una medición directa de este
+              municipio. Los planes y accesos se contrastan con estas fuentes:
             </p>
             <ul>
               <li>
                 <a href={destination.sourceUrl} rel="noreferrer" target="_blank">
-                  AEMET: valores climatológicos normales
+                  AEMET: mapas y valores climatológicos normales
                 </a>
                 <span>{destination.sourceNote}</span>
               </li>

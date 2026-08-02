@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 
 const DEFAULT_SITE_URL = "https://frescocerca.es";
 
+export const EDITORIAL_IMAGE_PATH =
+  "/images/frescocerca-refugio-editorial-og.jpg";
+export const EDITORIAL_PUBLISHED_DATE = "2026-07-27";
+export const EDITORIAL_REVIEW_DATE = "2026-08-02";
+
 function resolveSiteUrl() {
   const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
 
@@ -26,6 +31,11 @@ export const siteConfig = {
   locale: "es_ES",
   language: "es-ES",
   url: SITE_URL,
+  editorial: {
+    responsible: "Francisco Javier Sanchez Fuentes",
+    profilePath: "/sobre-frescocerca",
+    methodologyPath: "/metodologia",
+  },
   legal: {
     owner: "Francisco Javier Sanchez Fuentes",
     nif: "15514272J",
@@ -39,6 +49,11 @@ type PageMetadataOptions = {
   description: string;
   path: `/${string}` | "/";
   noIndex?: boolean;
+};
+
+type ArticleMetadataOptions = Omit<PageMetadataOptions, "noIndex"> & {
+  publishedTime?: string;
+  modifiedTime?: string;
 };
 
 export function absoluteUrl(path: string = "/") {
@@ -91,16 +106,132 @@ export function createPageMetadata({
   };
 }
 
+export function createArticleMetadata({
+  title,
+  description,
+  path,
+  publishedTime = EDITORIAL_PUBLISHED_DATE,
+  modifiedTime = EDITORIAL_REVIEW_DATE,
+}: ArticleMetadataOptions): Metadata {
+  const canonical = absoluteUrl(path);
+  const image = absoluteUrl(EDITORIAL_IMAGE_PATH);
+  const authorUrl = absoluteUrl(siteConfig.editorial.profilePath);
+
+  return {
+    title,
+    description,
+    authors: [
+      {
+        name: siteConfig.editorial.responsible,
+        url: authorUrl,
+      },
+    ],
+    alternates: { canonical },
+    openGraph: {
+      type: "article",
+      locale: siteConfig.locale,
+      url: canonical,
+      siteName: siteConfig.name,
+      title,
+      description,
+      publishedTime,
+      modifiedTime,
+      authors: [authorUrl],
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: "Un pueblo de montaña al anochecer, imagen editorial de FrescoCerca",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
+
+export function createArticleJsonLd({
+  title,
+  description,
+  path,
+  citations = [],
+  articleSection,
+  publishedTime = EDITORIAL_PUBLISHED_DATE,
+  modifiedTime = EDITORIAL_REVIEW_DATE,
+}: {
+  title: string;
+  description: string;
+  path: `/${string}` | "/";
+  citations?: readonly string[];
+  articleSection?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+}) {
+  const url = absoluteUrl(path);
+  const author = {
+    "@type": "Person",
+    "@id": `${absoluteUrl(siteConfig.editorial.profilePath)}#responsable-editorial`,
+    name: siteConfig.editorial.responsible,
+    url: absoluteUrl(siteConfig.editorial.profilePath),
+  };
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${url}#article`,
+    headline: title,
+    description,
+    url,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": url,
+    },
+    image: {
+      "@type": "ImageObject",
+      url: absoluteUrl(EDITORIAL_IMAGE_PATH),
+      width: 1200,
+      height: 630,
+    },
+    inLanguage: siteConfig.language,
+    isAccessibleForFree: true,
+    datePublished: publishedTime,
+    dateModified: modifiedTime,
+    author,
+    editor: author,
+    publisher: {
+      "@type": "Organization",
+      "@id": `${absoluteUrl("/")}#organization`,
+      name: siteConfig.name,
+      url: absoluteUrl("/"),
+      logo: {
+        "@type": "ImageObject",
+        url: absoluteUrl("/icons/icon-512.png"),
+        width: 512,
+        height: 512,
+      },
+    },
+    articleSection,
+    citation: citations.length > 0 ? [...citations] : undefined,
+  };
+}
+
 export function createWebPageJsonLd({
   title,
   description,
   path,
   type = "WebPage",
+  modifiedTime = EDITORIAL_REVIEW_DATE,
 }: {
   title: string;
   description: string;
   path: `/${string}` | "/";
   type?: "AboutPage" | "ContactPage" | "WebPage";
+  modifiedTime?: string;
 }) {
   const url = absoluteUrl(path);
 
@@ -121,7 +252,7 @@ export function createWebPageJsonLd({
       name: siteConfig.name,
       url: absoluteUrl("/"),
     },
-    dateModified: "2026-07-29",
+    dateModified: modifiedTime,
   };
 }
 

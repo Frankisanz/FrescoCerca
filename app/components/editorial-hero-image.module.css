@@ -1,0 +1,26 @@
+.figure {
+  width: min(100%, 74rem);
+  margin: clamp(1.5rem, 4vw, 3.25rem) auto;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+  border-radius: clamp(1rem, 2vw, 1.75rem);
+  background: #102f38;
+  box-shadow: 0 1.5rem 4rem rgb(17 46 52 / 14%);
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.caption {
+  margin: 0;
+  padding: 0.75rem 1rem 0.85rem;
+  background: #f4f8f4;
+  color: #4f6668;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}

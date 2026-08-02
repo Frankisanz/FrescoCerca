@@ -4,6 +4,7 @@ import { CLIMATE_METHODOLOGY } from "@/lib/destinations";
 import {
   createPageMetadata,
   createWebPageJsonLd,
+  EDITORIAL_REVIEW_DATE,
   serializeJsonLd,
   siteConfig,
 } from "@/lib/site";
@@ -12,6 +13,12 @@ const title = "Metodología";
 const description =
   "Cómo interpreta FrescoCerca los datos climáticos, las distancias y los tiempos estimados, y qué límites tienen sus recomendaciones.";
 const path = "/metodologia";
+const editorialReviewLabel = new Intl.DateTimeFormat("es-ES", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+}).format(new Date(`${EDITORIAL_REVIEW_DATE}T00:00:00Z`));
 
 export const metadata: Metadata = createPageMetadata({
   title,
@@ -70,23 +77,27 @@ export default function MetodologiaPage() {
               Datos climáticos orientativos
             </h2>
             <p className="mt-3">
-              Las fichas parten de{" "}
+              Las fichas usan como fuente marco los{" "}
               <a
                 href={CLIMATE_METHODOLOGY.fuenteUrl}
                 className="content-page__external-link font-semibold text-emerald-700 underline decoration-emerald-700/30 underline-offset-4 hover:decoration-current dark:text-emerald-300"
               >
-                valores climatológicos normales de AEMET para 1991–2020
-              </a>{" "}
-              y estaciones representativas cercanas. Los valores se presentan
-              como rangos editoriales redondeados para julio y agosto, revisados
-              junto con la altitud y la geografía local para facilitar la
-              comparación.
+                mapas y valores climatológicos normales de AEMET para
+                1991–2020
+              </a>
+              . A partir de esa información abierta, la altitud y el contexto
+              geográfico, FrescoCerca construye estimaciones editoriales
+              redondeadas para julio y agosto que permiten una primera
+              comparación. No se atribuyen a una estación concreta cuando la
+              ficha no identifica expresamente esa estación.
             </p>
             <p className="mt-3">
-              Estos rangos describen condiciones habituales. No son mediciones
-              en tiempo real, predicciones para una fecha concreta ni avisos de
-              fenómenos adversos. Para comparar destinos, el buscador utiliza el
-              punto medio de cada rango, no una temperatura futura.
+              Estos rangos son orientativos: no son mediciones directas del
+              municipio, tablas oficiales reproducidas literalmente,
+              observaciones en tiempo real, predicciones para una fecha concreta
+              ni avisos de fenómenos adversos. Para comparar destinos, el
+              buscador utiliza el punto medio de cada estimación, no una
+              temperatura futura.
             </p>
             <p className="mt-3">
               El tiempo puede cambiar con rapidez y variar dentro de un mismo
@@ -233,6 +244,33 @@ export default function MetodologiaPage() {
 
           <section
             className="methodology-page__section"
+            aria-labelledby="responsabilidad-editorial"
+          >
+            <h2
+              id="responsabilidad-editorial"
+              className="content-page__section-title text-2xl font-semibold tracking-tight text-current"
+            >
+              Responsabilidad editorial
+            </h2>
+            <p className="mt-3">
+              {siteConfig.editorial.responsible} es el responsable editorial
+              de FrescoCerca. Su función es mantener separados los datos de las
+              interpretaciones, revisar la coherencia de las comparaciones y
+              atender las correcciones. Esta identificación no atribuye
+              titulaciones ni credenciales profesionales que el sitio no haya
+              documentado.
+            </p>
+            <p className="mt-3">
+              Las fichas identifican la fuente marco usada para las estimaciones
+              climáticas y enlazan las fuentes locales que respaldan sus demás
+              afirmaciones verificables. FrescoCerca interpreta y organiza esa
+              información, pero no habla en nombre de AEMET, la DGT, el IGN ni
+              ninguna administración enlazada.
+            </p>
+          </section>
+
+          <section
+            className="methodology-page__section"
             aria-labelledby="correcciones"
           >
             <h2
@@ -252,8 +290,14 @@ export default function MetodologiaPage() {
               </a>
               .
             </p>
+            <p className="mt-3">
+              Si una corrección cambia una cifra, una fuente o una conclusión
+              práctica, actualizamos la fecha de revisión de la página. Los
+              cambios puramente tipográficos no se presentan como una nueva
+              revisión de los datos.
+            </p>
             <p className="mt-3 text-sm text-current/60">
-              Última actualización: 29 de julio de 2026.
+              Última actualización: {editorialReviewLabel}.
             </p>
           </section>
         </section>

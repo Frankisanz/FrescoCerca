@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { EditorialHeroImage } from "./components/editorial-hero-image";
 import { EscapeFinder } from "./components/escape-finder";
 
 export const metadata: Metadata = {
@@ -252,43 +253,46 @@ export default function Home() {
       </section>
 
       <section className="editorial-section section-pad">
-        <div className="site-shell editorial-grid">
-          <div className="editorial-intro">
-            <p className="eyebrow eyebrow-dark">Guías que sí resuelven dudas</p>
-            <h2>Antes de reservar, entiende qué estás comparando.</h2>
-            <p>
-              Temperatura media no es previsión, altitud no garantiza una noche
-              fría y “pueblo fresco” no significa lo mismo para todos.
-            </p>
-            <Link className="text-link" href="/guias">
-              Ver todas las guías
-            </Link>
-          </div>
-          <div className="article-list">
-            <Link href="/guias/pueblos-con-noches-frescas-en-verano">
-              <span className="article-index">01</span>
-              <span>
-                <small>Descanso nocturno · 11 min</small>
-                <strong>Pueblos con noches frescas: cómo elegir bien</strong>
-              </span>
-              <span aria-hidden="true">↗</span>
-            </Link>
-            <Link href="/guias/escapadas-frescas-sin-coche">
-              <span className="article-index">02</span>
-              <span>
-                <small>Transporte público · 12 min</small>
-                <strong>Cómo preparar una escapada fresca sin coche</strong>
-              </span>
-              <span aria-hidden="true">↗</span>
-            </Link>
-            <Link href="/guias/escapadas-frescas-de-fin-de-semana">
-              <span className="article-index">03</span>
-              <span>
-                <small>48 horas · 12 min</small>
-                <strong>Escapadas frescas de fin de semana</strong>
-              </span>
-              <span aria-hidden="true">↗</span>
-            </Link>
+        <div className="site-shell">
+          <EditorialHeroImage caption="Una buena escapada no termina al llegar: el alojamiento y el descenso nocturno deciden si realmente podrás descansar." />
+          <div className="editorial-grid">
+            <div className="editorial-intro">
+              <p className="eyebrow eyebrow-dark">Guías que sí resuelven dudas</p>
+              <h2>Antes de reservar, entiende qué estás comparando.</h2>
+              <p>
+                Temperatura media no es previsión, altitud no garantiza una
+                noche fría y “pueblo fresco” no significa lo mismo para todos.
+              </p>
+              <Link className="text-link" href="/guias">
+                Ver todas las guías
+              </Link>
+            </div>
+            <div className="article-list">
+              <Link href="/guias/pueblos-con-noches-frescas-en-verano">
+                <span className="article-index">01</span>
+                <span>
+                  <small>Descanso nocturno · 11 min</small>
+                  <strong>Pueblos con noches frescas: cómo elegir bien</strong>
+                </span>
+                <span aria-hidden="true">↗</span>
+              </Link>
+              <Link href="/guias/escapadas-frescas-sin-coche">
+                <span className="article-index">02</span>
+                <span>
+                  <small>Transporte público · 12 min</small>
+                  <strong>Cómo preparar una escapada fresca sin coche</strong>
+                </span>
+                <span aria-hidden="true">↗</span>
+              </Link>
+              <Link href="/guias/escapadas-frescas-de-fin-de-semana">
+                <span className="article-index">03</span>
+                <span>
+                  <small>48 horas · 12 min</small>
+                  <strong>Escapadas frescas de fin de semana</strong>
+                </span>
+                <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

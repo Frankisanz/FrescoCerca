@@ -48,6 +48,7 @@ export function PwaControls() {
     window.addEventListener("appinstalled", handleInstalled);
 
     let disposed = false;
+    let removeRegistrationUpdateListener: (() => void) | undefined;
 
     if (
       "serviceWorker" in navigator &&
@@ -62,21 +63,45 @@ export function PwaControls() {
             setWaitingWorker(registration.waiting);
           }
 
-          registration.addEventListener("updatefound", () => {
-            const installingWorker = registration.installing;
-            if (!installingWorker) return;
+          const observedWorkers = new WeakSet<ServiceWorker>();
+          const observeInstallation = (installingWorker: ServiceWorker | null) => {
+            if (!installingWorker || observedWorkers.has(installingWorker)) return;
+            observedWorkers.add(installingWorker);
 
-            installingWorker.addEventListener("statechange", () => {
+            const handleStateChange = () => {
               if (
                 installingWorker.state === "installed" &&
                 navigator.serviceWorker.controller
               ) {
                 setWaitingWorker(installingWorker);
               }
-            });
-          });
 
-          void registration.update();
+              if (
+                installingWorker.state === "installed" ||
+                installingWorker.state === "redundant"
+              ) {
+                installingWorker.removeEventListener(
+                  "statechange",
+                  handleStateChange,
+                );
+              }
+            };
+
+            installingWorker.addEventListener("statechange", handleStateChange);
+            handleStateChange();
+          };
+
+          const handleUpdateFound = () => {
+            observeInstallation(registration.installing);
+          };
+
+          // register() already checks for a newer worker. Observe an update that
+          // may have started before its promise resolved instead of forcing a
+          // second, immediate update() call on an unstable registration.
+          observeInstallation(registration.installing);
+          registration.addEventListener("updatefound", handleUpdateFound);
+          removeRegistrationUpdateListener = () =>
+            registration.removeEventListener("updatefound", handleUpdateFound);
         })
         .catch(() => {
           // The site remains fully usable if registration is blocked.
@@ -95,6 +120,7 @@ export function PwaControls() {
 
       return () => {
         disposed = true;
+        removeRegistrationUpdateListener?.();
         window.removeEventListener("beforeinstallprompt", handleInstallPrompt);
         window.removeEventListener("appinstalled", handleInstalled);
         navigator.serviceWorker.removeEventListener(

@@ -603,7 +603,7 @@ h3 {
 
 .temperature-route small {
   margin-top: 8px;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.68);
   font-size: 0.7rem;
 }
 
@@ -1660,7 +1660,7 @@ h3 {
   display: flex;
   gap: 10px 24px;
   flex-wrap: wrap;
-  color: rgba(255, 255, 255, 0.48);
+  color: rgba(255, 255, 255, 0.62);
   font-family: "Geist Mono", ui-monospace, monospace;
   font-size: 0.7rem;
 }

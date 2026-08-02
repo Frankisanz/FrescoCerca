@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { EditorialByline } from "@/app/components/editorial-byline";
+import { EditorialHeroImage } from "@/app/components/editorial-hero-image";
 import {
-  absoluteUrl,
   breadcrumbJsonLd,
   formatCelsius,
   fromCities,
@@ -11,9 +12,17 @@ import {
   serializeJsonLd,
 } from "@/lib/content";
 import {
+  CLIMATE_METHODOLOGY,
+  ORIGIN_CLIMATE_METHODOLOGY,
+} from "@/lib/destinations";
+import {
   CITY_GUIDE_MAX_TRAVEL_HOURS,
   formatTravelTime,
 } from "@/lib/destination-ranking";
+import {
+  createArticleJsonLd,
+  createArticleMetadata,
+} from "@/lib/site";
 
 type FromCityPageProps = {
   params: Promise<{ slug: string }>;
@@ -35,18 +44,12 @@ export async function generateMetadata({
     return { title: "Ciudad de salida no encontrada" };
   }
 
-  const url = absoluteUrl(`/desde/${city.slug}`);
-  return {
+  const path = `/desde/${city.slug}` as const;
+  return createArticleMetadata({
     title: city.title,
     description: city.description,
-    alternates: { canonical: url },
-    openGraph: {
-      title: city.title,
-      description: city.description,
-      url,
-      type: "article",
-    },
-  };
+    path,
+  });
 }
 
 export default async function FromCityPage({ params }: FromCityPageProps) {
@@ -58,6 +61,17 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
   }
 
   const candidates = getDestinationCandidates(city, 6);
+  const candidatesByTravelTime = [...candidates].sort(
+    (left, right) => left.estimatedTravelHours - right.estimatedTravelHours,
+  );
+  const shortestTripCandidate = candidatesByTravelTime[0];
+  const comparisonNames = candidates
+    .slice(0, 3)
+    .map(({ destination }) => destination.name);
+  const comparisonLabel = new Intl.ListFormat("es-ES", {
+    style: "long",
+    type: "conjunction",
+  }).format(comparisonNames);
   const path = `/desde/${city.slug}`;
   const breadcrumb = breadcrumbJsonLd([
     { name: "Inicio", path: "/" },
@@ -76,25 +90,19 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
       },
     })),
   };
-  const articleJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: city.title,
+  const citationUrls = Array.from(
+    new Set([
+      CLIMATE_METHODOLOGY.fuenteUrl,
+      ...candidates.map(({ destination }) => destination.sourceUrl),
+    ]),
+  );
+  const articleJsonLd = createArticleJsonLd({
+    title: city.title,
     description: city.description,
-    mainEntityOfPage: absoluteUrl(path),
-    author: {
-      "@type": "Organization",
-      name: "FrescoCerca",
-      url: absoluteUrl("/"),
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "FrescoCerca",
-      url: absoluteUrl("/"),
-    },
-    datePublished: "2026-07-27",
-    dateModified: "2026-07-29",
-  };
+    path: path as `/desde/${string}`,
+    articleSection: `Escapadas frescas desde ${city.name}`,
+    citations: citationUrls,
+  });
 
   return (
     <main id="contenido" className="content-shell from-detail-page">
@@ -123,7 +131,13 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
           apoyan en referencias geográficas y climáticas. Comprueba el tiempo,
           los avisos y la ruta para tus fechas.
         </div>
+        <EditorialByline sourceSummary="Estimaciones climáticas editoriales basadas en información abierta de AEMET; selección y tiempos explicados en la metodología pública de FrescoCerca." />
       </header>
+
+      <EditorialHeroImage
+        preload
+        caption={`Una escapada desde ${city.name} debe equilibrar descanso y trayecto: la imagen es editorial y no representa un destino concreto del listado.`}
+      />
 
       <section className="content-section" aria-labelledby="candidatos">
         <div className="content-section-heading">
@@ -224,6 +238,73 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
           </section>
 
           <section className="article-section">
+            <p className="content-kicker">Duración y movilidad</p>
+            <h2>Plan de 24 o 48 horas desde {city.name}</h2>
+            <div className="article-definition-list">
+              <div>
+                <h3>Si solo tienes 24 horas</h3>
+                <p>
+                  {shortestTripCandidate ? (
+                    <>
+                      Empieza comparando{" "}
+                      <Link
+                        href={`/destinos/${shortestTripCandidate.destination.slug}`}
+                      >
+                        {shortestTripCandidate.destination.name}
+                      </Link>
+                      : entre los candidatos mostrados es el de menor tiempo
+                      estimado, con{" "}
+                      {formatTravelTime(
+                        shortestTripCandidate.estimatedTravelHours,
+                      )}
+                      . Esa cifra no contempla tráfico ni el punto exacto de
+                      salida; confírmala antes de elegir.
+                    </>
+                  ) : (
+                    <>
+                      Reduce el radio y reserva el tiempo suficiente para
+                      comprobar el alojamiento antes de que anochezca.
+                    </>
+                  )}
+                </p>
+              </div>
+              <div>
+                <h3>Si puedes dedicar 48 horas</h3>
+                <p>
+                  {comparisonLabel
+                    ? `Compara ${comparisonLabel} con la misma previsión, el trayecto real y las condiciones del dormitorio. Dos noches permiten ampliar el radio, pero no justifican forzar una ruta con avisos o calor intenso.`
+                    : "Compara varias regiones con los mismos criterios y conserva una alternativa interior o más cercana."}
+                </p>
+              </div>
+              <div>
+                <h3>Una escapada desde {city.name} sin coche</h3>
+                <p>
+                  Este ranking no evalúa horarios ni el último tramo. Construye
+                  primero una cadena de ida y vuelta con los operadores
+                  oficiales y después compara el clima. Nuestra{" "}
+                  <Link href="/guias/escapadas-frescas-sin-coche">
+                    guía de transporte público
+                  </Link>{" "}
+                  explica qué comprobar.
+                </p>
+              </div>
+              <div>
+                <h3>¿Se puede dormir fresco sin aire acondicionado?</h3>
+                <p>
+                  Ningún destino lo garantiza. Pregunta por planta, orientación,
+                  persianas, ventilación cruzada, ruido y temperatura del
+                  dormitorio. Contrasta la mínima horaria y revisa el método
+                  para{" "}
+                  <Link href="/guias/como-elegir-destino-fresco">
+                    elegir alojamiento y destino
+                  </Link>
+                  .
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section className="article-section">
             <p className="content-kicker">Puede encajarte si buscas</p>
             <h2>Tipos de escapada</h2>
             <ul className="article-checklist">
@@ -253,6 +334,48 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
                 Conserva una alternativa por si cambia el pronóstico.
               </li>
             </ol>
+          </section>
+
+          <section className="article-section destination-sources">
+            <p className="content-kicker">Trazabilidad</p>
+            <h2>De dónde salen las referencias de esta guía</h2>
+            <p>
+              Los rangos de los destinos son estimaciones editoriales
+              orientativas basadas en{" "}
+              <a
+                href={CLIMATE_METHODOLOGY.fuenteUrl}
+                rel="noreferrer"
+                target="_blank"
+              >
+                {CLIMATE_METHODOLOGY.fuente}
+              </a>
+              . {CLIMATE_METHODOLOGY.metodologia}
+            </p>
+            <p>{ORIGIN_CLIMATE_METHODOLOGY}</p>
+            <p>
+              Revisión editorial de la base climática:{" "}
+              {CLIMATE_METHODOLOGY.revisado}.{" "}
+              <Link href="/metodologia#correcciones">
+                Consulta el cálculo y comunica una corrección
+              </Link>
+              .
+            </p>
+          </section>
+
+          <section className="article-section">
+            <p className="content-kicker">12 de agosto de 2026</p>
+            <h2>¿Viajas desde {city.name} para ver el eclipse?</h2>
+            <p>
+              Los candidatos de esta página se ordenan por clima orientativo y
+              trayecto, no por visibilidad astronómica. Antes de desplazarte,
+              comprueba el municipio y el horizonte en el IGN, la previsión de
+              AEMET y el estado del tráfico; conserva un plan B que no dependa
+              de improvisar a última hora.
+            </p>
+            <Link className="content-text-link" href="/eclipse-2026">
+              Preparar la escapada para el eclipse{" "}
+              <span aria-hidden="true">→</span>
+            </Link>
           </section>
 
           <section className="article-section article-faq">
