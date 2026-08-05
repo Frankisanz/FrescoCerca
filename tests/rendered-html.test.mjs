@@ -42,6 +42,10 @@ test("renders the Spanish, indexable FrescoCerca homepage", async () => {
   assert.match(html, /Buscador de escapadas/i);
   assert.match(html, /application\/ld\+json/i);
   assert.match(html, /og:image/i);
+  assert.match(
+    html,
+    /<meta name="google-adsense-account" content="ca-pub-5290446197600060"/i,
+  );
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/i);
 });
 
@@ -243,7 +247,11 @@ test("publishes the eclipse review date and current update frequency", async () 
 });
 
 test("keeps legal information available but out of the search index", async () => {
-  for (const pathname of ["/aviso-legal", "/privacidad", "/cookies"]) {
+  for (const { pathname, modified } of [
+    { pathname: "/aviso-legal", modified: "2026-07-27" },
+    { pathname: "/privacidad", modified: "2026-07-27" },
+    { pathname: "/cookies", modified: "2026-08-05" },
+  ]) {
     const response = await render(pathname);
     const html = await response.text();
 
@@ -253,8 +261,8 @@ test("keeps legal information available but out of the search index", async () =
       /<meta name="robots" content="noindex, follow"\s*\/?>/i,
       pathname,
     );
-    assert.match(html, /"dateModified":"2026-07-27"/, pathname);
-    assert.match(html, /<time dateTime="2026-07-27">/i, pathname);
+    assert.match(html, new RegExp(`"dateModified":"${modified}"`), pathname);
+    assert.match(html, new RegExp(`<time dateTime="${modified}">`, "i"), pathname);
   }
 });
 

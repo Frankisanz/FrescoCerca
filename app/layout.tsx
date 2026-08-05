@@ -37,6 +37,9 @@ export const metadata: Metadata = {
   metadataBase: SITE_URL,
   manifest: "/manifest.webmanifest",
   applicationName: siteConfig.name,
+  other: {
+    "google-adsense-account": "ca-pub-5290446197600060",
+  },
   title: {
     default: `${siteConfig.name} — Escapadas para dormir más fresco`,
     template: `%s | ${siteConfig.name}`,

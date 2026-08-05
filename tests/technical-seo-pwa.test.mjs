@@ -68,6 +68,18 @@ test("marks legal routes noindex in their shared metadata helper", async () => {
   }
 });
 
+test("publishes passive AdSense ownership signals without loading ad code", async () => {
+  const layout = await source("app/layout.tsx");
+  const adsTxt = await source("public/ads.txt");
+
+  assert.match(layout, /"google-adsense-account": "ca-pub-5290446197600060"/);
+  assert.doesNotMatch(layout, /pagead2\.googlesyndication\.com/);
+  assert.equal(
+    adsTxt.trim(),
+    "google.com, pub-5290446197600060, DIRECT, f08c47fec0942fa0",
+  );
+});
+
 test("keeps noindex legal routes out of the sitemap source", async () => {
   const sitemap = await source("app/sitemap.ts");
 

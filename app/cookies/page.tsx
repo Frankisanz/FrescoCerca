@@ -9,9 +9,9 @@ import {
 
 const title = "Política de cookies";
 const description =
-  "Información sobre el uso actual de cookies y tecnologías similares en FrescoCerca.";
+  "Información sobre el uso actual de cookies, la verificación de AdSense y tecnologías similares en FrescoCerca.";
 const path = "/cookies";
-const lastModified = "2026-07-27";
+const lastModified = "2026-08-05";
 
 export const metadata: Metadata = createPageMetadata({
   title,
@@ -53,8 +53,10 @@ export default function CookiesPage() {
             Política de cookies
           </h1>
           <p className="content-page__lead mt-5 max-w-3xl text-lg leading-8 text-current/70">
-            En su versión inicial, FrescoCerca no utiliza cookies no necesarias,
-            analítica de audiencia ni publicidad comportamental.
+            FrescoCerca ha configurado la verificación de propiedad de Google
+            AdSense mediante una metaetiqueta y un archivo ads.txt. Todavía no
+            sirve anuncios, no carga el código publicitario y no utiliza
+            analítica de audiencia ni cookies no necesarias.
           </p>
         </header>
 
@@ -111,9 +113,10 @@ export default function CookiesPage() {
                     <th scope="row" className="px-4 py-3 font-semibold text-current">
                       Publicidad
                     </th>
-                    <td className="px-4 py-3">No utilizada</td>
+                    <td className="px-4 py-3">En revisión; no activa</td>
                     <td className="px-4 py-3">
-                      No se muestran anuncios ni se crean perfiles comerciales.
+                      AdSense solo está configurado para acreditar la propiedad
+                      del sitio. No se muestran anuncios ni se carga su script.
                     </td>
                   </tr>
                   <tr className="border-t border-current/10">
@@ -138,6 +141,12 @@ export default function CookiesPage() {
               </table>
             </div>
             <p className="mt-4">
+              La metaetiqueta de cuenta de AdSense y el archivo ads.txt son
+              declaraciones estáticas que permiten identificar al editor
+              autorizado. Por sí solos no guardan información en el navegador
+              ni crean perfiles publicitarios.
+            </p>
+            <p className="mt-4">
               Las tecnologías estrictamente necesarias, si las emplea la
               infraestructura, no se utilizan para seguir al usuario con fines
               publicitarios y no requieren consentimiento. Los enlaces a
@@ -151,16 +160,17 @@ export default function CookiesPage() {
               id="cambios"
               className="content-page__section-title text-2xl font-semibold tracking-tight text-current"
             >
-              3. Si se activa analítica o publicidad
+              3. Antes de activar la publicidad
             </h2>
             <p className="mt-3">
-              Antes de activar Google AdSense, una herramienta de analítica o
+              Si Google aprueba el sitio, antes de servir publicidad o activar
               cualquier tecnología no necesaria, FrescoCerca deberá:
             </p>
             <ul className="mt-4 list-disc space-y-3 pl-6">
               <li>
-                impedir su carga hasta que exista una decisión de la persona
-                usuaria;
+                configurar una plataforma de gestión del consentimiento
+                certificada por Google para el tráfico de las regiones en las
+                que resulte exigible;
               </li>
               <li>
                 ofrecer opciones visibles para aceptar, rechazar o configurar
@@ -194,7 +204,7 @@ export default function CookiesPage() {
 
           <footer className="cookies-page__footer border-t border-current/10 pt-6 text-sm text-current/60">
             Última actualización:{" "}
-            <time dateTime={lastModified}>27 de julio de 2026</time>. Para dudas,
+            <time dateTime={lastModified}>5 de agosto de 2026</time>. Para dudas,
             escribe a{" "}
             <a
               href={`mailto:${siteConfig.legal.email}`}
