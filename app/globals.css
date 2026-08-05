@@ -1732,6 +1732,245 @@ h3 {
   text-underline-offset: 4px;
 }
 
+.eclipse-page [id] {
+  scroll-margin-top: 110px;
+}
+
+.eclipse-page .article-body {
+  min-width: 0;
+}
+
+.eclipse-answer {
+  padding: clamp(25px, 4vw, 38px);
+  border: 1px solid rgba(21, 58, 67, 0.14);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 92% 12%, rgba(246, 213, 107, 0.32), transparent 25%),
+    var(--mint);
+}
+
+.eclipse-answer .eyebrow {
+  margin-bottom: 8px;
+  color: var(--coral-deep);
+}
+
+.eclipse-answer h2 {
+  margin-bottom: 18px;
+  font-size: clamp(1.8rem, 4vw, 2.75rem);
+}
+
+.eclipse-answer .button {
+  margin-top: 5px;
+  text-decoration: none;
+}
+
+.eclipse-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  margin-block: 24px 42px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--line);
+}
+
+.eclipse-facts > div {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  min-height: 104px;
+  padding: 20px 16px;
+  background: var(--cream);
+}
+
+.eclipse-facts strong {
+  color: var(--ink-deep);
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.86rem;
+}
+
+.eclipse-facts span {
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.article-toc {
+  padding: 26px 28px;
+  border-left: 3px solid var(--coral);
+  background: var(--cream);
+}
+
+.article-toc > strong {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--ink-deep);
+}
+
+.article-toc ol {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 25px;
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.88rem;
+}
+
+.eclipse-table-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+  margin-block: 32px 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: white;
+  outline-offset: 4px;
+}
+
+.eclipse-table {
+  width: 100%;
+  min-width: 790px;
+  border-collapse: collapse;
+  color: #31555d;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.eclipse-table caption {
+  padding: 15px 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--cream);
+  color: var(--ink-deep);
+  font-weight: 720;
+  text-align: left;
+}
+
+.eclipse-table th,
+.eclipse-table td {
+  padding: 13px 15px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.eclipse-table thead th {
+  background: var(--ink);
+  color: white;
+  font-size: 0.7rem;
+  letter-spacing: 0.025em;
+}
+
+.eclipse-table tbody th {
+  color: var(--ink-deep);
+  font-weight: 740;
+}
+
+.eclipse-table tbody tr:last-child th,
+.eclipse-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.eclipse-status {
+  display: inline-flex;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.67rem;
+  font-weight: 760;
+}
+
+.eclipse-status--total {
+  background: var(--mint);
+  color: var(--ink-deep);
+}
+
+.eclipse-status--parcial {
+  background: #fbedd7;
+  color: #7d3b2c;
+}
+
+.eclipse-table-note {
+  color: var(--ink-soft);
+  font-size: 0.77rem;
+  line-height: 1.55;
+}
+
+.eclipse-compare,
+.eclipse-region-grid,
+.eclipse-weather-plan {
+  display: grid;
+  gap: 14px;
+  margin-block: 30px;
+}
+
+.eclipse-compare {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.eclipse-region-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.eclipse-weather-plan {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.eclipse-compare section,
+.eclipse-region-grid section,
+.eclipse-weather-plan section {
+  padding: 23px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--cream);
+}
+
+.eclipse-compare span,
+.eclipse-region-grid span,
+.eclipse-weather-plan strong {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--coral-deep);
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 740;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.eclipse-compare h3,
+.eclipse-region-grid h3 {
+  margin-bottom: 10px;
+  font-size: 1.18rem;
+}
+
+.eclipse-compare p,
+.eclipse-region-grid p,
+.eclipse-weather-plan p {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.eclipse-city-links {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-block: 28px;
+}
+
+.article-body .eclipse-city-links a {
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--cream);
+  color: var(--ink-deep);
+  text-decoration: none;
+}
+
+.article-body .eclipse-city-links a:hover,
+.article-body .eclipse-city-links a:focus-visible {
+  border-color: var(--coral);
+  color: var(--coral-deep);
+}
+
 .source-callout {
   padding: 24px 26px;
   border: 1px solid rgba(21, 58, 67, 0.13);
@@ -3242,5 +3481,38 @@ h3 {
 
   .destination-card {
     min-height: 0;
+  }
+
+  .eclipse-facts,
+  .eclipse-compare,
+  .eclipse-region-grid,
+  .eclipse-weather-plan,
+  .eclipse-city-links,
+  .article-toc ol {
+    grid-template-columns: 1fr;
+  }
+
+  .eclipse-facts {
+    gap: 1px;
+  }
+
+  .eclipse-facts > div {
+    min-height: 0;
+  }
+
+  .eclipse-answer {
+    border-radius: 18px;
+  }
+
+  .eclipse-answer .button {
+    width: 100%;
+  }
+
+  .article-toc {
+    padding: 22px;
+  }
+
+  .eclipse-table-wrap {
+    margin-right: -2px;
   }
 }

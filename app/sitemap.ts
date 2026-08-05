@@ -5,7 +5,7 @@ import { absoluteUrl, EDITORIAL_REVIEW_DATE } from "@/lib/site";
 
 const MANUAL_CONTENT_DATES = {
   coreEditorial: EDITORIAL_REVIEW_DATE,
-  eclipse: EDITORIAL_REVIEW_DATE,
+  eclipse: "2026-08-05",
   about: EDITORIAL_REVIEW_DATE,
 } as const;
 
@@ -14,7 +14,7 @@ function latestIsoDate(values: readonly string[]) {
 }
 
 function toLastModified(value: string) {
-  return new Date(`${value}T00:00:00+02:00`);
+  return new Date(`${value}T00:00:00.000Z`);
 }
 
 const latestGuideUpdate = latestIsoDate(
@@ -36,7 +36,7 @@ const staticRoutes = [
   {
     path: "/eclipse-2026",
     lastModified: MANUAL_CONTENT_DATES.eclipse,
-    changeFrequency: "monthly",
+    changeFrequency: "daily",
     priority: 0.9,
   },
   {

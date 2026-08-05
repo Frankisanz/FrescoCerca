@@ -104,9 +104,46 @@ test("renders an editorial route with a canonical URL", async () => {
   assert.equal(response.status, 200);
 
   const html = await response.text();
-  assert.match(html, /Dónde ver el eclipse/i);
+  assert.match(html, /Eclipse solar total del 12 de agosto de 2026/i);
   assert.match(html, /rel=["']canonical["']/i);
   assert.match(html, /Instituto Geográfico Nacional/i);
+});
+
+test("answers eclipse search intent with fresh, accessible and sourced content", async () => {
+  const response = await render("/eclipse-2026");
+  const html = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(html, /<title>[^<]*Eclipse solar total 2026 en España/i);
+  assert.match(html, /<time dateTime="2026-08-05">05\/08\/2026<\/time>/i);
+  assert.match(
+    html,
+    /Responsable editorial de[\s\S]{0,120}FrescoCerca[\s\S]{0,120}5 de agosto de 2026/,
+  );
+  assert.match(html, /"dateModified":"2026-08-05"/);
+  assert.match(html, /"@type":"BreadcrumbList"/);
+  assert.match(html, /"@type":"FAQPage"/);
+  assert.match(html, /aria-label="Contenido de la guía"/);
+  assert.match(html, /id="hora-por-ciudad"/);
+  assert.match(html, /id="total-o-parcial"/);
+  assert.match(html, /id="nubes"/);
+  assert.match(html, /id="seguridad"/);
+  assert.match(html, /id="perseidas"/);
+  assert.match(html, /Horarios oficiales de referencia del eclipse solar/);
+  assert.match(html, /<th scope="col">Ciudad<\/th>/);
+  assert.match(html, /role="region" aria-label="Horarios por ciudad/);
+  assert.match(html, /class="eclipse-facts" role="list"/);
+  assert.match(html, /Madrid[\s\S]*99 % de cobertura/);
+  assert.match(html, /Barcelona[\s\S]*99 % de cobertura/);
+  assert.match(html, /EN ISO 12312-2:2015/);
+  assert.match(html, /visualizadores\.ign\.es\/eclipses\/2026/);
+  assert.match(html, /aemet\.es\/es\/noticias\/2026\/05\/estudio_nubosidad_eclipse/);
+  assert.match(html, /dgt\.es\/comunicacion\/notas-de-prensa\/20260122-resolucion/);
+  assert.match(html, /astronomia\.ign\.es\/perseidas/);
+  assert.match(html, /href="\/desde\/madrid"/);
+  assert.match(html, /href="\/desde\/barcelona"/);
+  assert.match(html, /href="\/guias\/escapadas-frescas-sin-coche"/);
+  assert.match(html, /href="\/guias\/escapadas-frescas-de-fin-de-semana"/);
 });
 
 test("renders the editorial identity, Article schema and visual on key routes", async () => {
@@ -192,6 +229,17 @@ test("includes every new guide in the sitemap", async () => {
   assert.match(xml, /guias\/pueblos-con-noches-frescas-en-verano/);
   assert.match(xml, /guias\/escapadas-frescas-sin-coche/);
   assert.match(xml, /guias\/escapadas-frescas-de-fin-de-semana/);
+});
+
+test("publishes the eclipse review date and current update frequency", async () => {
+  const response = await render("/sitemap.xml");
+  const xml = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(
+    xml,
+    /<loc>https:\/\/frescocerca\.vercel\.app\/eclipse-2026<\/loc>[\s\S]*?<lastmod>2026-08-05T00:00:00\.000Z<\/lastmod>[\s\S]*?<changefreq>daily<\/changefreq>/,
+  );
 });
 
 test("keeps legal information available but out of the search index", async () => {

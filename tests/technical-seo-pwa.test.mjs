@@ -75,6 +75,8 @@ test("keeps noindex legal routes out of the sitemap source", async () => {
   assert.match(sitemap, /CLIMATE_METHODOLOGY\.revisado/);
   assert.match(sitemap, /latestGuideUpdate/);
   assert.match(sitemap, /toLastModified/);
+  assert.match(sitemap, /eclipse:\s*"2026-08-05"/);
+  assert.match(sitemap, /path:\s*"\/eclipse-2026"[\s\S]*changeFrequency:\s*"daily"/);
 });
 
 test("labels climate ranges as editorial estimates without unnamed stations", async () => {
