@@ -16,6 +16,7 @@ import {
   ORIGIN_CLIMATE_METHODOLOGY,
 } from "@/lib/destinations";
 import {
+  calculateDirectDistanceKm,
   CITY_GUIDE_MAX_TRAVEL_HOURS,
   formatTravelTime,
 } from "@/lib/destination-ranking";
@@ -72,6 +73,14 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
     style: "long",
     type: "conjunction",
   }).format(comparisonNames);
+  const nearbyOriginCities = fromCities
+    .filter((originCity) => originCity.slug !== city.slug)
+    .map((originCity) => ({
+      ...originCity,
+      directDistanceKm: calculateDirectDistanceKm(city, originCity),
+    }))
+    .sort((left, right) => left.directDistanceKm - right.directDistanceKm)
+    .slice(0, 5);
   const path = `/desde/${city.slug}`;
   const breadcrumb = breadcrumbJsonLd([
     { name: "Inicio", path: "/" },
@@ -405,6 +414,39 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
           </Link>
         </aside>
       </div>
+
+      <section
+        className="content-section content-section--soft"
+        aria-labelledby="otras-ciudades"
+      >
+        <div className="content-section-heading">
+          <div>
+            <p className="content-kicker">Más puntos de salida</p>
+            <h2 id="otras-ciudades">Escapadas frescas desde otras ciudades</h2>
+          </div>
+          <p>
+            Compara otros orígenes cercanos si puedes empezar el viaje desde
+            una provincia distinta o quieres compartir la guía con otra
+            persona.
+          </p>
+        </div>
+        <div className="content-link-grid">
+          {nearbyOriginCities.map((originCity) => (
+            <Link
+              className="content-link-card"
+              href={`/desde/${originCity.slug}`}
+              key={originCity.slug}
+            >
+              <span>Guía desde</span>
+              <strong>{originCity.name}</strong>
+              <span aria-hidden="true">Ver opciones →</span>
+            </Link>
+          ))}
+        </div>
+        <Link className="content-text-link" href="/desde">
+          Ver todas las ciudades de salida <span aria-hidden="true">→</span>
+        </Link>
+      </section>
     </main>
   );
 }

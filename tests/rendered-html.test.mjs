@@ -59,6 +59,9 @@ test("renders the Barcelona escape guide with its own canonical URL", async () =
     html,
     /<link rel="canonical" href="https:\/\/frescocerca\.vercel\.app\/desde\/barcelona"/,
   );
+  assert.match(html, /Escapadas frescas desde otras ciudades/);
+  assert.match(html, /href="\/desde\/valencia"/);
+  assert.match(html, /href="\/desde\/zaragoza"/);
 });
 
 test("renders the Malaga guide with the shared travel cap", async () => {
