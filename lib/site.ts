@@ -5,7 +5,7 @@ const DEFAULT_SITE_URL = "https://frescocerca.es";
 export const EDITORIAL_IMAGE_PATH =
   "/images/frescocerca-refugio-editorial-og.jpg";
 export const EDITORIAL_PUBLISHED_DATE = "2026-07-27";
-export const EDITORIAL_REVIEW_DATE = "2026-08-02";
+export const EDITORIAL_REVIEW_DATE = "2026-08-17";
 
 function resolveSiteUrl() {
   const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -54,6 +54,12 @@ type PageMetadataOptions = {
 type ArticleMetadataOptions = Omit<PageMetadataOptions, "noIndex"> & {
   publishedTime?: string;
   modifiedTime?: string;
+  image?: EditorialImage | null;
+};
+
+type EditorialImage = {
+  path: string;
+  alt: string;
 };
 
 export function absoluteUrl(path: string = "/") {
@@ -112,9 +118,10 @@ export function createArticleMetadata({
   path,
   publishedTime = EDITORIAL_PUBLISHED_DATE,
   modifiedTime = EDITORIAL_REVIEW_DATE,
+  image = null,
 }: ArticleMetadataOptions): Metadata {
   const canonical = absoluteUrl(path);
-  const image = absoluteUrl(EDITORIAL_IMAGE_PATH);
+  const imageUrl = image ? absoluteUrl(image.path) : null;
   const authorUrl = absoluteUrl(siteConfig.editorial.profilePath);
 
   return {
@@ -137,20 +144,22 @@ export function createArticleMetadata({
       publishedTime,
       modifiedTime,
       authors: [authorUrl],
-      images: [
-        {
-          url: image,
-          width: 1200,
-          height: 630,
-          alt: "Un pueblo de montaña al anochecer, imagen editorial de FrescoCerca",
-        },
-      ],
+      images: image
+        ? [
+            {
+              url: absoluteUrl(image.path),
+              width: 1200,
+              height: 630,
+              alt: image.alt,
+            },
+          ]
+        : [],
     },
     twitter: {
-      card: "summary_large_image",
+      card: imageUrl ? "summary_large_image" : "summary",
       title,
       description,
-      images: [image],
+      images: imageUrl ? [imageUrl] : [],
     },
   };
 }
@@ -163,6 +172,7 @@ export function createArticleJsonLd({
   articleSection,
   publishedTime = EDITORIAL_PUBLISHED_DATE,
   modifiedTime = EDITORIAL_REVIEW_DATE,
+  image = null,
 }: {
   title: string;
   description: string;
@@ -171,6 +181,7 @@ export function createArticleJsonLd({
   articleSection?: string;
   publishedTime?: string;
   modifiedTime?: string;
+  image?: EditorialImage | null;
 }) {
   const url = absoluteUrl(path);
   const author = {
@@ -191,12 +202,15 @@ export function createArticleJsonLd({
       "@type": "WebPage",
       "@id": url,
     },
-    image: {
-      "@type": "ImageObject",
-      url: absoluteUrl(EDITORIAL_IMAGE_PATH),
-      width: 1200,
-      height: 630,
-    },
+    image: image
+      ? {
+          "@type": "ImageObject",
+          url: absoluteUrl(image.path),
+          width: 1200,
+          height: 630,
+          caption: image.alt,
+        }
+      : undefined,
     inLanguage: siteConfig.language,
     isAccessibleForFree: true,
     datePublished: publishedTime,

@@ -3,8 +3,11 @@ import Link from "next/link";
 const explore = [
   { href: "/destinos", label: "Todos los destinos" },
   { href: "/guias", label: "Guías para viajar fresco" },
+  {
+    href: "/guias/checklist-alojamiento-fresco-verano",
+    label: "Checklist antes de reservar",
+  },
   { href: "/desde", label: "Escapadas desde tu ciudad" },
-  { href: "/eclipse-2026", label: "Eclipse solar 2026" },
   { href: "/desde/madrid", label: "Escapadas desde Madrid" },
   { href: "/desde/sevilla", label: "Escapadas desde Sevilla" },
 ];

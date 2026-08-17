@@ -2321,6 +2321,231 @@ h3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.catalog-insights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.catalog-insights > div,
+.destination-benchmark > div {
+  display: grid;
+  gap: 5px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--cream);
+}
+
+.catalog-insights strong,
+.destination-benchmark strong {
+  color: var(--ink-deep);
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 1.05rem;
+}
+
+.catalog-insights span,
+.destination-benchmark span {
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.atlas-map {
+  margin: 0 0 22px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--paper);
+  box-shadow: 0 8px 25px rgba(13, 42, 49, 0.04);
+}
+
+.atlas-map__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.atlas-map__background {
+  fill: #edf4ea;
+}
+
+.atlas-map__grid line {
+  stroke: rgba(21, 58, 67, 0.11);
+  stroke-dasharray: 4 8;
+}
+
+.atlas-map__grid text {
+  fill: #647a7e;
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 10px;
+}
+
+.atlas-map__point {
+  stroke: white;
+  stroke-width: 2;
+  transition: r 0.18s ease, stroke-width 0.18s ease;
+}
+
+.atlas-map a:hover .atlas-map__point,
+.atlas-map a:focus-visible .atlas-map__point {
+  r: 9px;
+  stroke: var(--ink-deep);
+  stroke-width: 3;
+}
+
+.atlas-map a:focus-visible {
+  outline: none;
+}
+
+.atlas-map__point--coolest {
+  fill: #166b73;
+  background: #166b73;
+}
+
+.atlas-map__point--cool {
+  fill: #53a18e;
+  background: #53a18e;
+}
+
+.atlas-map__point--mild {
+  fill: var(--coral);
+  background: var(--coral);
+}
+
+.atlas-map__label {
+  fill: var(--ink-deep);
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.88);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.atlas-map figcaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 24px;
+  padding: 12px 5px 0;
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+}
+
+.atlas-map__legend {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.atlas-map__legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-left: 7px;
+  border: 1px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(21, 58, 67, 0.18);
+}
+
+.catalog-table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: 0 8px 25px rgba(13, 42, 49, 0.04);
+}
+
+.catalog-table-wrap:focus-visible {
+  outline: 3px solid rgba(244, 122, 90, 0.38);
+  outline-offset: 3px;
+}
+
+.catalog-table {
+  width: 100%;
+  min-width: 860px;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.catalog-table caption {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 620;
+  text-align: left;
+}
+
+.catalog-table th,
+.catalog-table td {
+  padding: 14px 15px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.catalog-table thead th {
+  background: var(--mint);
+  color: var(--ink-deep);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.catalog-table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.catalog-table tbody th {
+  min-width: 165px;
+  color: var(--ink-deep);
+}
+
+.catalog-table tbody th a {
+  color: var(--coral-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.catalog-table tbody th span {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 0.66rem;
+  font-weight: 450;
+}
+
+.catalog-table tbody tr:hover {
+  background: rgba(223, 239, 226, 0.34);
+}
+
+.catalog-table--compact {
+  min-width: 690px;
+}
+
+.catalog-method-note {
+  margin: 14px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.destination-benchmark {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.origin-comparison-table {
+  min-width: 920px;
+}
+
 .destination-card {
   display: flex;
   min-width: 0;
@@ -2846,6 +3071,78 @@ h3 {
 
 .destination-sources__note {
   margin-top: 18px;
+}
+
+.guide-toolkit__panel,
+.guide-toolkit__message,
+.guide-toolkit__decision {
+  margin-top: 22px;
+  padding: clamp(20px, 4vw, 30px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--cream);
+}
+
+.guide-toolkit h3 {
+  margin: 0 0 17px;
+  font-size: 1.15rem;
+}
+
+.guide-toolkit__questions {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 24px;
+}
+
+.guide-toolkit__questions li {
+  padding-left: 5px;
+}
+
+.guide-toolkit__message {
+  background: var(--mint);
+}
+
+.guide-toolkit__message blockquote {
+  margin: 0;
+  padding: 19px;
+  border-left: 3px solid var(--coral);
+  border-radius: 0 12px 12px 0;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.guide-toolkit__message blockquote p {
+  margin: 0;
+}
+
+.guide-toolkit__message blockquote p + p {
+  margin-top: 10px;
+}
+
+.guide-toolkit__decision dl {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.guide-toolkit__decision dl > div {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.3fr) minmax(0, 1fr);
+  gap: 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+}
+
+.guide-toolkit__decision dt {
+  color: var(--coral-deep);
+  font-weight: 760;
+}
+
+.guide-toolkit__decision dd {
+  margin: 0;
+  color: var(--ink-soft);
 }
 
 .destination-layout {
@@ -3453,9 +3750,29 @@ h3 {
   .article-card-grid,
   .article-related-grid,
   .destination-grid--compact,
+  .catalog-insights,
+  .destination-benchmark,
   .destination-day-plan,
   .destination-practical-grid {
     grid-template-columns: 1fr;
+  }
+
+  .guide-toolkit__decision dl > div {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .catalog-table-wrap {
+    margin-right: -2px;
+  }
+
+  .atlas-map {
+    padding: 8px;
+  }
+
+  .atlas-map figcaption {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .destination-day-plan li {

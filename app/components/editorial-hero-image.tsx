@@ -20,9 +20,7 @@ export function EditorialHeroImage({
         height={900}
         sizes="(max-width: 760px) calc(100vw - 2rem), (max-width: 1240px) calc(100vw - 4rem), 1184px"
         quality={82}
-        fetchPriority={bypassDevelopmentOptimizer && preload ? "high" : undefined}
-        loading={bypassDevelopmentOptimizer && preload ? "eager" : undefined}
-        preload={!bypassDevelopmentOptimizer && preload}
+        priority={preload}
         unoptimized={bypassDevelopmentOptimizer}
       />
       <figcaption className={styles.caption}>

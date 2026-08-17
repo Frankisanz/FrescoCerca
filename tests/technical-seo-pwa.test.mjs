@@ -80,15 +80,36 @@ test("publishes passive AdSense ownership signals without loading ad code", asyn
   );
 });
 
-test("keeps noindex legal routes out of the sitemap source", async () => {
+test("uses frescocerca.es as the canonical production origin", async () => {
+  const site = await source("lib/site.ts");
+
+  assert.match(
+    site,
+    /const DEFAULT_SITE_URL = "https:\/\/frescocerca\.es"/,
+  );
+  assert.doesNotMatch(site, /frescocerca\.vercel\.app/);
+});
+
+test("keeps every noindex route out of the sitemap source", async () => {
   const sitemap = await source("app/sitemap.ts");
 
   assert.doesNotMatch(sitemap, /"\/(?:aviso-legal|privacidad|cookies)"/);
+  assert.doesNotMatch(sitemap, /"\/eclipse-2026"/);
   assert.match(sitemap, /CLIMATE_METHODOLOGY\.revisado/);
   assert.match(sitemap, /latestGuideUpdate/);
   assert.match(sitemap, /toLastModified/);
-  assert.match(sitemap, /eclipse:\s*"2026-08-05"/);
-  assert.match(sitemap, /path:\s*"\/eclipse-2026"[\s\S]*changeFrequency:\s*"daily"/);
+});
+
+test("keeps the completed eclipse available as a noindex historical archive", async () => {
+  const eclipse = await source("app/eclipse-2026/page.tsx");
+
+  assert.match(eclipse, /Archivo del eclipse solar total de 2026 en España/);
+  assert.match(eclipse, /updatedDate = "2026-08-17"/);
+  assert.match(
+    eclipse,
+    /robots:\s*\{[\s\S]*?index:\s*false,[\s\S]*?follow:\s*true/,
+  );
+  assert.match(eclipse, /El eclipse de 2026 ya se celebró/);
 });
 
 test("redirects alternate production hosts to the apex canonical domain", async () => {
@@ -120,6 +141,63 @@ test("labels climate ranges as editorial estimates without unnamed stations", as
   assert.match(destinations, /Estimaciones editoriales orientativas/);
   assert.match(methodology, /No se atribuyen a una estación concreta/);
   assert.match(destinationPage, /No reproducen la tabla/);
+});
+
+test("ships the current high-value comparison and decision tools", async () => {
+  const atlas = await source("app/destinos/page.tsx");
+  const destinationPage = await source("app/destinos/[slug]/page.tsx");
+  const originPage = await source("app/desde/[slug]/page.tsx");
+  const guideData = await source("lib/guide-growth.ts");
+  const guidePage = await source("app/guias/[slug]/page.tsx");
+
+  assert.match(atlas, /<table className="catalog-table">/);
+  assert.match(atlas, /Comparación editorial de los 30 destinos/);
+
+  assert.match(destinationPage, /getDestinationCatalogBenchmark/);
+  assert.match(destinationPage, /aria-label="Posición dentro del catálogo"/);
+  assert.match(destinationPage, /frente a la mediana nocturna del catálogo/);
+
+  assert.match(originPage, /Matriz de seis candidatos calculada para salir desde/);
+  assert.match(originPage, /Fuentes locales de los candidatos mostrados/);
+  assert.match(originPage, /candidateSources\.map/);
+
+  assert.match(guideData, /slug: "checklist-alojamiento-fresco-verano"/);
+  assert.match(guideData, /checklistTitle: "Las doce preguntas"/);
+  assert.match(guideData, /decisionTitle: "Semáforo de decisión"/);
+  assert.match(guideData, /IDAE — Recomendaciones de ahorro energético/);
+  assert.match(guideData, /Ministerio de Sanidad — Calor extremo/);
+  assert.match(guidePage, /className="article-section guide-toolkit"/);
+  assert.match(guidePage, /guide\.sources\.map/);
+});
+
+test("detail articles opt out of the generic social image fallback", async () => {
+  const site = await source("lib/site.ts");
+  const articleMetadata = site.slice(
+    site.indexOf("export function createArticleMetadata"),
+    site.indexOf("export function createArticleJsonLd"),
+  );
+
+  assert.match(articleMetadata, /image = null/);
+  assert.match(articleMetadata, /images:\s*image[\s\S]*?:\s*\[\]/);
+  assert.match(articleMetadata, /images:\s*imageUrl \? \[imageUrl\] : \[\]/);
+  assert.doesNotMatch(articleMetadata, /frescocerca-refugio-editorial-og\.jpg/);
+  assert.doesNotMatch(articleMetadata, /absoluteUrl\("\/og\.png"\)/);
+});
+
+test("keeps the destination atlas and editorial image hydration-safe", async () => {
+  const atlas = await source("app/components/destination-atlas-map.tsx");
+  const editorialImage = await source("app/components/editorial-hero-image.tsx");
+
+  assert.ok(
+    atlas.includes(
+      "<title>{`${destination.name}: ${destination.summerLowRange[0]}–${destination.summerLowRange[1]} °C`}</title>",
+    ),
+    "each SVG title must be a single string child",
+  );
+  assert.doesNotMatch(atlas, /<title>\s*\{destination\.name\}/);
+
+  assert.match(editorialImage, /priority=\{preload\}/);
+  assert.doesNotMatch(editorialImage, /\s+preload=\{/);
 });
 
 test("secondary text colors meet WCAG AA contrast on the dark surface", async () => {

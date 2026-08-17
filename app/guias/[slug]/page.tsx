@@ -72,7 +72,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
     publishedTime: guide.published,
     modifiedTime: guide.updated,
     articleSection: guide.eyebrow,
-    citations: guide.sources?.map((source) => source.url) ?? [],
+    citations: guide.sources.map((source) => source.url),
   });
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -88,6 +88,14 @@ export default async function GuidePage({ params }: GuidePageProps) {
   };
   const relatedGuides = guides
     .filter((candidate) => candidate.slug !== guide.slug)
+    .sort((left, right) => {
+      const leftMatchesTopic = left.eyebrow === guide.eyebrow ? 1 : 0;
+      const rightMatchesTopic = right.eyebrow === guide.eyebrow ? 1 : 0;
+      return (
+        rightMatchesTopic - leftMatchesTopic ||
+        right.updated.localeCompare(left.updated)
+      );
+    })
     .slice(0, 3);
 
   return (
@@ -122,7 +130,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
           <EditorialByline
             reviewedOn={formatDate(guide.updated)}
             sourceSummary={
-              guide.sources?.length
+              guide.sources.length
                 ? "Las fuentes consultadas se identifican y enlazan al final de la guía."
                 : "La revisión sigue la metodología editorial pública de FrescoCerca."
             }
@@ -153,6 +161,44 @@ export default async function GuidePage({ params }: GuidePageProps) {
               </section>
             ))}
 
+            {guide.toolkit ? (
+              <section className="article-section guide-toolkit">
+                <p className="content-kicker">Herramienta práctica</p>
+                <h2>{guide.toolkit.title}</h2>
+                <p>{guide.toolkit.introduction}</p>
+
+                <div className="guide-toolkit__panel">
+                  <h3>{guide.toolkit.checklistTitle}</h3>
+                  <ol className="guide-toolkit__questions">
+                    {guide.toolkit.checklist.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ol>
+                </div>
+
+                <div className="guide-toolkit__message">
+                  <h3>{guide.toolkit.messageTitle}</h3>
+                  <blockquote>
+                    {guide.toolkit.messageLines.map((line) => (
+                      <p key={line}>{line}</p>
+                    ))}
+                  </blockquote>
+                </div>
+
+                <div className="guide-toolkit__decision">
+                  <h3>{guide.toolkit.decisionTitle}</h3>
+                  <dl>
+                    {guide.toolkit.decisionRows.map((row) => (
+                      <div key={row.label}>
+                        <dt>{row.label}</dt>
+                        <dd>{row.text}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              </section>
+            ) : null}
+
             <section className="article-section article-takeaways">
               <p className="content-kicker">Resumen útil</p>
               <h2>Qué debes llevarte de esta guía</h2>
@@ -174,30 +220,29 @@ export default async function GuidePage({ params }: GuidePageProps) {
               ))}
             </section>
 
-            {guide.sources?.length ? (
-              <section className="article-section destination-sources">
-                <p className="content-kicker">Fuentes y límites</p>
-                <h2>Información oficial consultada</h2>
-                <p>
-                  Estas fuentes respaldan el método de la guía. Los horarios,
-                  servicios, avisos y condiciones meteorológicas pueden cambiar:
-                  comprueba siempre la información vigente para tus fechas.
-                </p>
-                <ul>
-                  {guide.sources.map((source) => (
-                    <li key={source.url}>
-                      <a href={source.url} rel="noreferrer" target="_blank">
-                        {source.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-                <p className="destination-sources__note">
-                  FrescoCerca no ofrece una previsión ni garantiza que un destino
-                  vaya a resultar fresco durante un viaje concreto.
-                </p>
-              </section>
-            ) : null}
+            <section className="article-section destination-sources">
+              <p className="content-kicker">Fuentes y límites</p>
+              <h2>Información oficial consultada</h2>
+              <p>
+                Estas fuentes respaldan el método de la guía. Los horarios,
+                servicios, avisos y condiciones meteorológicas pueden cambiar:
+                comprueba siempre la información vigente para tus fechas.
+              </p>
+              <ul>
+                {guide.sources.map((source) => (
+                  <li key={source.url}>
+                    <a href={source.url} rel="noreferrer" target="_blank">
+                      {source.title}
+                    </a>
+                    <span>{source.supports}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="destination-sources__note">
+                FrescoCerca no ofrece una previsión ni garantiza que un destino
+                vaya a resultar fresco durante un viaje concreto.
+              </p>
+            </section>
           </div>
 
           <aside className="article-aside">
