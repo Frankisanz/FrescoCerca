@@ -91,6 +91,9 @@ test("renders the Barcelona matrix, local sources and production canonical", asy
   assert.match(html, /Fuentes locales de los candidatos mostrados/);
   assert.match(html, /AEMET, mapas y valores climatológicos normales/);
   assertNoGenericSocialImage(html, "/desde/barcelona");
+  assert.match(html, /Escapadas frescas desde otras ciudades/);
+  assert.match(html, /href="\/desde\/valencia"/);
+  assert.match(html, /href="\/desde\/zaragoza"/);
 });
 
 test("renders the Malaga guide with the shared travel cap", async () => {

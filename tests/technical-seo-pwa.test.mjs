@@ -112,6 +112,26 @@ test("keeps the completed eclipse available as a noindex historical archive", as
   assert.match(eclipse, /El eclipse de 2026 ya se celebró/);
 });
 
+test("redirects alternate production hosts to the apex canonical domain", async () => {
+  const nextConfig = await source("next.config.ts");
+
+  assert.match(nextConfig, /value:\s*"www\.frescocerca\.es"/);
+  assert.match(nextConfig, /value:\s*"frescocerca\.vercel\.app"/);
+  assert.equal(
+    nextConfig.match(/destination:\s*"https:\/\/frescocerca\.es\/:path\*"/g)
+      ?.length,
+    2,
+  );
+});
+
+test("cross-links city guides to strengthen crawl discovery", async () => {
+  const cityGuide = await source("app/desde/[slug]/page.tsx");
+
+  assert.match(cityGuide, /nearbyOriginCities/);
+  assert.match(cityGuide, /calculateDirectDistanceKm\(city, originCity\)/);
+  assert.match(cityGuide, /href=\{`\/desde\/\$\{originCity\.slug\}`\}/);
+});
+
 test("labels climate ranges as editorial estimates without unnamed stations", async () => {
   const destinations = await source("lib/destinations.ts");
   const methodology = await source("app/metodologia/page.tsx");

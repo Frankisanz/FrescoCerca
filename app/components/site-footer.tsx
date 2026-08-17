@@ -8,6 +8,8 @@ const explore = [
     label: "Checklist antes de reservar",
   },
   { href: "/desde", label: "Escapadas desde tu ciudad" },
+  { href: "/desde/madrid", label: "Escapadas desde Madrid" },
+  { href: "/desde/sevilla", label: "Escapadas desde Sevilla" },
 ];
 
 const trust = [
