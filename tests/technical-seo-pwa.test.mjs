@@ -164,6 +164,22 @@ test("detail articles opt out of the generic social image fallback", async () =>
   assert.doesNotMatch(articleMetadata, /absoluteUrl\("\/og\.png"\)/);
 });
 
+test("keeps the destination atlas and editorial image hydration-safe", async () => {
+  const atlas = await source("app/components/destination-atlas-map.tsx");
+  const editorialImage = await source("app/components/editorial-hero-image.tsx");
+
+  assert.ok(
+    atlas.includes(
+      "<title>{`${destination.name}: ${destination.summerLowRange[0]}–${destination.summerLowRange[1]} °C`}</title>",
+    ),
+    "each SVG title must be a single string child",
+  );
+  assert.doesNotMatch(atlas, /<title>\s*\{destination\.name\}/);
+
+  assert.match(editorialImage, /priority=\{preload\}/);
+  assert.doesNotMatch(editorialImage, /\s+preload=\{/);
+});
+
 test("secondary text colors meet WCAG AA contrast on the dark surface", async () => {
   const css = await source("app/globals.css");
 

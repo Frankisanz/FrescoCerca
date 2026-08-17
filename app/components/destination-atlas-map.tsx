@@ -84,9 +84,7 @@ export function DestinationAtlasMap({
                 cy={point.y}
                 r={index < 6 ? 7 : 5}
               >
-                <title>
-                  {destination.name}: {destination.summerLowRange[0]}–{destination.summerLowRange[1]} °C
-                </title>
+                <title>{`${destination.name}: ${destination.summerLowRange[0]}–${destination.summerLowRange[1]} °C`}</title>
               </circle>
               {index < 6 ? (
                 <text className="atlas-map__label" x={point.x + 10} y={point.y - 8}>
