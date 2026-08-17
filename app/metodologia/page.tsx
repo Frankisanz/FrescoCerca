@@ -4,7 +4,6 @@ import { CLIMATE_METHODOLOGY } from "@/lib/destinations";
 import {
   createPageMetadata,
   createWebPageJsonLd,
-  EDITORIAL_REVIEW_DATE,
   serializeJsonLd,
   siteConfig,
 } from "@/lib/site";
@@ -13,12 +12,51 @@ const title = "Metodología";
 const description =
   "Cómo interpreta FrescoCerca los datos climáticos, las distancias y los tiempos estimados, y qué límites tienen sus recomendaciones.";
 const path = "/metodologia";
+const METHODOLOGY_UPDATED = "2026-08-17";
 const editorialReviewLabel = new Intl.DateTimeFormat("es-ES", {
   day: "numeric",
   month: "long",
   year: "numeric",
   timeZone: "UTC",
-}).format(new Date(`${EDITORIAL_REVIEW_DATE}T00:00:00Z`));
+}).format(new Date(`${METHODOLOGY_UPDATED}T00:00:00Z`));
+
+const editorialHistory = [
+  {
+    date: "2026-08-17",
+    label: "17 de agosto de 2026",
+    title: "Atlas comparativo y revisión posterior al eclipse",
+    detail:
+      "Se incorporó el atlas comparativo, se reforzaron las fuentes y las listas de comprobación, y la cobertura del eclipse del 12 de agosto pasó a tratarse como contenido de archivo.",
+  },
+  {
+    date: "2026-08-05",
+    label: "5 de agosto de 2026",
+    title: "Preparación técnica para AdSense",
+    detail:
+      "Se añadieron las señales de titularidad y los archivos técnicos necesarios para solicitar la revisión de AdSense, sin presentar esa preparación como una aprobación ni activar anuncios por sí sola.",
+  },
+  {
+    date: "2026-08-02",
+    label: "2 de agosto de 2026",
+    title: "Ampliación de destinos y fuentes",
+    detail:
+      "Se desarrollaron las fichas locales de destino, se incorporaron fuentes públicas específicas y se hizo más visible la responsabilidad editorial.",
+  },
+  {
+    date: "2026-07-29",
+    label: "29 de julio de 2026",
+    title: "Nuevas guías de planificación",
+    detail:
+      "Se ampliaron las guías sobre noches frescas, transporte público y escapadas de fin de semana, junto con los criterios para ordenar recomendaciones.",
+  },
+  {
+    date: "2026-07-27",
+    label: "27 de julio de 2026",
+    title: "Publicación inicial",
+    detail:
+      "Se lanzó la primera versión pública de FrescoCerca con el buscador, el catálogo inicial y la explicación básica de sus límites.",
+  },
+] as const;
 
 export const metadata: Metadata = createPageMetadata({
   title,
@@ -30,6 +68,7 @@ const jsonLd = createWebPageJsonLd({
   title,
   description,
   path,
+  modifiedTime: METHODOLOGY_UPDATED,
 });
 
 export default function MetodologiaPage() {
@@ -66,6 +105,65 @@ export default function MetodologiaPage() {
         </header>
 
         <section className="content-page__body mt-10 space-y-10 text-base leading-8 text-current/80">
+          <section
+            className="methodology-page__section"
+            aria-labelledby="tipos-de-datos"
+          >
+            <h2
+              id="tipos-de-datos"
+              className="content-page__section-title text-2xl font-semibold tracking-tight text-current"
+            >
+              Qué es medido y qué es estimado
+            </h2>
+            <p className="mt-3">
+              FrescoCerca no opera estaciones meteorológicas ni realiza
+              mediciones propias en los destinos. Cuando enlaza un dato medido
+              u observado, ese dato pertenece a la fuente pública identificada;
+              el sitio se limita a explicarlo y organizarlo.
+            </p>
+            <dl className="mt-5 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl border border-current/10 p-5">
+                <dt className="font-semibold text-current">
+                  Medición u observación
+                </dt>
+                <dd className="mt-1">
+                  Es un valor registrado por una fuente oficial. FrescoCerca no
+                  lo genera y solo debe tratarse como medición cuando se
+                  identifica su fuente y periodo.
+                </dd>
+              </div>
+              <div className="rounded-2xl border border-current/10 p-5">
+                <dt className="font-semibold text-current">
+                  Referencia climatológica
+                </dt>
+                <dd className="mt-1">
+                  Resume periodos históricos largos. Ayuda a comparar lugares,
+                  pero no describe el tiempo que hará durante un viaje.
+                </dd>
+              </div>
+              <div className="rounded-2xl border border-current/10 p-5">
+                <dt className="font-semibold text-current">
+                  Estimación editorial
+                </dt>
+                <dd className="mt-1">
+                  Es un cálculo de FrescoCerca, como los rangos redondeados o
+                  los tiempos orientativos. Siempre debe leerse junto a su
+                  método y sus límites.
+                </dd>
+              </div>
+              <div className="rounded-2xl border border-current/10 p-5">
+                <dt className="font-semibold text-current">
+                  Predicción y aviso
+                </dt>
+                <dd className="mt-1">
+                  Proceden de organismos competentes como AEMET. FrescoCerca no
+                  produce previsiones ni alertas y remite a la información
+                  oficial vigente.
+                </dd>
+              </div>
+            </dl>
+          </section>
+
           <section
             className="methodology-page__section"
             aria-labelledby="clima-orientativo"
@@ -271,6 +369,68 @@ export default function MetodologiaPage() {
 
           <section
             className="methodology-page__section"
+            aria-labelledby="herramientas-editoriales"
+          >
+            <h2
+              id="herramientas-editoriales"
+              className="content-page__section-title text-2xl font-semibold tracking-tight text-current"
+            >
+              Herramientas y asistencia generativa
+            </h2>
+            <p className="mt-3">
+              FrescoCerca utiliza herramientas de automatización y asistencia
+              generativa para ayudar a estructurar comparaciones, detectar
+              incoherencias y preparar borradores de texto o código. Esas
+              herramientas no son una fuente meteorológica, turística ni de
+              seguridad y sus resultados no se publican como mediciones.
+            </p>
+            <p className="mt-3">
+              La responsabilidad final corresponde a la persona identificada
+              en el sitio. Las afirmaciones verificables deben apoyarse en las
+              fuentes enlazadas; cuando una cifra no procede de una observación
+              local reproducible, se presenta expresamente como estimación y se
+              explican sus límites.
+            </p>
+          </section>
+
+          <section
+            className="methodology-page__section"
+            aria-labelledby="historial-editorial"
+          >
+            <h2
+              id="historial-editorial"
+              className="content-page__section-title text-2xl font-semibold tracking-tight text-current"
+            >
+              Historial de cambios editoriales
+            </h2>
+            <p className="mt-3">
+              Este registro recoge cambios de contenido y método que afectan a
+              la utilidad o interpretación del sitio. No se añaden aquí ajustes
+              puramente tipográficos.
+            </p>
+            <ol className="mt-5 space-y-5">
+              {editorialHistory.map((entry) => (
+                <li
+                  className="rounded-2xl border border-current/10 p-5"
+                  key={entry.date}
+                >
+                  <time
+                    className="text-sm font-semibold text-emerald-700 dark:text-emerald-300"
+                    dateTime={entry.date}
+                  >
+                    {entry.label}
+                  </time>
+                  <h3 className="mt-1 text-lg font-semibold text-current">
+                    {entry.title}
+                  </h3>
+                  <p className="mt-1">{entry.detail}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section
+            className="methodology-page__section"
             aria-labelledby="correcciones"
           >
             <h2
@@ -297,7 +457,11 @@ export default function MetodologiaPage() {
               revisión de los datos.
             </p>
             <p className="mt-3 text-sm text-current/60">
-              Última actualización: {editorialReviewLabel}.
+              Última actualización: {" "}
+              <time dateTime={METHODOLOGY_UPDATED}>
+                {editorialReviewLabel}
+              </time>
+              .
             </p>
           </section>
         </section>

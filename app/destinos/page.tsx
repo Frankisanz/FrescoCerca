@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { DestinationAtlasMap } from "@/app/components/destination-atlas-map";
 import { EditorialByline } from "@/app/components/editorial-byline";
 import { EditorialHeroImage } from "@/app/components/editorial-hero-image";
 import {
@@ -7,6 +8,7 @@ import {
   breadcrumbJsonLd,
   formatCelsius,
   fromCities,
+  getDestinationCatalogSummary,
   getRankedDestinations,
   guides,
   serializeJsonLd,
@@ -15,6 +17,7 @@ import { CLIMATE_METHODOLOGY } from "@/lib/destinations";
 import {
   createArticleJsonLd,
   createArticleMetadata,
+  EDITORIAL_IMAGE_PATH,
 } from "@/lib/site";
 
 const title = "Destinos frescos de España para este verano";
@@ -25,7 +28,15 @@ export const metadata: Metadata = createArticleMetadata({
   title,
   description,
   path: "/destinos",
+  image: {
+    path: EDITORIAL_IMAGE_PATH,
+    alt: "Paisaje de montaña que ilustra el atlas comparativo de FrescoCerca",
+  },
 });
+
+function formatRange(range: readonly [number, number]) {
+  return range[0] + "–" + range[1] + " °C";
+}
 
 const regionalApproaches = [
   {
@@ -65,6 +76,7 @@ const regionalApproaches = [
 
 export default function DestinationsIndexPage() {
   const rankedDestinations = getRankedDestinations();
+  const catalogSummary = getDestinationCatalogSummary();
 
   const breadcrumb = breadcrumbJsonLd([
     { name: "Inicio", path: "/" },
@@ -89,6 +101,10 @@ export default function DestinationsIndexPage() {
     path: "/destinos",
     articleSection: "Destinos frescos de España",
     citations: [CLIMATE_METHODOLOGY.fuenteUrl],
+    image: {
+      path: EDITORIAL_IMAGE_PATH,
+      alt: "Paisaje de montaña que ilustra el atlas comparativo de FrescoCerca",
+    },
   });
 
   return (
@@ -124,7 +140,10 @@ export default function DestinationsIndexPage() {
           </a>{" "}
           y se explica en la metodología.
         </div>
-        <EditorialByline sourceSummary="Estimaciones de julio y agosto basadas en información climática abierta de AEMET, redondeadas para comparar y nunca presentadas como mediciones directas ni predicciones." />
+        <EditorialByline
+          reviewedOn="17 de agosto de 2026"
+          sourceSummary="Estimaciones de julio y agosto basadas en información climática abierta de AEMET, redondeadas para comparar y nunca presentadas como mediciones directas ni predicciones."
+        />
       </header>
 
       <EditorialHeroImage
@@ -145,54 +164,63 @@ export default function DestinationsIndexPage() {
           </p>
         </div>
 
-        <div className="destination-grid">
-          {rankedDestinations.map((destination) => (
-            <article className="destination-card" key={destination.slug}>
-              <div className="destination-card__heading">
-                <div>
-                  <p className="destination-card__region">
-                    {destination.province} · {destination.region}
-                  </p>
-                  <h3>
-                    <Link href={`/destinos/${destination.slug}`}>
+        <div className="catalog-insights" role="list" aria-label="Resumen del catálogo">
+          <div role="listitem">
+            <strong>{catalogSummary.total}</strong>
+            <span>destinos comparados</span>
+          </div>
+          <div role="listitem">
+            <strong>{catalogSummary.regionCount}</strong>
+            <span>comunidades representadas</span>
+          </div>
+          <div role="listitem">
+            <strong>{formatCelsius(catalogSummary.medianSummerLow)}</strong>
+            <span>mediana nocturna orientativa</span>
+          </div>
+        </div>
+
+        <DestinationAtlasMap destinations={rankedDestinations} />
+
+        <div className="catalog-table-wrap" tabIndex={0}>
+          <table className="catalog-table">
+            <caption>
+              Comparación editorial de los 30 destinos. Orden inicial: alivio
+              nocturno, alivio diurno y nombre.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Pos.</th>
+                <th scope="col">Destino</th>
+                <th scope="col">Mínimas</th>
+                <th scope="col">Máximas</th>
+                <th scope="col">Altitud</th>
+                <th scope="col">Puede encajar para</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rankedDestinations.map((destination, index) => (
+                <tr key={destination.slug}>
+                  <td>{index + 1}</td>
+                  <th scope="row">
+                    <Link href={"/destinos/" + destination.slug}>
                       {destination.name}
                     </Link>
-                  </h3>
-                </div>
-                <span className="destination-card__altitude">
-                  {destination.altitude.toLocaleString("es-ES")} m
-                </span>
-              </div>
-
-              <p>{destination.description}</p>
-
-              <dl className="destination-metrics">
-                <div>
-                  <dt>Máxima estival</dt>
-                  <dd>{formatCelsius(destination.summerHigh)}</dd>
-                </div>
-                <div>
-                  <dt>Mínima estival</dt>
-                  <dd>{formatCelsius(destination.summerLow)}</dd>
-                </div>
-              </dl>
-
-              <ul className="destination-tags" aria-label="Características">
-                {destination.tags.slice(0, 3).map((tag) => (
-                  <li key={tag}>{tag}</li>
-                ))}
-              </ul>
-
-              <Link
-                className="content-text-link"
-                href={`/destinos/${destination.slug}`}
-                aria-label={`Ver la guía de ${destination.name}`}
-              >
-                Ver destino <span aria-hidden="true">→</span>
-              </Link>
-            </article>
-          ))}
+                    <span>{destination.province} · {destination.region}</span>
+                  </th>
+                  <td>{formatRange(destination.summerLowRange)}</td>
+                  <td>{formatRange(destination.summerHighRange)}</td>
+                  <td>{destination.altitude.toLocaleString("es-ES")} m</td>
+                  <td>{destination.bestFor}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+        <p className="catalog-method-note">
+          Son bandas editoriales históricas, no mediciones de una estación
+          municipal ni una predicción. Abre cada ficha para ver los límites,
+          fuentes locales y comprobaciones antes de reservar.
+        </p>
       </section>
 
       <section className="content-section content-section--soft">
@@ -275,17 +303,17 @@ export default function DestinationsIndexPage() {
       <section className="content-section content-section--soft">
         <div className="content-section-heading">
           <div>
-            <p className="content-kicker">Especial 12 de agosto de 2026</p>
-            <h2>¿Buscas un destino para ver el eclipse?</h2>
+            <p className="content-kicker">Herramienta para reservar</p>
+            <h2>Haz las preguntas que una media climática no responde</h2>
           </div>
           <p>
-            Estar en una zona fresca o elevada no garantiza totalidad ni un
-            horizonte visible. Confirma primero el punto en el visor oficial y
-            prepara una alternativa meteorológica y de acceso.
+            La orientación, las persianas, el ruido y la ventilación del
+            dormitorio pueden importar más que un grado de diferencia entre
+            pueblos. Usa nuestra lista antes de pagar una estancia.
           </p>
         </div>
-        <Link className="content-text-link" href="/eclipse-2026">
-          Preparar una escapada para el eclipse de 2026{" "}
+        <Link className="content-text-link" href="/guias/checklist-alojamiento-fresco-verano">
+          Abrir el checklist de alojamiento{" "}
           <span aria-hidden="true">→</span>
         </Link>
       </section>

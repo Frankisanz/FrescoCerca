@@ -163,6 +163,12 @@ export default function SobreFrescoCercaPage() {
               documentadas.
             </p>
             <p className="mt-3">
+              El trabajo descrito es documental y editorial. No implica haber
+              visitado todos los destinos ni haber realizado mediciones
+              meteorológicas, inspecciones de alojamientos o comprobaciones de
+              accesibilidad sobre el terreno.
+            </p>
+            <p className="mt-3">
               Para proponer una corrección, escribe a{" "}
               <a
                 href={`mailto:${siteConfig.legal.email}`}

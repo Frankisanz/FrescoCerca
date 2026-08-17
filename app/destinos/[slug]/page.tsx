@@ -6,6 +6,7 @@ import {
   breadcrumbJsonLd,
   editorialDestinations as destinations,
   getDestination,
+  getDestinationCatalogBenchmark,
   getNearbyDestinations,
   serializeJsonLd,
 } from "@/lib/content";
@@ -69,6 +70,14 @@ export default async function DestinationPage({
   }
 
   const nearby = getNearbyDestinations(destination);
+  const benchmark = getDestinationCatalogBenchmark(destination);
+  const comparisonRows = [
+    { destination, distance: 0 },
+    ...nearby.map((candidate) => ({
+      destination: candidate.destination,
+      distance: candidate.distance,
+    })),
+  ];
   const climateReviewLabel = new Intl.DateTimeFormat("es-ES", {
     day: "numeric",
     month: "long",
@@ -247,6 +256,31 @@ export default async function DestinationPage({
               orientación del alojamiento y el episodio meteorológico concreto
               importan más que una media aislada.
             </p>
+            <div className="destination-benchmark" role="group" aria-label="Posición dentro del catálogo">
+              <div>
+                <strong>{benchmark.nightPosition} de {benchmark.total}</strong>
+                <span>por mínima nocturna de referencia</span>
+              </div>
+              <div>
+                <strong>{benchmark.altitudePosition} de {benchmark.total}</strong>
+                <span>por altitud, de mayor a menor</span>
+              </div>
+              <div>
+                <strong>
+                  {benchmark.differenceFromMedian === 0
+                    ? "Igual a la mediana"
+                    : benchmark.differenceFromMedian < 0
+                      ? Math.abs(benchmark.differenceFromMedian) + " °C menos"
+                      : benchmark.differenceFromMedian + " °C más"}
+                </strong>
+                <span>frente a la mediana nocturna del catálogo</span>
+              </div>
+            </div>
+            <p className="catalog-method-note">
+              La posición compara el valor central de nuestras bandas
+              editoriales. No convierte la estimación en una medición local ni
+              anticipa el tiempo de una fecha concreta.
+            </p>
           </section>
 
           <section className="article-section">
@@ -390,26 +424,40 @@ export default async function DestinationPage({
               duración exacta por carretera.
             </p>
           </div>
-          <div className="destination-grid destination-grid--compact">
-            {nearby.map(({ destination: candidate, distance }) => (
-              <article className="destination-card" key={candidate.slug}>
-                <p className="destination-card__region">
-                  A unos {distance} km en línea recta
-                </p>
-                <h3>
-                  <Link href={`/destinos/${candidate.slug}`}>
-                    {candidate.name}
-                  </Link>
-                </h3>
-                <p>{candidate.description}</p>
-                <Link
-                  className="content-text-link"
-                  href={`/destinos/${candidate.slug}`}
-                >
-                  Comparar destino <span aria-hidden="true">→</span>
-                </Link>
-              </article>
-            ))}
+          <div className="catalog-table-wrap" tabIndex={0}>
+            <table className="catalog-table catalog-table--compact">
+              <caption>
+                {destination.name} frente a tres alternativas cercanas
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Destino</th>
+                  <th scope="col">Mínimas</th>
+                  <th scope="col">Máximas</th>
+                  <th scope="col">Altitud</th>
+                  <th scope="col">Distancia geográfica</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparisonRows.map(({ destination: candidate, distance }) => (
+                  <tr key={candidate.slug}>
+                    <th scope="row">
+                      {candidate.slug === destination.slug ? (
+                        <strong>{candidate.name} (actual)</strong>
+                      ) : (
+                        <Link href={"/destinos/" + candidate.slug}>
+                          {candidate.name}
+                        </Link>
+                      )}
+                    </th>
+                    <td>{formatRange(candidate.summerLowRange)}</td>
+                    <td>{formatRange(candidate.summerHighRange)}</td>
+                    <td>{candidate.altitude.toLocaleString("es-ES")} m</td>
+                    <td>{distance === 0 ? "—" : distance + " km aprox."}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
       )}

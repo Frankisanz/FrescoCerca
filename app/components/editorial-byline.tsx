@@ -4,10 +4,10 @@ import styles from "./editorial-byline.module.css";
 
 export function EditorialByline({
   sourceSummary,
-  reviewedOn = "2 de agosto de 2026",
+  reviewedOn,
 }: {
   sourceSummary: string;
-  reviewedOn?: string;
+  reviewedOn: string;
 }) {
   return (
     <aside className={styles.byline} aria-label="Responsabilidad editorial">

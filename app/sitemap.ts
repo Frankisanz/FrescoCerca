@@ -5,7 +5,6 @@ import { absoluteUrl, EDITORIAL_REVIEW_DATE } from "@/lib/site";
 
 const MANUAL_CONTENT_DATES = {
   coreEditorial: EDITORIAL_REVIEW_DATE,
-  eclipse: "2026-08-05",
   about: EDITORIAL_REVIEW_DATE,
 } as const;
 
@@ -32,12 +31,6 @@ const staticRoutes = [
     lastModified: latestSiteUpdate,
     changeFrequency: "weekly",
     priority: 1,
-  },
-  {
-    path: "/eclipse-2026",
-    lastModified: MANUAL_CONTENT_DATES.eclipse,
-    changeFrequency: "daily",
-    priority: 0.9,
   },
   {
     path: "/metodologia",

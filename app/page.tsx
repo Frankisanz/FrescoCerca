@@ -30,10 +30,10 @@ const benefits = [
 
 const collections = [
   {
-    kicker: "Para una noche",
-    title: "Bosque, baño y vuelta a casa",
-    text: "Opciones sencillas para improvisar cuando la ciudad no baja de 25 °C.",
-    href: "/guias/pueblos-con-noches-frescas-en-verano",
+    kicker: "Antes de reservar",
+    title: "La habitación importa más que la etiqueta",
+    text: "Doce preguntas para comprobar sombra, ventilación y climatización antes de pagar.",
+    href: "/guias/checklist-alojamiento-fresco-verano",
     className: "collection-forest",
   },
   {
@@ -231,22 +231,55 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="eclipse-callout">
+      <section
+        className="eclipse-callout"
+        aria-labelledby="home-checklist-title"
+      >
         <div className="site-shell eclipse-grid">
-          <div className="eclipse-visual" aria-hidden="true">
-            <span className="eclipse-sun" />
-            <span className="eclipse-moon" />
-            <span className="eclipse-glow" />
-          </div>
+          <aside
+            className="climate-card"
+            aria-label="Vista previa de la checklist de alojamiento"
+          >
+            <div className="climate-card-top">
+              <span>Antes de pagar</span>
+              <span className="live-chip">Checklist</span>
+            </div>
+            <div className="temperature-route">
+              <div>
+                <span className="temp-label">Preguntas concretas</span>
+                <strong>12</strong>
+                <small>para comparar</small>
+              </div>
+              <div className="route-line" aria-hidden="true">
+                <span />
+              </div>
+              <div>
+                <span className="temp-label">Decisión final</span>
+                <strong>✓</strong>
+                <small>con plan alternativo</small>
+              </div>
+            </div>
+            <div className="climate-card-bottom">
+              <span className="night-drop">Sombra · ventilación</span>
+              <span>Ruido · climatización</span>
+            </div>
+          </aside>
           <div>
-            <p className="eyebrow">Especial · 12 de agosto de 2026</p>
-            <h2>El eclipse se disfruta mejor con horizonte… y un plan B.</h2>
+            <p className="eyebrow">Guía práctica · Antes de reservar</p>
+            <h2 id="home-checklist-title">
+              Un pueblo fresco no garantiza una habitación fresca.
+            </h2>
             <p>
-              Te explicamos cómo valorar nubosidad, orientación, acceso y
-              temperatura sin competir con el visor astronómico oficial.
+              Revisa la estancia exacta, su orientación, la planta, la sombra,
+              la ventilación y la climatización. Incluimos preguntas listas
+              para enviar al alojamiento y un semáforo para decidir sin fiarte
+              de adjetivos vagos.
             </p>
-            <Link className="button button-light" href="/eclipse-2026">
-              Preparar mi escapada para el eclipse
+            <Link
+              className="button button-light"
+              href="/guias/checklist-alojamiento-fresco-verano"
+            >
+              Abrir la checklist de alojamiento
             </Link>
           </div>
         </div>
@@ -268,11 +301,11 @@ export default function Home() {
               </Link>
             </div>
             <div className="article-list">
-              <Link href="/guias/pueblos-con-noches-frescas-en-verano">
+              <Link href="/guias/checklist-alojamiento-fresco-verano">
                 <span className="article-index">01</span>
                 <span>
-                  <small>Descanso nocturno · 11 min</small>
-                  <strong>Pueblos con noches frescas: cómo elegir bien</strong>
+                  <small>Herramienta de reserva · 13 min</small>
+                  <strong>Checklist para reservar un alojamiento fresco</strong>
                 </span>
                 <span aria-hidden="true">↗</span>
               </Link>

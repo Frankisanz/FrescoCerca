@@ -11,6 +11,7 @@ import {
   getFromCity,
   serializeJsonLd,
 } from "@/lib/content";
+import { getDestinationEditorial } from "@/lib/destination-editorial";
 import {
   CLIMATE_METHODOLOGY,
   ORIGIN_CLIMATE_METHODOLOGY,
@@ -32,6 +33,10 @@ export const dynamicParams = false;
 
 export function generateStaticParams() {
   return fromCities.map((city) => ({ slug: city.slug }));
+}
+
+function formatRange(range: readonly [number, number]) {
+  return range[0] + "–" + range[1] + " °C";
 }
 
 export async function generateMetadata({
@@ -61,6 +66,17 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
   }
 
   const candidates = getDestinationCandidates(city, 6);
+  const candidateSources = Array.from(
+    new Map(
+      candidates.flatMap(({ destination }) => {
+        const editorial = getDestinationEditorial(destination.slug);
+        return (editorial?.sources ?? []).map((source) => [
+          source.url,
+          { ...source, destinationName: destination.name },
+        ] as const);
+      }),
+    ).values(),
+  );
   const candidatesByTravelTime = [...candidates].sort(
     (left, right) => left.estimatedTravelHours - right.estimatedTravelHours,
   );
@@ -94,6 +110,7 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
     new Set([
       CLIMATE_METHODOLOGY.fuenteUrl,
       ...candidates.map(({ destination }) => destination.sourceUrl),
+      ...candidateSources.map((source) => source.url),
     ]),
   );
   const articleJsonLd = createArticleJsonLd({
@@ -131,7 +148,10 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
           apoyan en referencias geográficas y climáticas. Comprueba el tiempo,
           los avisos y la ruta para tus fechas.
         </div>
-        <EditorialByline sourceSummary="Estimaciones climáticas editoriales basadas en información abierta de AEMET; selección y tiempos explicados en la metodología pública de FrescoCerca." />
+        <EditorialByline
+          reviewedOn="17 de agosto de 2026"
+          sourceSummary="Estimaciones climáticas editoriales basadas en información abierta de AEMET; selección, fuentes locales de cada candidato y tiempos explicados en la metodología pública de FrescoCerca."
+        />
       </header>
 
       <EditorialHeroImage
@@ -151,6 +171,49 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
             ruta y el tráfico reales.
           </p>
         </div>
+
+        {candidates.length > 0 && (
+          <div className="catalog-table-wrap" tabIndex={0}>
+            <table className="catalog-table origin-comparison-table">
+              <caption>
+                Matriz de seis candidatos calculada para salir desde {city.name}
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Destino</th>
+                  <th scope="col">Trayecto estimado</th>
+                  <th scope="col">Mínimas</th>
+                  <th scope="col">Máximas</th>
+                  <th scope="col">Altitud</th>
+                  <th scope="col">Alivio nocturno</th>
+                </tr>
+              </thead>
+              <tbody>
+                {candidates.map(
+                  ({ destination, estimatedTravelHours, indicativeDifference }) => (
+                    <tr key={destination.slug}>
+                      <th scope="row">
+                        <Link href={"/destinos/" + destination.slug}>
+                          {destination.name}
+                        </Link>
+                        <span>{destination.province}</span>
+                      </th>
+                      <td>{formatTravelTime(estimatedTravelHours)}</td>
+                      <td>{formatRange(destination.summerLowRange)}</td>
+                      <td>{formatRange(destination.summerHighRange)}</td>
+                      <td>{destination.altitude.toLocaleString("es-ES")} m</td>
+                      <td>
+                        {indicativeDifference > 0
+                          ? "−" + formatCelsius(indicativeDifference)
+                          : "Sin ventaja clara"}
+                      </td>
+                    </tr>
+                  ),
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {candidates.length > 0 ? (
           <div className="destination-grid">
@@ -352,6 +415,19 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
               . {CLIMATE_METHODOLOGY.metodologia}
             </p>
             <p>{ORIGIN_CLIMATE_METHODOLOGY}</p>
+            <h3>Fuentes locales de los candidatos mostrados</h3>
+            <ul>
+              {candidateSources.map((source) => (
+                <li key={source.url}>
+                  <a href={source.url} rel="noreferrer" target="_blank">
+                    {source.label}
+                  </a>
+                  <span>
+                    {source.destinationName}: {source.supports}
+                  </span>
+                </li>
+              ))}
+            </ul>
             <p>
               Revisión editorial de la base climática:{" "}
               {CLIMATE_METHODOLOGY.revisado}.{" "}
@@ -360,22 +436,6 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
               </Link>
               .
             </p>
-          </section>
-
-          <section className="article-section">
-            <p className="content-kicker">12 de agosto de 2026</p>
-            <h2>¿Viajas desde {city.name} para ver el eclipse?</h2>
-            <p>
-              Los candidatos de esta página se ordenan por clima orientativo y
-              trayecto, no por visibilidad astronómica. Antes de desplazarte,
-              comprueba el municipio y el horizonte en el IGN, la previsión de
-              AEMET y el estado del tráfico; conserva un plan B que no dependa
-              de improvisar a última hora.
-            </p>
-            <Link className="content-text-link" href="/eclipse-2026">
-              Preparar la escapada para el eclipse{" "}
-              <span aria-hidden="true">→</span>
-            </Link>
           </section>
 
           <section className="article-section article-faq">

@@ -16,6 +16,7 @@ import {
 import {
   createArticleJsonLd,
   createArticleMetadata,
+  EDITORIAL_IMAGE_PATH,
 } from "@/lib/site";
 
 const title = "Escapadas frescas desde tu ciudad";
@@ -26,6 +27,10 @@ export const metadata: Metadata = createArticleMetadata({
   title,
   description,
   path: "/desde",
+  image: {
+    path: EDITORIAL_IMAGE_PATH,
+    alt: "Paisaje de montaña que ilustra las guías de salida de FrescoCerca",
+  },
 });
 
 const planningModes = [
@@ -82,6 +87,10 @@ export default function FromCitiesIndexPage() {
     path: "/desde",
     articleSection: "Escapadas frescas por ciudad de salida",
     citations: [CLIMATE_METHODOLOGY.fuenteUrl],
+    image: {
+      path: EDITORIAL_IMAGE_PATH,
+      alt: "Paisaje de montaña que ilustra las guías de salida de FrescoCerca",
+    },
   });
 
   return (
@@ -116,7 +125,10 @@ export default function FromCitiesIndexPage() {
           </a>
           .
         </div>
-        <EditorialByline sourceSummary="Estimaciones climáticas editoriales basadas en información abierta de AEMET; distancias y tiempos calculados con el método público de FrescoCerca." />
+        <EditorialByline
+          reviewedOn="17 de agosto de 2026"
+          sourceSummary="Estimaciones climáticas editoriales basadas en información abierta de AEMET; distancias y tiempos calculados con el método público de FrescoCerca."
+        />
       </header>
 
       <EditorialHeroImage
@@ -232,17 +244,17 @@ export default function FromCitiesIndexPage() {
       <section className="content-section">
         <div className="content-section-heading">
           <div>
-            <p className="content-kicker">Viaje especial</p>
-            <h2>Si sales para ver el eclipse de agosto de 2026</h2>
+            <p className="content-kicker">Decisión verificable</p>
+            <h2>Compara el alojamiento antes de comparar kilómetros</h2>
           </div>
           <p>
-            La ciudad de salida solo resuelve el primer tramo. Confirma en el
-            IGN si el lugar elegido está en la franja adecuada, el horizonte
-            oeste, la previsión y una salida segura antes de desplazarte.
+            Una escapada cercana puede descansar mejor que otra más alta si el
+            dormitorio acumula calor. Copia doce preguntas concretas para el
+            anfitrión y decide con criterios verdes, ámbar y rojos.
           </p>
         </div>
-        <Link className="content-text-link" href="/eclipse-2026">
-          Ver la guía del eclipse solar de 2026{" "}
+        <Link className="content-text-link" href="/guias/checklist-alojamiento-fresco-verano">
+          Usar el checklist antes de reservar{" "}
           <span aria-hidden="true">→</span>
         </Link>
       </section>

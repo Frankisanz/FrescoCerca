@@ -93,7 +93,6 @@ export type FromCity = {
   province: string;
   lat: number;
   lng: number;
-  referenceHigh: number;
   title: string;
   description: string;
   introduction: string[];
@@ -111,7 +110,6 @@ export const fromCities: FromCity[] = [
     province: "Comunidad de Madrid",
     lat: 40.4168,
     lng: -3.7038,
-    referenceHigh: 33,
     title: "Escapadas frescas desde Madrid",
     description:
       "Compara destinos de montaña y zonas verdes para organizar una escapada con menos calor desde Madrid, con datos climáticos orientativos y criterios prácticos.",
@@ -165,7 +163,6 @@ export const fromCities: FromCity[] = [
     province: "Sevilla",
     lat: 37.3891,
     lng: -5.9845,
-    referenceHigh: 36,
     title: "Escapadas frescas desde Sevilla",
     description:
       "Ideas para escapar del calor desde Sevilla comparando sierras, altitud, noches de verano y planes tranquilos sin confundir clima habitual con previsión.",
@@ -219,7 +216,6 @@ export const fromCities: FromCity[] = [
     province: "Córdoba",
     lat: 37.8882,
     lng: -4.7794,
-    referenceHigh: 36,
     title: "Escapadas frescas desde Córdoba",
     description:
       "Encuentra candidatos para una escapada con noches más suaves desde Córdoba, comparando altitud, entorno, distancia aproximada y servicios.",
@@ -273,7 +269,6 @@ export const fromCities: FromCity[] = [
     province: "Jaén",
     lat: 37.7796,
     lng: -3.7849,
-    referenceHigh: 34,
     title: "Escapadas frescas desde Jaén",
     description:
       "Compara pueblos de sierra y destinos elevados para preparar una escapada menos calurosa desde Jaén con criterios verificables.",
@@ -327,7 +322,6 @@ export const fromCities: FromCity[] = [
     province: "Jaén",
     lat: 38.011,
     lng: -3.371,
-    referenceHigh: 34,
     title: "Escapadas frescas desde Úbeda",
     description:
       "Descubre destinos serranos y elevados para salir del calor desde Úbeda, con una comparación honesta de clima, distancia y comodidad.",
@@ -381,7 +375,6 @@ export const fromCities: FromCity[] = [
     province: "Región de Murcia",
     lat: 37.9922,
     lng: -1.1307,
-    referenceHigh: 34,
     title: "Escapadas frescas desde Murcia",
     description:
       "Compara montaña, interior y costa para encontrar una escapada potencialmente más fresca desde Murcia sin guiarte solo por la máxima.",
@@ -435,7 +428,6 @@ export const fromCities: FromCity[] = [
     province: "Zaragoza",
     lat: 41.6488,
     lng: -0.8891,
-    referenceHigh: 33,
     title: "Escapadas frescas desde Zaragoza",
     description:
       "Busca escapadas de montaña desde Zaragoza comparando Pirineos y Sistema Ibérico con distancia, altitud y noches estivales de referencia.",
@@ -489,7 +481,6 @@ export const fromCities: FromCity[] = [
     province: "Toledo",
     lat: 39.8628,
     lng: -4.0273,
-    referenceHigh: 34,
     title: "Escapadas frescas desde Toledo",
     description:
       "Selecciona una escapada con noches potencialmente más suaves desde Toledo comparando montes, sierras y destinos de mayor altitud.",
@@ -543,7 +534,6 @@ export const fromCities: FromCity[] = [
     province: "Valladolid",
     lat: 41.6523,
     lng: -4.7245,
-    referenceHigh: 31,
     title: "Escapadas frescas desde Valladolid",
     description:
       "Explora destinos montañosos para una escapada más fresca desde Valladolid, con criterios sobre altitud, mínima nocturna y distancia.",
@@ -597,7 +587,6 @@ export const fromCities: FromCity[] = [
     province: "Barcelona",
     lat: 41.3874,
     lng: 2.1686,
-    referenceHigh: 29,
     title: "Escapadas frescas desde Barcelona",
     description:
       "Encuentra ideas de montaña e interior para dormir con más frescor desde Barcelona, comparando altitud, humedad, distancia y condiciones reales del alojamiento.",
@@ -651,7 +640,6 @@ export const fromCities: FromCity[] = [
     province: "Valencia",
     lat: 39.4699,
     lng: -0.3763,
-    referenceHigh: 31,
     title: "Escapadas frescas desde Valencia",
     description:
       "Compara sierras e interior desde Valencia para preparar una escapada con noches potencialmente más llevaderas, sin confundir brisa, humedad y altitud.",
@@ -705,7 +693,6 @@ export const fromCities: FromCity[] = [
     province: "Málaga",
     lat: 36.7213,
     lng: -4.4214,
-    referenceHigh: 30,
     title: "Escapadas frescas desde Málaga",
     description:
       "Explora escapadas de sierra desde Málaga para comparar noches, altitud, humedad y accesos antes de reservar una salida de verano.",
@@ -759,7 +746,6 @@ export const fromCities: FromCity[] = [
     province: "Bizkaia",
     lat: 43.263,
     lng: -2.935,
-    referenceHigh: 26,
     title: "Escapadas frescas desde Bilbao",
     description:
       "Prepara una escapada desde Bilbao comparando valles, costa y montaña con atención a humedad, lluvia, altitud y el tipo de plan que buscas.",
@@ -813,7 +799,6 @@ export const fromCities: FromCity[] = [
     province: "Granada",
     lat: 37.1773,
     lng: -3.5986,
-    referenceHigh: 35,
     title: "Escapadas frescas desde Granada",
     description:
       "Compara escapadas de altitud desde Granada para buscar noches más llevaderas con datos orientativos, acceso real y una planificación responsable.",
@@ -869,6 +854,23 @@ export type GuideSection = {
   bullets?: string[];
 };
 
+export type GuideSource = {
+  title: string;
+  url: string;
+  supports: string;
+};
+
+export type GuideToolkit = {
+  title: string;
+  introduction: string;
+  checklistTitle: string;
+  checklist: string[];
+  messageTitle: string;
+  messageLines: string[];
+  decisionTitle: string;
+  decisionRows: { label: string; text: string }[];
+};
+
 export type Guide = {
   slug: string;
   title: string;
@@ -882,7 +884,8 @@ export type Guide = {
   sections: GuideSection[];
   takeaways: string[];
   faqs: { question: string; answer: string }[];
-  sources?: { title: string; url: string }[];
+  sources: GuideSource[];
+  toolkit?: GuideToolkit;
 };
 
 const foundationGuides: Guide[] = [
@@ -895,7 +898,7 @@ const foundationGuides: Guide[] = [
     eyebrow: "Guía de planificación",
     readingMinutes: 9,
     published: "2026-07-27",
-    updated: "2026-07-27",
+    updated: "2026-08-17",
     introduction: [
       "Buscar «un sitio donde no haga calor» parece sencillo hasta que aparecen diez listas con pueblos distintos. El problema no suele estar en los nombres, sino en el criterio: una máxima media de julio no dice qué ocurrirá el sábado, ni cómo se sentirá una habitación a medianoche.",
       "Un destino fresco es el resultado de varias decisiones pequeñas. Esta guía propone un proceso verificable para pasar de una lista llamativa a una escapada que tenga sentido para tus fechas, tu origen y tu forma de viajar.",
@@ -973,6 +976,32 @@ const foundationGuides: Guide[] = [
           "No. Las fichas se basan en referencias climáticas y geográficas para descubrir candidatos. Antes de viajar debes consultar la predicción y los avisos de fuentes oficiales.",
       },
     ],
+    sources: [
+      {
+        title: "AEMET — Predicción por horas para municipios",
+        url: "https://www.aemet.es/es/zona_portada_destacada/predicion_municipios_horas",
+        supports:
+          "Evolución horaria de temperatura, sensación térmica, humedad, viento y avisos.",
+      },
+      {
+        title: "AEMET — Avisos meteorológicos",
+        url: "https://www.aemet.es/es/eltiempo/prediccion/avisos",
+        supports:
+          "Comprobación de fenómenos adversos antes de confirmar o iniciar el viaje.",
+      },
+      {
+        title: "IDAE — Recomendaciones de ahorro energético en hogares",
+        url: "https://www.idae.es/ahorra-energia/recomendaciones-para-el-ahorro-energetico-en-hogares",
+        supports:
+          "Protección solar, persianas y ventilación nocturna para reducir el calentamiento interior.",
+      },
+      {
+        title: "Ministerio de Sanidad — Calor extremo",
+        url: "https://www.sanidad.gob.es/areas/sanidadAmbiental/riesgosAmbientales/calorExtremo/home.htm",
+        supports:
+          "Riesgos para la salud, población vulnerable y medidas preventivas ante temperaturas excesivas.",
+      },
+    ],
   },
   {
     slug: "donde-hace-menos-calor-en-espana",
@@ -983,7 +1012,7 @@ const foundationGuides: Guide[] = [
     eyebrow: "Clima y territorio",
     readingMinutes: 10,
     published: "2026-07-27",
-    updated: "2026-07-27",
+    updated: "2026-08-17",
     introduction: [
       "La pregunta «¿dónde hace menos calor en España?» no tiene una sola respuesta. Puede referirse a la tarde más suave, a la noche más fría, a menor sensación térmica o a un lugar donde sea fácil pasar las horas centrales bajo techo o entre árboles.",
       "España reúne costa atlántica, valles interiores, mesetas y cordilleras en distancias relativamente cortas. Entender esos patrones permite buscar mejor y evitar listas que presentan una media histórica como si fuera una garantía para el próximo fin de semana.",
@@ -1061,6 +1090,26 @@ const foundationGuides: Guide[] = [
           "Sirven para descubrir destinos y entender patrones. Para reservar una escapada sensible al calor, combínalas con condiciones flexibles y una previsión cercana a la fecha.",
       },
     ],
+    sources: [
+      {
+        title: "AEMET — Valores climatológicos normales: ayuda",
+        url: "https://www.aemet.es/es/serviciosclimaticos/datosclimatologicos/valoresclimatologicos/ayuda",
+        supports:
+          "Definición, alcance y límites de los valores climatológicos normales.",
+      },
+      {
+        title: "AEMET — Publicación de valores normales",
+        url: "https://www.aemet.es/es/conocermas/recursos_en_linea/publicaciones_y_estudios/publicaciones/detalles/Valores_normales",
+        supports:
+          "Contexto oficial para comparar patrones climáticos sin tratarlos como pronósticos.",
+      },
+      {
+        title: "AEMET — Predicción por horas para municipios",
+        url: "https://www.aemet.es/es/zona_portada_destacada/predicion_municipios_horas",
+        supports:
+          "Variables que deben comprobarse para una fecha concreta: temperatura, humedad, viento y sensación térmica.",
+      },
+    ],
   },
   {
     slug: "escapadas-frescas-con-ninos",
@@ -1071,7 +1120,7 @@ const foundationGuides: Guide[] = [
     eyebrow: "Viajes en familia",
     readingMinutes: 9,
     published: "2026-07-27",
-    updated: "2026-07-27",
+    updated: "2026-08-17",
     introduction: [
       "Viajar con niños durante un episodio cálido no consiste en encontrar una piscina y dar el plan por resuelto. El trayecto, la siesta, la temperatura de la habitación y la posibilidad de cambiar de actividad importan tanto como el destino.",
       "Una buena escapada familiar reduce decisiones sobre la marcha. El lugar más frío puede no ser el más cómodo si obliga a conducir demasiado, carece de sombra o no ofrece una alternativa interior cuando cambia el tiempo.",
@@ -1143,6 +1192,26 @@ const foundationGuides: Guide[] = [
           "Sombra o buen aislamiento, ventilación o climatización efectiva, agua, un espacio para descansar en las horas centrales y una ubicación accesible para las necesidades de la familia.",
       },
     ],
+    sources: [
+      {
+        title: "Ministerio de Sanidad — Calor extremo",
+        url: "https://www.sanidad.gob.es/areas/sanidadAmbiental/riesgosAmbientales/calorExtremo/home.htm",
+        supports:
+          "Prevención, colectivos vulnerables y actuación frente a síntomas relacionados con el calor.",
+      },
+      {
+        title: "DGT — Viajar seguro con niños",
+        url: "https://www.dgt.es/muevete-con-seguridad/viaja-seguro/con-ninos/",
+        supports:
+          "Preparación del trayecto y seguridad de los menores dentro del vehículo.",
+      },
+      {
+        title: "Protección Civil — Altas temperaturas",
+        url: "https://www.proteccioncivil.es/coordinacion/gestion-de-riesgos/meterologicos/altas-temperaturas",
+        supports:
+          "Medidas de autoprotección y consulta de avisos durante episodios cálidos.",
+      },
+    ],
   },
   {
     slug: "escapadas-frescas-con-perro",
@@ -1153,7 +1222,7 @@ const foundationGuides: Guide[] = [
     eyebrow: "Viajar con animales",
     readingMinutes: 9,
     published: "2026-07-27",
-    updated: "2026-07-27",
+    updated: "2026-08-17",
     introduction: [
       "Un destino que resulta agradable para una persona puede seguir siendo demasiado caluroso para un perro. El suelo, la falta de sombra, el esfuerzo y el transporte cambian la exposición. Además, raza, edad, peso y estado de salud modifican el riesgo.",
       "Esta guía ayuda a filtrar lugares y alojamientos, pero no sustituye el consejo veterinario. Ante dudas sobre la tolerancia de tu animal o cualquier síntoma, consulta a un profesional.",
@@ -1223,6 +1292,26 @@ const foundationGuides: Guide[] = [
         question: "¿Puede quedarse el perro en el coche con el aire puesto?",
         answer:
           "No es una opción segura: el sistema puede fallar y la situación cambiar rápidamente. Organiza el viaje para que el animal nunca quede solo en el vehículo.",
+      },
+    ],
+    sources: [
+      {
+        title: "Derechos Sociales — Guía para animales en una ola de calor",
+        url: "https://www.dsca.gob.es/es/publicacion/guia-cuidar-tu-animal-compania-ola-calor",
+        supports:
+          "Hidratación, horarios, suelo, ejercicio, ventilación y actuación ante un golpe de calor.",
+      },
+      {
+        title: "DGT — Cómo viajar con tu mascota",
+        url: "https://www.dgt.es/muevete-con-seguridad/viaja-seguro/con-tu-mascota/",
+        supports:
+          "Documentación, sistemas de retención, paradas y seguridad dentro del vehículo.",
+      },
+      {
+        title: "AEMET — Predicción por horas para municipios",
+        url: "https://www.aemet.es/es/zona_portada_destacada/predicion_municipios_horas",
+        supports:
+          "Comprobación horaria de temperatura, humedad, viento y avisos antes de los paseos.",
       },
     ],
   },
@@ -1309,6 +1398,71 @@ export function getRankedDestinations() {
     );
     return destination ? [destination] : [];
   });
+}
+
+function median(values: number[]) {
+  const ordered = [...values].sort((left, right) => left - right);
+  const middle = Math.floor(ordered.length / 2);
+
+  if (ordered.length % 2 === 0) {
+    return (ordered[middle - 1] + ordered[middle]) / 2;
+  }
+
+  return ordered[middle];
+}
+
+export function getDestinationCatalogSummary() {
+  const byNight = [...editorialDestinations].sort(
+    (left, right) =>
+      left.summerLow - right.summerLow ||
+      left.summerHigh - right.summerHigh ||
+      left.name.localeCompare(right.name, "es"),
+  );
+  const byAltitude = [...editorialDestinations].sort(
+    (left, right) =>
+      right.altitude - left.altitude || left.name.localeCompare(right.name, "es"),
+  );
+
+  return {
+    total: editorialDestinations.length,
+    regionCount: new Set(
+      editorialDestinations.map((destination) => destination.region),
+    ).size,
+    medianSummerLow: median(
+      editorialDestinations.map((destination) => destination.summerLow),
+    ),
+    coolestNightReference: byNight[0],
+    highestAltitude: byAltitude[0],
+  };
+}
+
+export function getDestinationCatalogBenchmark(
+  destination: EditorialDestination,
+) {
+  const summary = getDestinationCatalogSummary();
+  const byNight = [...editorialDestinations].sort(
+    (left, right) =>
+      left.summerLow - right.summerLow ||
+      left.summerHigh - right.summerHigh ||
+      left.name.localeCompare(right.name, "es"),
+  );
+  const byAltitude = [...editorialDestinations].sort(
+    (left, right) =>
+      right.altitude - left.altitude || left.name.localeCompare(right.name, "es"),
+  );
+
+  return {
+    total: summary.total,
+    nightPosition:
+      byNight.findIndex((candidate) => candidate.slug === destination.slug) + 1,
+    altitudePosition:
+      byAltitude.findIndex((candidate) => candidate.slug === destination.slug) + 1,
+    medianSummerLow: summary.medianSummerLow,
+    differenceFromMedian:
+      Math.round(
+        (destination.summerLow - summary.medianSummerLow) * 10,
+      ) / 10,
+  };
 }
 
 export type NearbyDestinationCandidate = {

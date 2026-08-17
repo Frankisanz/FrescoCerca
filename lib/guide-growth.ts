@@ -1,10 +1,172 @@
 import type { Guide } from "@/lib/content";
 
-export type GrowthGuide = Guide & {
-  sources: { title: string; url: string }[];
-};
+export type GrowthGuide = Guide;
 
 export const growthGuides = [
+  {
+    slug: "checklist-alojamiento-fresco-verano",
+    title: "Checklist para reservar un alojamiento fresco en verano",
+    seoTitle: "Cómo saber si un alojamiento será fresco en verano",
+    description:
+      "Doce preguntas, un mensaje para el anfitrión y un semáforo de decisión para comprobar la habitación, la sombra, la ventilación y la climatización antes de reservar.",
+    eyebrow: "Herramienta de reserva",
+    readingMinutes: 13,
+    published: "2026-08-17",
+    updated: "2026-08-17",
+    introduction: [
+      "Elegir un pueblo con noches suaves no garantiza una habitación fresca. Dos dormitorios del mismo edificio pueden comportarse de forma opuesta por su planta, orientación, cubierta, persianas, ventilación y exposición al sol de la tarde. Por eso esta guía empieza en la estancia exacta y no en los adjetivos del anuncio.",
+      "El objetivo no es adivinar una temperatura interior ni exigir al alojamiento una promesa imposible. Es reunir respuestas comprobables, comparar siempre las mismas variables y conservar una salida si cambia la previsión. Al final encontrarás una ficha de doce preguntas y un mensaje que puedes adaptar antes de pagar.",
+    ],
+    sections: [
+      {
+        heading: "Reserva una habitación concreta, no una casa genérica",
+        paragraphs: [
+          "Pregunta qué dormitorio recibirás, en qué planta está y qué tiene encima. Una habitación bajo cubierta puede acumular más calor que otra en una planta intermedia; una estancia orientada al oeste puede recibir radiación cuando el edificio ya lleva horas calentándose. «Casa de piedra», «alojamiento rural» o «zona de montaña» no responden a ninguna de esas cuestiones.",
+          "Si el establecimiento asigna la habitación al llegar, pide que anoten tu necesidad y pregunta qué alternativas existirían. Confirma también el horario de entrada: llegar a última hora a una estancia cerrada todo el día cambia la experiencia. Una respuesta útil describe la estancia; una respuesta vaga repite el anuncio.",
+        ],
+        bullets: [
+          "Planta y posición respecto a la cubierta.",
+          "Orientación y horas de sol directo.",
+          "Tipo de protección exterior en cada ventana.",
+          "Posibilidad real de elegir otra habitación.",
+        ],
+      },
+      {
+        heading: "Comprueba cómo evita que entre el calor durante el día",
+        paragraphs: [
+          "Persianas, contraventanas y toldos exteriores pueden limitar la radiación antes de que atraviese el vidrio. Una cortina interior ayuda con la luz, pero no equivale a una protección exterior. El IDAE recomienda cerrar persianas o bajar toldos durante las horas de sol y aprovechar la ventilación cuando el aire exterior es más fresco.",
+          "Pregunta quién deja cerrada la protección antes de tu llegada y si podrás manejarla. En alojamientos con grandes ventanales, aclara qué fachada recibe el sol de tarde y si existe sombra exterior. No necesitas conocer la ficha técnica del edificio: necesitas saber si la habitación puede mantenerse protegida mientras estás fuera.",
+        ],
+      },
+      {
+        heading: "Verifica si podrás ventilar cuando refresque fuera",
+        paragraphs: [
+          "Abrir una ventana solo enfría si el aire exterior está más fresco que el interior y puede circular. Dos huecos en fachadas distintas favorecen la ventilación cruzada; una sola ventana puede depender más del viento. Pregunta si hay mosquiteras, topes seguros, contraventanas y ruido nocturno que obligue a cerrar.",
+          "Mira la predicción horaria de AEMET desde la cena hasta la mañana, no solo la mínima diaria. Temperatura, sensación térmica, humedad y viento ayudan a valorar si abrir tendrá sentido. Si existe humo de un incendio o una indicación oficial de mantener ventanas cerradas, la seguridad y la calidad del aire prevalecen sobre la ventilación nocturna.",
+        ],
+      },
+      {
+        heading: "Aclara qué climatización llega al dormitorio",
+        paragraphs: [
+          "«Aire acondicionado» puede referirse al salón, a una unidad central con horario o a un equipo que no alcanza el dormitorio. Confirma la estancia exacta, el control disponible, las horas de funcionamiento y si existe un suplemento. Si solo hay ventilador, pregunta cuántos, de qué tipo y dónde se colocan.",
+          "Ningún aparato compensa por sí solo una habitación expuesta todo el día, pero una respuesta precisa reduce incertidumbre. También conviene saber qué ocurre ante una avería y cómo contactar fuera del horario de recepción. Guarda por escrito las prestaciones que hayan condicionado la reserva.",
+        ],
+      },
+      {
+        heading: "Haz dos comprobaciones meteorológicas antes de viajar",
+        paragraphs: [
+          "Con varios días de margen, comprueba el patrón general, los avisos y la política de cancelación. Entre 72 y 48 horas antes, compara el municipio del alojamiento con una alternativa razonable. El día anterior, revisa la evolución horaria y confirma que el supuesto de ventilación o climatización sigue siendo válido.",
+          "La referencia climática de FrescoCerca ayuda a descubrir lugares, pero la decisión final depende de tus fechas. Si los candidatos ofrecen una noche parecida, puede ganar el alojamiento con mejores respuestas, un trayecto más corto o una cancelación más flexible. No conviertas una diferencia pequeña en una carretera desproporcionada.",
+        ],
+      },
+      {
+        heading: "Busca pruebas recientes y conserva una salida",
+        paragraphs: [
+          "Lee reseñas recientes que mencionen la habitación, la planta y una estancia en verano. Una opinión antigua o de otra habitación puede no ser comparable. Las fotografías ayudan a reconocer persianas, buhardillas o grandes cristaleras, pero no prueban ventilación ni temperatura; pregunta lo que la imagen no puede confirmar.",
+          "Revisa por escrito la cancelación, los cambios de habitación y el canal de contacto. Si viaja una persona vulnerable, un bebé o alguien con una condición médica, prioriza un plan que no dependa de una única ventana o de que la noche enfríe más de lo previsto. Ante síntomas o avisos de salud, siguen mandando las indicaciones sanitarias.",
+        ],
+      },
+      {
+        heading: "Compara con el mismo semáforo, no con el mejor adjetivo",
+        paragraphs: [
+          "Puntúa cada opción con las mismas preguntas: habitación identificada, protección solar exterior, ventilación utilizable, climatización confirmada, previsión nocturna y flexibilidad. La puntuación no es científica y no predice grados; evita que un anuncio atractivo o una mínima aislada borren los puntos débiles.",
+          "Descarta antes de sumar. Si una condición es imprescindible para tu grupo y el alojamiento no puede confirmarla, ninguna ventaja secundaria la compensa. Cuando dos opciones quedan igualadas, elige la más fácil de verificar y aquella que te permita cambiar el plan con menos coste y exposición.",
+        ],
+      },
+    ],
+    toolkit: {
+      title: "Ficha de comprobación antes de pagar",
+      introduction:
+        "Copia estas preguntas en tus notas y registra la respuesta de cada alojamiento. Un «sí» solo cuenta cuando sabes a qué habitación y condición se refiere.",
+      checklistTitle: "Las doce preguntas",
+      checklist: [
+        "¿Qué habitación exacta se asignará y en qué planta está?",
+        "¿Está bajo cubierta o tiene otra estancia encima?",
+        "¿Qué orientación tiene y a qué horas recibe sol directo?",
+        "¿Tiene persiana, contraventana o toldo exterior utilizable?",
+        "¿La protección solar estará cerrada antes de mi llegada?",
+        "¿Se pueden abrir dos huecos para crear ventilación cruzada?",
+        "¿Hay mosquiteras, ruido o límites de seguridad al abrir?",
+        "¿El aire acondicionado llega al dormitorio concreto?",
+        "¿Puedo controlarlo y su uso está incluido en el precio?",
+        "Si solo hay ventiladores, ¿cuántos hay y dónde están?",
+        "¿Qué alternativa ofrecen si el equipo falla o la habitación se recalienta?",
+        "¿Hasta cuándo puedo cancelar o cambiar sin penalización?",
+      ],
+      messageTitle: "Mensaje breve para el alojamiento",
+      messageLines: [
+        "Hola. Antes de reservar necesito confirmar cómo se comporta el dormitorio en noches calurosas.",
+        "¿Podríais indicarme la habitación o planta, su orientación y si está bajo cubierta?",
+        "También necesito saber si tiene protección solar exterior, ventilación cruzada y climatización o ventilador dentro del dormitorio.",
+        "¿El equipo puede controlarse libremente, está incluido y qué alternativa habría si no funcionara? Gracias.",
+      ],
+      decisionTitle: "Semáforo de decisión",
+      decisionRows: [
+        {
+          label: "Verde",
+          text: "Respuestas concretas por escrito, habitación identificada, protección exterior y al menos una estrategia nocturna verificable.",
+        },
+        {
+          label: "Ámbar",
+          text: "Faltan uno o dos datos, la ventilación depende del ruido o el equipo no está en la habitación. Pide aclaraciones antes de pagar.",
+        },
+        {
+          label: "Rojo",
+          text: "Solo hay adjetivos, no se identifica la estancia, recibe sol de tarde sin protección o una necesidad imprescindible queda sin confirmar.",
+        },
+      ],
+    },
+    takeaways: [
+      "La temperatura del pueblo no describe el dormitorio.",
+      "Pregunta por planta, cubierta, orientación y protección exterior.",
+      "Ventilar solo ayuda cuando el exterior refresca y abrir es viable.",
+      "Confirma climatización, control, coste y plan ante averías.",
+      "Guarda respuestas y elige una reserva que puedas cambiar.",
+    ],
+    faqs: [
+      {
+        question: "¿Una casa de piedra siempre es fresca?",
+        answer:
+          "No. La masa del edificio puede amortiguar cambios, pero la orientación, la cubierta, las ventanas, el uso y varios días de calor alteran el resultado. Comprueba la habitación concreta.",
+      },
+      {
+        question: "¿Basta con que la mínima prevista sea baja?",
+        answer:
+          "No. Puede alcanzarse cerca del amanecer y el dormitorio puede conservar calor. Revisa la evolución horaria, la humedad, el viento y si realmente podrás ventilar.",
+      },
+      {
+        question: "¿Qué hago si el alojamiento no puede responder?",
+        answer:
+          "Decide si el dato es imprescindible. Si lo es, busca una opción que sí pueda confirmarlo o una reserva flexible; no conviertas una suposición en una garantía.",
+      },
+    ],
+    sources: [
+      {
+        title: "AEMET — Predicción por horas para municipios",
+        url: "https://www.aemet.es/es/zona_portada_destacada/predicion_municipios_horas",
+        supports:
+          "Consulta horaria de temperatura, sensación térmica, humedad, viento y avisos.",
+      },
+      {
+        title: "AEMET — Interpretación de avisos Meteoalerta",
+        url: "https://www.aemet.es/es/eltiempo/prediccion/avisos/ayuda",
+        supports:
+          "Alcance de los avisos y niveles de peligro que deben prevalecer sobre el plan turístico.",
+      },
+      {
+        title: "IDAE — Recomendaciones de ahorro energético en hogares",
+        url: "https://www.idae.es/ahorra-energia/recomendaciones-para-el-ahorro-energetico-en-hogares",
+        supports:
+          "Uso de persianas, toldos y ventilación en las horas más frescas.",
+      },
+      {
+        title: "Ministerio de Sanidad — Calor extremo",
+        url: "https://www.sanidad.gob.es/areas/sanidadAmbiental/riesgosAmbientales/calorExtremo/home.htm",
+        supports:
+          "Prevención, riesgos y protección de personas vulnerables durante episodios cálidos.",
+      },
+    ],
+  },
   {
     slug: "pueblos-con-noches-frescas-en-verano",
     title:
@@ -15,7 +177,7 @@ export const growthGuides = [
     eyebrow: "Descanso nocturno",
     readingMinutes: 11,
     published: "2026-07-29",
-    updated: "2026-07-29",
+    updated: "2026-08-17",
     introduction: [
       "Buscar un pueblo con noches frescas no consiste en ordenar un mapa por altitud. La mínima cambia con cada situación atmosférica, y el alivio depende también de humedad, viento, entorno construido y capacidad del alojamiento para perder el calor acumulado. Un pueblo que suele refrescar puede atravesar una noche cálida: decide con datos de tus fechas.",
       "Esta guía propone un método para crear una lista corta y comprobarla con información oficial. No ofrece un ranking eterno ni promete una temperatura. El objetivo es saber qué datos miraste, cuándo los revisaste y qué alternativa conservarás si cambian la previsión, los avisos o el acceso.",
@@ -104,18 +266,26 @@ export const growthGuides = [
       {
         title: "AEMET — Predicción meteorológica",
         url: "https://www.aemet.es/es/eltiempo/prediccion",
+        supports:
+          "Punto de acceso oficial a la predicción que debe prevalecer sobre cualquier referencia histórica.",
       },
       {
         title: "AEMET — Predicción por horas en municipios",
         url: "https://www.aemet.es/es/zona_portada_destacada/predicion_municipios_horas",
+        supports:
+          "Consulta de temperatura, humedad y viento durante las horas de descanso.",
       },
       {
         title: "AEMET — Interpretación de avisos Meteoalerta",
         url: "https://www.aemet.es/es/eltiempo/prediccion/avisos/ayuda",
+        supports:
+          "Significado de los niveles de peligro y criterios para cambiar o cancelar el plan.",
       },
       {
         title: "Ministerio de Sanidad — Calor extremo",
         url: "https://www.sanidad.gob.es/areas/sanidadAmbiental/riesgosAmbientales/calorExtremo/",
+        supports:
+          "Medidas preventivas y riesgos del calor, especialmente para personas vulnerables.",
       },
     ],
   },
@@ -129,7 +299,7 @@ export const growthGuides = [
     eyebrow: "Viaje en transporte público",
     readingMinutes: 12,
     published: "2026-07-29",
-    updated: "2026-07-29",
+    updated: "2026-08-17",
     introduction: [
       "Una escapada sin coche empieza por la red de transporte, no por una lista de pueblos bonitos. Solo es viable si puedes completar la ida, el último tramo y la vuelta con horarios confirmados. En áreas rurales, pocos kilómetros entre estación y alojamiento pueden ser la parte más difícil.",
       "Primero construye cadenas de transporte verificables y después compara las condiciones de tus fechas. El tren o el autobús evita conducir, pero no garantiza frescor, puntualidad ni acceso hasta la puerta. Confirma por separado meteorología y operación en fuentes oficiales.",
@@ -225,30 +395,44 @@ export const growthGuides = [
       {
         title: "Renfe — Consulta de horarios",
         url: "https://www.renfe.com/es/es/viajar/informacion-util/horarios.html",
+        supports:
+          "Comprobación de horarios ferroviarios para la fecha concreta del viaje.",
       },
       {
         title: "Renfe — Prepara tu viaje",
         url: "https://www.renfe.com/es/es/viajar/prepara-tu-viaje.html",
+        supports:
+          "Condiciones operativas, equipaje y preparación de los trayectos en tren.",
       },
       {
         title: "Adif — Estado de la red",
         url: "https://www.adif.es/viajeros/estado-de-la-red",
+        supports:
+          "Incidencias de infraestructura que pueden alterar la ida o la vuelta.",
       },
       {
         title: "Adif — Estaciones de viajeros",
         url: "https://www.adif.es/viajeros/estaciones",
+        supports:
+          "Servicios y ubicación de estaciones para verificar los transbordos y el último tramo.",
       },
       {
         title: "Adif — Accesibilidad en estaciones y servicio Acerca",
         url: "https://www.adif.es/viajeros/accesibilidad-estaciones",
+        supports:
+          "Condiciones de accesibilidad y asistencia que deben confirmarse antes de viajar.",
       },
       {
         title: "AEMET — Predicción por horas en municipios",
         url: "https://www.aemet.es/es/zona_portada_destacada/predicion_municipios_horas",
+        supports:
+          "Comprobación meteorológica por horas una vez cerrada una cadena de transporte viable.",
       },
       {
         title: "Ministerio de Sanidad — Calor extremo",
         url: "https://www.sanidad.gob.es/areas/sanidadAmbiental/riesgosAmbientales/calorExtremo/",
+        supports:
+          "Medidas preventivas durante esperas, desplazamientos a pie y episodios cálidos.",
       },
     ],
   },
@@ -262,7 +446,7 @@ export const growthGuides = [
     eyebrow: "Plan de 48 horas",
     readingMinutes: 12,
     published: "2026-07-29",
-    updated: "2026-07-29",
+    updated: "2026-08-17",
     introduction: [
       "Un fin de semana deja poco margen para corregir una mala elección. Si el viernes se pierde en tráfico, el sábado obliga a caminar al mediodía y la habitación conserva calor, una buena cifra en el mapa sirve de poco. Viaje, alojamiento, horarios y alternativa deben formar una sola decisión.",
       "Este método está pensado para dos noches y se adapta a una. Busca una mejora razonable con un desplazamiento asumible, no el punto más frío. Ningún destino garantiza frescor: la previsión, los avisos, incendios, tormentas o incidencias pueden exigir cambiar o cancelar.",
@@ -364,27 +548,39 @@ export const growthGuides = [
       {
         title: "AEMET — Predicción meteorológica",
         url: "https://www.aemet.es/es/eltiempo/prediccion",
+        supports:
+          "Predicción oficial para decidir si el plan de 48 horas sigue siendo razonable.",
       },
       {
         title: "AEMET — Interpretación de avisos Meteoalerta",
         url: "https://www.aemet.es/es/eltiempo/prediccion/avisos/ayuda",
+        supports:
+          "Lectura de avisos y niveles de peligro antes de mantener o cancelar el viaje.",
       },
       {
         title: "DGT — Información e incidencias de tráfico",
         url: "https://www.dgt.es/conoce-el-estado-del-trafico/informacion-e-incidencias-de-trafico/index.html",
+        supports:
+          "Estado del tráfico e incidencias que pueden modificar el tiempo real de carretera.",
       },
       {
         title: "DGT — Recomendaciones de tráfico",
         url: "https://www.dgt.es/conoce-el-estado-del-trafico/recomendaciones-de-trafico/",
+        supports:
+          "Planificación segura de salidas, retornos y desplazamientos especiales.",
       },
       {
         title: "Ministerio de Sanidad — Calor extremo",
         url: "https://www.sanidad.gob.es/areas/sanidadAmbiental/riesgosAmbientales/calorExtremo/",
+        supports:
+          "Prevención y protección de personas vulnerables durante el fin de semana.",
       },
       {
         title:
           "Protección Civil — Recomendaciones ante altas temperaturas e incendios",
-        url: "https://www.proteccioncivil.es/-/protecci%C3%B3n-civil-y-emergencias-alerta-por-altas-temperaturas-persistentes-en-la-pen%C3%ADnsula-y-baleares",
+        url: "https://www.proteccioncivil.es/coordinacion/gestion-de-riesgos/meterologicos/altas-temperaturas",
+        supports:
+          "Medidas de autoprotección ante calor e incendios que pueden obligar a cambiar el plan.",
       },
     ],
   },
