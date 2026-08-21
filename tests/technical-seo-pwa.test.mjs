@@ -114,14 +114,20 @@ test("keeps the completed eclipse available as a noindex historical archive", as
 
 test("redirects alternate production hosts to the apex canonical domain", async () => {
   const nextConfig = await source("next.config.ts");
+  const vercelConfig = await source("vercel.json");
 
   assert.match(nextConfig, /value:\s*"www\.frescocerca\.es"/);
   assert.match(nextConfig, /value:\s*"frescocerca\.vercel\.app"/);
+  assert.match(nextConfig, /statusCode:\s*301/);
   assert.equal(
     nextConfig.match(/destination:\s*"https:\/\/frescocerca\.es\/:path\*"/g)
       ?.length,
     2,
   );
+
+  assert.match(vercelConfig, /"value":\s*"www\.frescocerca\.es"/);
+  assert.match(vercelConfig, /"value":\s*"frescocerca\.vercel\.app"/);
+  assert.match(vercelConfig, /"statusCode":\s*301/);
 });
 
 test("cross-links city guides to strengthen crawl discovery", async () => {

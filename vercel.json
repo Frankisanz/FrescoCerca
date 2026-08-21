@@ -2,6 +2,30 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "buildCommand": "npm run build:vercel",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.frescocerca.es"
+        }
+      ],
+      "destination": "https://frescocerca.es/$1",
+      "statusCode": 301
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "frescocerca.vercel.app"
+        }
+      ],
+      "destination": "https://frescocerca.es/$1",
+      "statusCode": 301
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
