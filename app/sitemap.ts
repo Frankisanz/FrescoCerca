@@ -86,7 +86,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...guides.map((guide) => ({
       url: absoluteUrl(`/guias/${guide.slug}`),
-      lastModified: new Date(`${guide.updated}T00:00:00+02:00`),
+      lastModified: toLastModified(guide.updated),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),

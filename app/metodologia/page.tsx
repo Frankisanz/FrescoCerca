@@ -20,13 +20,25 @@ const editorialReviewLabel = new Intl.DateTimeFormat("es-ES", {
   timeZone: "UTC",
 }).format(new Date(`${METHODOLOGY_UPDATED}T00:00:00Z`));
 
-const editorialHistory = [
+type EditorialHistoryEntry = {
+  date: string;
+  label: string;
+  title: string;
+  detail: string;
+  link?: { href: string; label: string };
+};
+
+const editorialHistory: readonly EditorialHistoryEntry[] = [
   {
     date: "2026-08-17",
     label: "17 de agosto de 2026",
     title: "Atlas comparativo y revisión posterior al eclipse",
     detail:
       "Se incorporó el atlas comparativo, se reforzaron las fuentes y las listas de comprobación, y la cobertura del eclipse del 12 de agosto pasó a tratarse como contenido de archivo.",
+    link: {
+      href: "/eclipse-2026",
+      label: "Consultar el archivo del eclipse de 2026",
+    },
   },
   {
     date: "2026-08-05",
@@ -56,7 +68,7 @@ const editorialHistory = [
     detail:
       "Se lanzó la primera versión pública de FrescoCerca con el buscador, el catálogo inicial y la explicación básica de sus límites.",
   },
-] as const;
+];
 
 export const metadata: Metadata = createPageMetadata({
   title,
@@ -423,7 +435,20 @@ export default function MetodologiaPage() {
                   <h3 className="mt-1 text-lg font-semibold text-current">
                     {entry.title}
                   </h3>
-                  <p className="mt-1">{entry.detail}</p>
+                  <p className="mt-1">
+                    {entry.detail}
+                    {entry.link ? (
+                      <>
+                        {" "}
+                        <Link
+                          href={entry.link.href}
+                          className="font-semibold text-emerald-700 underline decoration-emerald-700/30 underline-offset-4 hover:decoration-current dark:text-emerald-300"
+                        >
+                          {entry.link.label}
+                        </Link>
+                      </>
+                    ) : null}
+                  </p>
                 </li>
               ))}
             </ol>

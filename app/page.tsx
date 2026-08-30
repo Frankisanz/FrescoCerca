@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { createPageMetadata, serializeJsonLd, siteConfig } from "@/lib/site";
 import { EditorialHeroImage } from "./components/editorial-hero-image";
 import { EscapeFinder } from "./components/escape-finder";
 
+const pageTitle = "Escapadas frescas cerca de ti";
+const pageDescription =
+  "Encuentra pueblos y destinos donde dormir más fresco este verano. Compara temperatura orientativa, distancia y tipo de escapada desde tu ciudad.";
+
 export const metadata: Metadata = {
-  title: "Escapadas frescas cerca de ti",
-  description:
-    "Encuentra pueblos y destinos donde dormir más fresco este verano. Compara temperatura orientativa, distancia y tipo de escapada desde tu ciudad.",
-  alternates: { canonical: "/" },
+  ...createPageMetadata({
+    title: pageTitle,
+    description: pageDescription,
+    path: "/",
+  }),
+  title: { absolute: `${pageTitle} | ${siteConfig.name}` },
 };
 
 const benefits = [
@@ -107,7 +114,7 @@ export default function Home() {
     <main id="contenido">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(homeJsonLd) }}
       />
 
       <section className="hero">

@@ -49,7 +49,6 @@ export const metadata: Metadata = {
   creator: siteConfig.name,
   publisher: siteConfig.name,
   category: "travel",
-  alternates: { canonical: "/" },
   formatDetection: {
     email: false,
     address: false,

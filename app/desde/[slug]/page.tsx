@@ -82,6 +82,9 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
     (left, right) => left.estimatedTravelHours - right.estimatedTravelHours,
   );
   const shortestTripCandidate = candidatesByTravelTime[0];
+  const farthestTripCandidate =
+    candidatesByTravelTime[candidatesByTravelTime.length - 1];
+  const backupCandidate = candidatesByTravelTime[1];
   const comparisonNames = candidates
     .slice(0, 3)
     .map(({ destination }) => destination.name);
@@ -388,22 +391,52 @@ export default async function FromCityPage({ params }: FromCityPageProps) {
 
           <section className="article-section">
             <p className="content-kicker">Método de decisión</p>
-            <h2>Elige en cinco comprobaciones</h2>
+            <h2>Elige en cinco comprobaciones desde {city.name}</h2>
             <ol className="article-numbered-list">
               <li>
-                Mira la mínima prevista y la humedad durante las horas de sueño.
+                Mira la mínima prevista y la humedad durante las horas de sueño
+                en el destino, no la temperatura a la que salgas de {city.name}.
               </li>
               <li>
-                Comprueba la ruta real, no solo la distancia que aparece aquí.
+                {shortestTripCandidate &&
+                farthestTripCandidate &&
+                shortestTripCandidate !== farthestTripCandidate ? (
+                  <>
+                    Comprueba la ruta real: los trayectos estimados de esta
+                    guía, de{" "}
+                    {formatTravelTime(shortestTripCandidate.estimatedTravelHours)}{" "}
+                    a{" "}
+                    {formatTravelTime(farthestTripCandidate.estimatedTravelHours)}
+                    , no contemplan tráfico, obras ni tu punto exacto de salida.
+                  </>
+                ) : (
+                  <>
+                    Comprueba la ruta real, no solo la distancia que aparece
+                    aquí.
+                  </>
+                )}
               </li>
               <li>
                 Confirma ventilación, sombra y climatización del alojamiento.
               </li>
               <li>
-                Revisa avisos oficiales, accesos y riesgo de incendio.
+                Revisa los avisos oficiales, los accesos y el riesgo de
+                incendio, tanto al salir de {city.name} como en el destino.
               </li>
               <li>
-                Conserva una alternativa por si cambia el pronóstico.
+                {backupCandidate ? (
+                  <>
+                    Conserva una alternativa de la lista corta, como{" "}
+                    <Link
+                      href={`/destinos/${backupCandidate.destination.slug}`}
+                    >
+                      {backupCandidate.destination.name}
+                    </Link>
+                    , por si cambia el pronóstico.
+                  </>
+                ) : (
+                  <>Conserva una alternativa por si cambia el pronóstico.</>
+                )}
               </li>
             </ol>
           </section>

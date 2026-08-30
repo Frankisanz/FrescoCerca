@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl, siteConfig } from "@/lib/site";
+import { absoluteUrl } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -9,6 +9,5 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ["/api/", "/_sites-preview/"],
     },
     sitemap: absoluteUrl("/sitemap.xml"),
-    host: siteConfig.url.origin,
   };
 }

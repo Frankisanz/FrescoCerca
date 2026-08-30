@@ -134,35 +134,31 @@ export default async function DestinationPage({
     }),
     about: { "@id": `${destinationAbsoluteUrl}#destination` },
   };
+  const faqs = [
+    {
+      question: `¿Hace fresco en ${destination.name} durante el verano?`,
+      answer: `La estimación editorial orientativa de FrescoCerca sitúa el rango de máximas entre ${formatRange(destination.summerHighRange)} y el de mínimas entre ${formatRange(destination.summerLowRange)}. Se basa en información climática abierta de AEMET, pero no reproduce una estación concreta ni es una predicción: comprueba AEMET para las fechas del viaje.`,
+    },
+    {
+      question: `¿Qué debo mirar al reservar en ${destination.name}?`,
+      answer: editorial.stayAdvice,
+    },
+    {
+      question: `¿Cómo organizar el día si hace calor en ${destination.name}?`,
+      answer: `Prioriza ${editorial.dayPlan[0].title.toLowerCase()} por la mañana, ${editorial.dayPlan[1].title.toLowerCase()} durante las horas centrales y ${editorial.dayPlan[2].title.toLowerCase()} al final del día. Adapta siempre el plan a los avisos y condiciones reales.`,
+    },
+  ];
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: `¿Hace fresco en ${destination.name} durante el verano?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `La estimación editorial orientativa de FrescoCerca sitúa el rango de máximas entre ${formatRange(destination.summerHighRange)} y el de mínimas entre ${formatRange(destination.summerLowRange)}. Se basa en información climática abierta de AEMET, pero no reproduce una estación concreta ni es una predicción: comprueba AEMET para las fechas del viaje.`,
-        },
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
       },
-      {
-        "@type": "Question",
-        name: `¿Qué debo mirar al reservar en ${destination.name}?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: editorial.stayAdvice,
-        },
-      },
-      {
-        "@type": "Question",
-        name: `¿Cómo organizar el día si hace calor en ${destination.name}?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Prioriza ${editorial.dayPlan[0].title.toLowerCase()} por la mañana, ${editorial.dayPlan[1].title.toLowerCase()} durante las horas centrales y ${editorial.dayPlan[2].title.toLowerCase()} al final del día. Adapta siempre el plan a los avisos y condiciones reales.`,
-        },
-      },
-    ],
+    })),
   };
 
   return (
@@ -353,26 +349,12 @@ export default async function DestinationPage({
           <section className="article-section article-faq">
             <p className="content-kicker">Preguntas frecuentes</p>
             <h2>Antes de viajar a {destination.name}</h2>
-            <details>
-              <summary>¿Hace fresco en verano?</summary>
-              <p>
-                Puede ofrecer una referencia más suave que una ciudad baja y
-                continental, especialmente por la noche, pero no hay garantía.
-                Compara la mínima prevista de tus fechas y los avisos oficiales.
-              </p>
-            </details>
-            <details>
-              <summary>¿Qué importancia tiene la altitud?</summary>
-              <p>
-                Sus {destination.altitude.toLocaleString("es-ES")} metros ayudan
-                a interpretar el contexto, pero relieve, humedad, viento, sombra
-                y edificio también condicionan el descanso.
-              </p>
-            </details>
-            <details>
-              <summary>¿Qué debo preguntar al alojamiento?</summary>
-              <p>{editorial.stayAdvice}</p>
-            </details>
+            {faqs.map((faq) => (
+              <details key={faq.question}>
+                <summary>{faq.question}</summary>
+                <p>{faq.answer}</p>
+              </details>
+            ))}
           </section>
         </article>
 

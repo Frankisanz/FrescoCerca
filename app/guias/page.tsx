@@ -6,29 +6,17 @@ import {
   guides,
   serializeJsonLd,
 } from "@/lib/content";
+import { createPageMetadata } from "@/lib/site";
 
-const title = "Guías de escapadas frescas y noches con menos calor";
+const title = "Guías de escapadas frescas y noches sin calor";
 const description =
   "Guías para encontrar noches frescas, preparar escapadas sin coche o de fin de semana y elegir destinos responsables con niños o con perro.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title,
   description,
-  alternates: { canonical: absoluteUrl("/guias") },
-  openGraph: {
-    title,
-    description,
-    url: absoluteUrl("/guias"),
-    type: "website",
-    images: [absoluteUrl("/og.png")],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title,
-    description,
-    images: [absoluteUrl("/og.png")],
-  },
-};
+  path: "/guias",
+});
 
 export default function GuidesIndexPage() {
   const breadcrumb = breadcrumbJsonLd([
