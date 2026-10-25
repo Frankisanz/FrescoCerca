@@ -1,7 +1,11 @@
 import type { MetadataRoute } from "next";
-import { fromCities, guides } from "@/lib/content";
+import { editorialDestinations, fromCities, guides } from "@/lib/content";
 import { CLIMATE_METHODOLOGY, destinations } from "@/lib/destinations";
-import { absoluteUrl, EDITORIAL_REVIEW_DATE } from "@/lib/site";
+import {
+  absoluteUrl,
+  destinationCardImage,
+  EDITORIAL_REVIEW_DATE,
+} from "@/lib/site";
 
 const MANUAL_CONTENT_DATES = {
   coreEditorial: EDITORIAL_REVIEW_DATE,
@@ -58,12 +62,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
-    ...destinations.map((destination) => ({
-      url: absoluteUrl(`/destinos/${destination.slug}`),
-      lastModified: destinationLastModified,
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    })),
+    ...destinations.map((destination) => {
+      const editorial = editorialDestinations.find(
+        (item) => item.slug === destination.slug,
+      );
+      return {
+        url: absoluteUrl(`/destinos/${destination.slug}`),
+        lastModified: destinationLastModified,
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+        images: editorial
+          ? [absoluteUrl(destinationCardImage(editorial).path)]
+          : undefined,
+      };
+    }),
   ];
   const editorialRoutes: MetadataRoute.Sitemap = [
     {

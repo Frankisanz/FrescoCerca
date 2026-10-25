@@ -3833,3 +3833,22 @@ h3 {
     margin-right: -2px;
   }
 }
+
+.destination-card-figure {
+  margin: 26px 0 0;
+}
+
+.destination-card-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(21, 58, 67, 0.12);
+  border-radius: 14px;
+}
+
+.destination-card-figure figcaption {
+  margin-top: 8px;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}

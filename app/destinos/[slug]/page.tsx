@@ -15,6 +15,7 @@ import { CLIMATE_METHODOLOGY } from "@/lib/destinations";
 import {
   createArticleJsonLd,
   createArticleMetadata,
+  destinationCardImage,
   EDITORIAL_PUBLISHED_DATE,
   EDITORIAL_REVIEW_DATE,
   siteConfig,
@@ -51,6 +52,7 @@ export async function generateMetadata({
     path: `/destinos/${destination.slug}`,
     publishedTime: EDITORIAL_PUBLISHED_DATE,
     modifiedTime: EDITORIAL_REVIEW_DATE,
+    image: destinationCardImage(destination),
   });
 }
 
@@ -86,6 +88,7 @@ export default async function DestinationPage({
   }).format(new Date(`${CLIMATE_METHODOLOGY.revisado}T00:00:00Z`));
   const destinationUrl =
     `/destinos/${destination.slug}` as `/destinos/${string}`;
+  const cardImage = destinationCardImage(destination);
   const destinationAbsoluteUrl = absoluteUrl(destinationUrl);
   const breadcrumb = breadcrumbJsonLd([
     { name: "Inicio", path: "/" },
@@ -131,6 +134,7 @@ export default async function DestinationPage({
       articleSection: "Destinos para noches más frescas",
       publishedTime: EDITORIAL_PUBLISHED_DATE,
       modifiedTime: EDITORIAL_REVIEW_DATE,
+      image: cardImage,
     }),
     about: { "@id": `${destinationAbsoluteUrl}#destination` },
   };
@@ -252,6 +256,18 @@ export default async function DestinationPage({
               orientación del alojamiento y el episodio meteorológico concreto
               importan más que una media aislada.
             </p>
+            <figure className="destination-card-figure">
+              {/* eslint-disable-next-line @next/next/no-img-element -- ficha estática propia, ya en WebP a su tamaño */}
+              <img
+                src={cardImage.path}
+                alt={cardImage.alt}
+                width={1200}
+                height={630}
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption>{cardImage.caption}</figcaption>
+            </figure>
             <div className="destination-benchmark" role="group" aria-label="Posición dentro del catálogo">
               <div>
                 <strong>{benchmark.nightPosition} de {benchmark.total}</strong>

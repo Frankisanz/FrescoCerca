@@ -60,7 +60,26 @@ type ArticleMetadataOptions = Omit<PageMetadataOptions, "noIndex"> & {
 type EditorialImage = {
   path: string;
   alt: string;
+  caption?: string;
 };
+
+/** Ficha visual propia de cada destino (scripts/generate-destination-cards.mjs). */
+export function destinationCardImage(destination: {
+  slug: string;
+  name: string;
+  province: string;
+  altitude: number;
+  summerHighRange: readonly [number, number];
+  summerLowRange: readonly [number, number];
+}): Required<EditorialImage> {
+  const [lowFrom, lowTo] = destination.summerLowRange;
+  const [highFrom, highTo] = destination.summerHighRange;
+  return {
+    path: `/images/destinos/${destination.slug}.webp`,
+    alt: `Ficha climática de ${destination.name} (${destination.province}): ${destination.altitude.toLocaleString("es-ES")} m de altitud, mínimas de ${lowFrom} a ${lowTo} °C y máximas de ${highFrom} a ${highTo} °C como referencia orientativa de julio y agosto.`,
+    caption: `${destination.name} en verano: noches de ${lowFrom}–${lowTo} °C y días de ${highFrom}–${highTo} °C, estimación editorial orientativa a partir de datos de AEMET.`,
+  };
+}
 
 export function absoluteUrl(path: string = "/") {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
@@ -206,9 +225,16 @@ export function createArticleJsonLd({
       ? {
           "@type": "ImageObject",
           url: absoluteUrl(image.path),
+          contentUrl: absoluteUrl(image.path),
           width: 1200,
           height: 630,
-          caption: image.alt,
+          caption: image.caption ?? image.alt,
+          description: image.alt,
+          creditText: siteConfig.name,
+          creator: { "@type": "Organization", name: siteConfig.name },
+          copyrightNotice: `© ${siteConfig.name}`,
+          license: absoluteUrl("/aviso-legal"),
+          acquireLicensePage: absoluteUrl("/aviso-legal"),
         }
       : undefined,
     inLanguage: siteConfig.language,

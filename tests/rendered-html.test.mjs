@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -34,6 +35,19 @@ function assertNoGenericSocialImage(html, pathname) {
   assert.doesNotMatch(html, /name="twitter:image"/i, pathname);
   assert.doesNotMatch(html, /frescocerca-refugio-editorial-og\.jpg/i, pathname);
   assert.doesNotMatch(html, /https:\/\/frescocerca\.es\/og\.png/i, pathname);
+}
+
+// Las fichas de destino llevan su propia imagen (scripts/generate-destination-cards.mjs),
+// nunca la genérica del sitio.
+function assertOwnDestinationImage(html, slug) {
+  const image = `https://frescocerca.es/images/destinos/${slug}.webp`;
+  assert.match(html, /<meta name="twitter:card" content="summary_large_image"\s*\/?>/i);
+  assert.ok(html.includes(`<meta property="og:image" content="${image}"`), slug);
+  assert.ok(html.includes(`<meta name="twitter:image" content="${image}"`), slug);
+  assert.ok(html.includes(`src="/images/destinos/${slug}.webp"`), slug);
+  assert.match(html, /"@type":"ImageObject"[^}]*"creditText":"FrescoCerca"/);
+  assert.doesNotMatch(html, /frescocerca-refugio-editorial-og\.jpg/i, slug);
+  assert.doesNotMatch(html, /https:\/\/frescocerca\.es\/og\.png/i, slug);
 }
 
 async function render(pathname = "/") {
@@ -256,7 +270,7 @@ test("destination articles publish authorship, benchmark and comparable alternat
   assert.match(html, /frente a la mediana nocturna del catálogo/);
   assert.match(html, /Capileira[\s\S]{0,40}frente a tres alternativas cercanas/);
   assert.match(html, /Fuente marco, estimación y límites/);
-  assertNoGenericSocialImage(html, "/destinos/capileira");
+  assertOwnDestinationImage(html, "capileira");
   assert.doesNotMatch(html, /Equipo editorial FrescoCerca/);
 });
 
@@ -479,4 +493,33 @@ test("city guide ranking removes former long-distance anomalies and keeps variet
       (destinations) => (destinations?.length ?? 0) <= 2,
     ),
   );
+});
+
+test("sitemap lists an existing image card for every destination", async () => {
+  const response = await render("/sitemap.xml");
+  const xml = await response.text();
+  const destinations = [...xml.matchAll(/<loc>https:\/\/frescocerca\.es\/destinos\/([a-z0-9-]+)<\/loc>/g)];
+
+  assert.ok(destinations.length >= 30);
+  assert.match(xml, /xmlns:image="http:\/\/www\.google\.com\/schemas\/sitemap-image\/1\.1"/);
+  for (const [, slug] of destinations) {
+    assert.ok(
+      xml.includes(`<image:loc>https://frescocerca.es/images/destinos/${slug}.webp</image:loc>`),
+      slug,
+    );
+    assert.ok(
+      existsSync(new URL(`../public/images/destinos/${slug}.webp`, import.meta.url)),
+      slug,
+    );
+  }
+});
+
+test("publishes llms.txt with every destination", async () => {
+  const response = await render("/llms.txt");
+  const text = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(text, /^# FrescoCerca/);
+  assert.match(text, /## Destinos/);
+  assert.match(text, /https:\/\/frescocerca\.es\/destinos\/capileira/);
 });
