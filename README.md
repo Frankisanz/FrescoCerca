@@ -57,3 +57,16 @@ Si no se define, la aplicación usa `https://frescocerca.es`.
 
 Antes de ampliar el dataset deben verificarse fuentes, fechas y criterios con la
 metodología publicada en `/metodologia`.
+
+## Fichas visuales de destino
+
+Cada destino tiene una imagen propia en `public/images/destinos/<slug>.webp` (1200×630). Muestra la altitud y los
+rangos orientativos de julio y agosto que ya figuran en la ficha. Se usa como `og:image`, como `ImageObject` del
+Article y en el sitemap de imágenes, y se muestra en la página con su texto alternativo y su pie. Si cambias o añades
+un destino en `lib/destinations.ts`, regenera las imágenes:
+
+```bash
+node --experimental-strip-types scripts/generate-destination-cards.mjs
+```
+
+Las guías siguen sin imagen social genérica. `/llms.txt` se genera desde los mismos datos que las páginas.
