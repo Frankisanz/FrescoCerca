@@ -43,6 +43,12 @@ const staticRoutes = [
     priority: 0.7,
   },
   {
+    path: "/eclipse-2027",
+    lastModified: "2026-11-25",
+    changeFrequency: "monthly",
+    priority: 0.8,
+  },
+  {
     path: "/sobre-frescocerca",
     lastModified: MANUAL_CONTENT_DATES.about,
     changeFrequency: "monthly",

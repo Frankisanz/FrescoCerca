@@ -224,7 +224,9 @@ export default function Eclipse2026Page() {
               <a href={links.ignLocal} target="_blank" rel="noopener noreferrer">
                 Instituto Geográfico Nacional (IGN)
               </a>
-              . No reutilices esta planificación para una fecha distinta.
+              . No reutilices esta planificación para una fecha distinta. Para
+              el próximo eclipse total, consulta nuestra{" "}
+              <Link href="/eclipse-2027">guía del eclipse del 2 de agosto de 2027</Link>.
             </p>
             <a
               className="button button-primary"

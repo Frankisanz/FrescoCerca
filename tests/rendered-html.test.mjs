@@ -335,6 +335,27 @@ test("includes every new guide in the sitemap", async () => {
   assert.doesNotMatch(xml, /frescocerca\.vercel\.app/);
 });
 
+test("renders the 2027 eclipse guide as an indexable, sourced page", async () => {
+  const response = await render("/eclipse-2027");
+  assert.equal(response.status, 200);
+
+  const html = await response.text();
+  assertCanonical(html, "/eclipse-2027");
+  assert.doesNotMatch(html, /noindex/i);
+  assert.match(html, /<title>[^<]*Eclipse total de Sol del 2 de agosto de 2027/i);
+  assert.match(html, /"@type":"FAQPage"/);
+  assert.match(html, /"@type":"BreadcrumbList"/);
+  assert.match(html, /Ceuta[\s\S]*4 min 48 s/);
+  assert.match(html, /Cádiz[\s\S]*2 min 54 s/);
+  assert.match(html, /astronomia\.ign\.es\/es\/eclipses-de-sol-y-luna\/eclipse-total-sol-de-2-de-agosto-2027/);
+  assert.match(html, /EN ISO 12312-2/);
+  assert.match(html, /href="\/eclipse-2026"/);
+  assertNoGenericSocialImage(html, "/eclipse-2027");
+
+  const sitemap = await (await render("/sitemap.xml")).text();
+  assert.match(sitemap, /<loc>https:\/\/frescocerca\.es\/eclipse-2027<\/loc>/);
+});
+
 test("excludes the noindex eclipse archive from the production sitemap", async () => {
   const response = await render("/sitemap.xml");
   const xml = await response.text();
