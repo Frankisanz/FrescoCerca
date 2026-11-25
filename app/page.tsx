@@ -288,6 +288,13 @@ export default function Home() {
             >
               Abrir la checklist de alojamiento
             </Link>
+            <p>
+              ¿Preparas el eclipse total del 2 de agosto de 2027?{" "}
+              <Link href="/eclipse-2027">
+                Dónde será total, a qué hora y cómo llevar el calor
+              </Link>
+              .
+            </p>
           </div>
         </div>
       </section>
